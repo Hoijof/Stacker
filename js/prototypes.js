@@ -66,7 +66,9 @@ TodoManager.prototype.saveTodos = function() {
 
 TodoManager.prototype.loadTodos = function() {
 	this.todos = JSON.parse(localStorage.getItem("todos"));
-	this.todos.filter(function(elem){elem !== undefined});
+	if (this.todos == null) this.todos = [];
+
+	this.todos = this.todos.filter(function(elem){return elem !== undefined && elem !== null});
 }
 
 TodoManager.prototype.renderAllTodos = function() {
