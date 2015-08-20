@@ -22,12 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		switch (option) {
 			case '+':
-				this.parentElement.style.zIndex = parseInt(this.parentElement.style.zIndex + 1);
-				todoManager.todos[todoId].zIndex = parseInt(this.parentElement.style.zIndex + 1);
+				this.parentElement.style.zIndex = parseInt(this.parentElement.style.zIndex) + 1;
+				todoManager.todos[todoId].zIndex = parseInt(this.parentElement.style.zIndex) + 1;
 			break;
 			case '-':
-				this.parentElement.style.zIndex = parseInt(this.parentElement.style.zIndex - 1);
-				todoManager.todos[todoId].zIndex = parseInt(this.parentElement.style.zIndex - 1);
+				this.parentElement.style.zIndex = parseInt(this.parentElement.style.zIndex) - 1;
+				todoManager.todos[todoId].zIndex = parseInt(this.parentElement.style.zIndex) - 1;
 			break;
 			case 'x':
 				todoManager.removeTodo(todoId, -1);
