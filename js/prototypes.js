@@ -1,11 +1,15 @@
 
-function createDiv (text) {
+function createDiv (text, className) {
 	var div = document.createElement('div');
 	div.innerHTML = text;
 	div.style.float = "right";
 	div.style.cursor = "pointer";
 	div.style.width = "16px";
 	div.style.textAlign = "center";
+
+	if (className !== undefined) {
+		div.className = className;
+	}
 
 	return div;
 }
@@ -114,9 +118,11 @@ Todo.prototype.render = function() {
 
 	document.getElementById("mainContainer").appendChild(node);
 
-	node.appendChild(createDiv('x'));
-	node.appendChild(createDiv('-'));
-	node.appendChild(createDiv('+'));
+	node.appendChild(createDiv('x', "controll"));
+	node.appendChild(createDiv('-', "controll"));
+	node.appendChild(createDiv('+', "controll"));
+	node.appendChild(createDiv(this.depth, "depth"));
+
 	node.appendChild(text);
 
 	$("#todo_" + this.id).draggable({

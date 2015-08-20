@@ -18,16 +18,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	$("#mainContainer").on("click", "div > div", function() {
 		var option = $(this).html(),
-			todoId = parseInt(this.parentElement.id.split("_")[1]);
+			todoId = parseInt(this.parentElement.id.split("_")[1]),
+			depth = 0;
 
 		switch (option) {
 			case '+':
-				this.parentElement.style.zIndex = parseInt(this.parentElement.style.zIndex) + 1;
-				todoManager.todos[todoId].depth = parseInt(this.parentElement.style.zIndex) + 1;
+				depth = parseInt(this.parentElement.style.zIndex) + 1;
+
+				this.parentElement.style.zIndex = depth;
+				todoManager.todos[todoId].depth = depth;
+				this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
 			break;
 			case '-':
-				this.parentElement.style.zIndex = parseInt(this.parentElement.style.zIndex) - 1;
-				todoManager.todos[todoId].depth = parseInt(this.parentElement.style.zIndex) - 1;
+				depth = parseInt(this.parentElement.style.zIndex) - 1;
+
+				this.parentElement.style.zIndex = depth;
+				todoManager.todos[todoId].depth = depth;
+				this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
 			break;
 			case 'x':
 				todoManager.removeTodo(todoId, -1);
