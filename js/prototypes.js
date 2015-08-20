@@ -89,7 +89,8 @@ function Todo(name) {
 
 Todo.prototype.render = function() {
 	var node = document.createElement('div'),
-		text = document.createElement('div');
+		text = document.createElement('div'),
+		that = this;
 
  	text.innerHTML = this.name
  	text.style.marginTop = "25px";
@@ -100,8 +101,8 @@ Todo.prototype.render = function() {
 	node.style.height = "150px";
 	node.style.width = "150px";
 	node.style.position = "fixed";
-	node.style.left = this.x + "px";
-	node.style.top = this.y + "px";
+	node.style.left = this.x;
+	node.style.top = this.y;
 	node.style.cursor = "-webkit-grab";
 	node.style.zIndex = this.depth;
 
@@ -112,7 +113,15 @@ Todo.prototype.render = function() {
 	node.appendChild(createDiv('+'));
 	node.appendChild(text);
 
-	$("#todo_" + this.id).draggable();
+	$("#todo_" + this.id).draggable({
+		stop: function() {
+			var todo = $("#todo_" + that.id)
+			that.x = todo.css("left");
+			that.y = todo.css("top");
+
+			todoManager.saveTodos();
+		}
+	});
 }
 
 Todo.prototype.derender = function() {
