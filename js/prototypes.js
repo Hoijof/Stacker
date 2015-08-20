@@ -65,10 +65,16 @@ TodoManager.prototype.saveTodos = function() {
 }
 
 TodoManager.prototype.loadTodos = function() {
+	var i;
+
 	this.todos = JSON.parse(localStorage.getItem("todos"));
 	if (this.todos == null) this.todos = [];
 
 	this.todos = this.todos.filter(function(elem){return elem !== undefined && elem !== null});
+
+	for (i in this.todos) {
+		this.todos[i].id = i;
+	}
 }
 
 TodoManager.prototype.renderAllTodos = function() {
