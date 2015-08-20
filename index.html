@@ -2,6 +2,8 @@
 <html>
 	<head>
 		<title>Stacker</title>
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+
 		<script src="js/prototypes.js?version=1.0.2"></script>
 		<script src="js/main.js?version=1.0.2"></script>
 
@@ -11,7 +13,10 @@
 	</head>		
 	<body>
 		<div id="mainContainer"></div>
-		<div id="formContainer">
-			<input type="text" style="position: fixed;top: 0;">
-		</div>
+		<div id="formContainer" class="group">      
+	      <input type="text" required>
+	      <span class="highlight"></span>
+	      <span class="bar"></span>
+	      <label>Enter something to do</label>
+	    </div>
 	</body>

@@ -3,10 +3,10 @@ function createDiv (text) {
 	var div = document.createElement('div');
 	div.innerHTML = text;
 	div.style.float = "right";
-	div.style.border = "1px solid black";
 	div.style.cursor = "pointer";
 	div.style.width = "16px";
 	div.style.textAlign = "center";
+
 	return div;
 }
 // PROTOTYPES
@@ -94,12 +94,12 @@ Todo.prototype.render = function() {
 
  	text.innerHTML = this.name
  	text.style.marginTop = "25px";
+ 	text.style.marginLeft = "15px";
+ 	text.style.marginRight = "15px";
+ 	text.style.fontFamily = "Roboto";
  	
 	node.id = "todo_" + this.id;
-	node.style.backgroundColor = this.color;
-	node.style.border = "1px solid black";
-	node.style.height = "150px";
-	node.style.width = "150px";
+	node.className = "card card-1";
 	node.style.position = "fixed";
 	node.style.left = this.x;
 	node.style.top = this.y;
