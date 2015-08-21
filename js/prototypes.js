@@ -106,10 +106,7 @@ Todo.prototype.render = function() {
 		that = this;
 
  	text.innerHTML = this.name
- 	text.style.marginTop = "25px";
- 	text.style.marginLeft = "15px";
- 	text.style.marginRight = "15px";
- 	text.style.fontFamily = "Roboto";
+ 	text.className = "cardText";
  	
 	node.id = "todo_" + this.id;
 	node.className = "card card-1";

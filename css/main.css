@@ -158,3 +158,10 @@ body {
 .controll:hover {
   background-color: #eeeded;
 }
+
+.cardText {
+  marginTop: 25px;
+  marginLeft: 15px;
+  marginRight: 15px;
+  fontFamily: "Roboto";
+}

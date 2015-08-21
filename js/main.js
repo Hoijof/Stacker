@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		}		
 	});
 
+	$("#mainContainer").on("dblclick", "div", function() {
+		var elem = this.querySelector('.cardText');
+
+		console.log(elem.innerHTML);
+	});
+
 	$("#mainContainer").on("click", "div > div", function() {
 		var option = $(this).html(),
 			todoId = parseInt(this.parentElement.id.split("_")[1]),
