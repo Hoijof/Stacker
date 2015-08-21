@@ -41,7 +41,7 @@ function TodoManager() {
 
 TodoManager.prototype.addTodo = function(todo) {
 	this.todos.push(todo);
-	todo.id = this.todos.size() - 1;
+	todo.id = this.todos.length - 1;
 
 	return todo;
 };
@@ -74,8 +74,11 @@ TodoManager.prototype.loadTodos = function() {
 	this.todos = JSON.parse(localStorage.getItem("todos"));
 	if (this.todos == null) this.todos = [];
 
-	this.todos = this.todos.filter(function(elem){return elem !== undefined && elem !== null});
+	this.clearArray();
+}
 
+TodoManager.prototype.clearArray = function() {
+	this.todos = this.todos.filter(function(elem){return elem !== undefined && elem !== null});
 	for (i in this.todos) {
 		this.todos[i].id = i;
 	}
