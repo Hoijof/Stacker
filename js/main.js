@@ -3,11 +3,13 @@ var todoManager = new TodoManager();
 
 document.addEventListener('DOMContentLoaded', function() {
 	"strict mode";
-	var input = document.querySelector("#formContainer input");
+
+	var input = document.querySelector("#formContainer input"),
+    mainContainer = $("#mainContainer");
 
 	input.addEventListener('keyup', function(event) {
 		event.stopPropagation();
-		var todo = ""
+		var todo = "";
 		if (event.keyCode === 13) {
 			todo = todoManager.addTodo(new Todo(input.value));
 			todo.render();
@@ -16,13 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		}		
 	});
 
-	$("#mainContainer").on("dblclick", "div", function() {
+  mainContainer.on("dblclick", "div", function() {
 		var elem = this.querySelector('.cardText');
 
 		console.log(elem.innerHTML);
 	});
 
-	$("#mainContainer").on("click", "div > div", function() {
+  mainContainer.on("click", "div > div", function() {
 		var option = $(this).html(),
 			todoId = parseInt(this.parentElement.id.split("_")[1]),
 			depth = 0;
@@ -47,11 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			break;
 		}
 		todoManager.saveTodos();
-	});
-
-	document.addEventListener("keyup", function(e) {
-		input.focus();
-		$(input).val($(input).val() + String.fromCharCode(e.keyCode));
 	});
 
 	todoManager.loadTodos();

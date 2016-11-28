@@ -52,13 +52,13 @@ TodoManager.prototype.removeTodo = function(id) {
 }
 
 TodoManager.prototype.redrawTodo = function(todoId, x, y) {
-	var todo = this.todos[todoId]
+	var todo = this.todos[todoId];
 	todo.x = x;
 	todo.y = y;
 
 	todo.derender();
 	todo.render();
-}
+};
 
 TodoManager.prototype.saveTodos = function() {
 	if(typeof(Storage) !== "undefined") {
@@ -66,7 +66,7 @@ TodoManager.prototype.saveTodos = function() {
 	} else {
 	    console.log("you don't have local storage :(");
 	}
-}
+};
 
 TodoManager.prototype.loadTodos = function() {
 	var i;
@@ -75,21 +75,25 @@ TodoManager.prototype.loadTodos = function() {
 	if (this.todos == null) this.todos = [];
 
 	this.clearArray();
-}
+};
 
 TodoManager.prototype.clearArray = function() {
+	var i;
+
 	this.todos = this.todos.filter(function(elem){return elem !== undefined && elem !== null});
 	for (i in this.todos) {
-		this.todos[i].id = i;
+		if (this.todos.hasOwnProperty(i)) {
+			this.todos[i].id = i;
+		}
 	}
-}
+};
 
 TodoManager.prototype.renderAllTodos = function() {
 	this.todos.forEach(function(todo) {
 		todo.__proto__ = Todo.prototype;
 		todo.render();
 	})
-}
+};
 
 function Todo(name) {
 	this.id = -1;
@@ -134,9 +138,9 @@ Todo.prototype.render = function() {
 			todoManager.saveTodos();
 		}
 	});
-}
+};
 
 Todo.prototype.derender = function() {
 	var node = document.getElementById("todo_" + this.id);
 	document.getElementById("mainContainer").removeChild(node);
-}
+};
