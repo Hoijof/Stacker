@@ -159,6 +159,10 @@ body {
   background-color: #eeeded;
 }
 
+.editContainer {
+    display: none;
+}
+
 .cardText {
   marginTop: 25px;
   marginLeft: 15px;

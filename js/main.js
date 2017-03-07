@@ -1,11 +1,14 @@
 var todoManager = new TodoManager();
 
 
+
 document.addEventListener('DOMContentLoaded', function () {
   "strict mode";
 
-  var input = document.querySelector("#formContainer input"),
-    mainContainer = $("#mainContainer");
+  var mainContainer = $("#mainContainer"),
+    input = document.querySelector("#formContainer input"),
+    editContainer = document.getElementById('editContainer'),
+    editInput = editContainer.getElementsByClassName('input')[0];
 
   input.addEventListener('keyup', function (event) {
     event.stopPropagation();
@@ -18,19 +21,38 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  editInput.addEventListener('keyup', function (event) {
+    event.stopPropagation();
+    var todo;
+    if (event.keyCode === 13) {
+      todo = todoManager.todos[editContainer.todoId];
+      todo.name = editInput.value;
+      todo.derender();
+      todo.render();
+      this.value = "";
+      todoManager.saveTodos();
+
+      editContainer.style.display = 'none';
+    }
+  });
+
   /*
   On double click edit the todo
    */
   mainContainer.on("dblclick", "div", function () {
-    var elem = this.querySelector('.cardText');
+    var elem = this.querySelector('.cardText'),
+      todoId = parseInt(this.id.split("_")[1]),
+      todo = todoManager.todos[todoId];
 
-
-    console.log(elem.innerHTML);
+    editInput.value = todo.name;
+    editContainer.todoId = todoId;
+    editContainer.style.display = 'block';
+    editInput.focus();
   });
 
   mainContainer.on("click", "div > div", function () {
     var option = $(this).html(),
-      todoId = parseInt(this.parentElement.id.split("_")[1]),
+      todoId = getParentTodoId(this),
       depth;
 
     switch (option) {

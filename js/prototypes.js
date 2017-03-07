@@ -13,6 +13,10 @@ function createDiv(text, className) {
   return div;
 }
 
+function getParentTodoId(context) {
+  return parseInt(context.parentElement.id.split("_")[1]);
+}
+
 function changeDepth(todoId, increment) {
   var depth = parseInt(this.parentElement.style.zIndex) + increment;
 
