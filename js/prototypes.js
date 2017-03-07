@@ -167,10 +167,10 @@ Todo.prototype.render = function () {
 
   document.getElementById("mainContainer").appendChild(node);
 
-  node.appendChild(createDiv('x', "control"));
-  node.appendChild(createDiv('+', "control"));
-  node.appendChild(createDiv('-', "control"));
-  node.appendChild(createDiv('C', "control"));
+  node.appendChild(createDiv('x', "control remove"));
+  node.appendChild(createDiv('+', "control up"));
+  node.appendChild(createDiv('-', "control down"));
+  node.appendChild(createDiv('C', "control copy"));
   node.appendChild(createDiv(this.depth, "depth"));
 
   node.appendChild(text);

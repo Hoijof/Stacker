@@ -1,7 +1,6 @@
 var todoManager = new TodoManager();
 
 
-
 document.addEventListener('DOMContentLoaded', function () {
   "strict mode";
 
@@ -37,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /*
-  On double click edit the todo
+   On double click edit the todo
    */
   mainContainer.on("dblclick", "div", function () {
     var elem = this.querySelector('.cardText'),
@@ -48,6 +47,24 @@ document.addEventListener('DOMContentLoaded', function () {
     editContainer.todoId = todoId;
     editContainer.style.display = 'block';
     editInput.focus();
+  });
+
+  /*
+   On click perform the todo
+   */
+  mainContainer.on("click", "div", function (event) {
+    var elem = this.querySelector('.cardText'),
+      todoId = parseInt(this.id.split("_")[1]),
+      todo = todoManager.todos[todoId];
+
+    if (event.ctrlKey) {
+    }
+    if (event.altKey) {
+      this.querySelector('.copy').click();
+    }
+    if (event.shiftKey) {
+
+    }
   });
 
   mainContainer.on("click", "div > div", function () {
