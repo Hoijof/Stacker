@@ -13,6 +13,35 @@ function createDiv(text, className) {
   return div;
 }
 
+function copySelectionText() {
+  var copysuccess; // var to check whether execCommand successfully executed
+  try {
+    copysuccess = document.execCommand("copy"); // run command to copy selected text to clipboard
+  } catch (e) {
+    copysuccess = false
+  }
+  return copysuccess
+}
+
+function selectText(element) {
+  var doc = document
+    , text = element
+    , range, selection
+    ;
+  if (doc.body.createTextRange) {
+    range = document.body.createTextRange();
+    range.moveToElementText(text);
+    range.select();
+  } else if (window.getSelection) {
+    selection = window.getSelection();
+    range = document.createRange();
+    range.selectNodeContents(text);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    return selection;
+  }
+}
+
 function getParentTodoId(context) {
   return parseInt(context.parentElement.id.split("_")[1]);
 }
@@ -114,7 +143,7 @@ TodoManager.prototype.renderAllTodos = function () {
 function Todo(name) {
   this.id = -1;
   this.name = name;
-  this.depth = 100;
+  this.depth = 5;
   this.x = 100;
   this.y = 100;
   this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -141,6 +170,7 @@ Todo.prototype.render = function () {
   node.appendChild(createDiv('x', "control"));
   node.appendChild(createDiv('+', "control"));
   node.appendChild(createDiv('-', "control"));
+  node.appendChild(createDiv('C', "control"));
   node.appendChild(createDiv(this.depth, "depth"));
 
   node.appendChild(text);

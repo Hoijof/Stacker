@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   mainContainer.on("click", "div > div", function () {
     var option = $(this).html(),
-      todoId = getParentTodoId(this),
-      depth;
+      selection,
+      todoId = getParentTodoId(this);
 
     switch (option) {
       case '+':
@@ -61,6 +61,11 @@ document.addEventListener('DOMContentLoaded', function () {
         break;
       case '-':
         changeDepth.apply(this, [todoId, -1]);
+        break;
+      case 'C':
+        selection = selectText(this.parentElement.getElementsByClassName('cardText')[0]);
+        copySelectionText();
+        selection.empty();
         break;
       case 'x':
         todoManager.removeTodo(todoId, -1);
