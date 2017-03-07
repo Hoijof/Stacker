@@ -47,14 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
     todoManager.saveTodos();
   });
 
-  function changeDepth(todoId, increment) {
-    var depth = parseInt(this.parentElement.style.zIndex) + increment;
-
-    this.parentElement.style.zIndex = depth;
-    todoManager.todos[todoId].depth = depth;
-    this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
-  }
-
   todoManager.loadTodos();
   todoManager.renderAllTodos();
   input.focus();
