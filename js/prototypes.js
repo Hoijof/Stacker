@@ -59,7 +59,7 @@ TodoManager.prototype.addTodo = function (todo) {
 TodoManager.prototype.removeTodo = function (id) {
   this.todos[id].derender();
   this.todos[id] = undefined;
-}
+};
 
 TodoManager.prototype.redrawTodo = function (todoId, x, y) {
   var todo = this.todos[todoId];
@@ -121,7 +121,7 @@ Todo.prototype.render = function () {
     text = document.createElement('div'),
     that = this;
 
-  text.innerHTML = this.name
+  text.innerHTML = this.name;
   text.className = "cardText";
 
   node.id = "todo_" + this.id;
@@ -134,16 +134,16 @@ Todo.prototype.render = function () {
 
   document.getElementById("mainContainer").appendChild(node);
 
-  node.appendChild(createDiv('x', "controll"));
-  node.appendChild(createDiv('-', "controll"));
-  node.appendChild(createDiv('+', "controll"));
+  node.appendChild(createDiv('x', "control"));
+  node.appendChild(createDiv('+', "control"));
+  node.appendChild(createDiv('-', "control"));
   node.appendChild(createDiv(this.depth, "depth"));
 
   node.appendChild(text);
 
   $("#todo_" + this.id).draggable({
     stop: function () {
-      var todo = $("#todo_" + that.id)
+      var todo = $("#todo_" + that.id);
       that.x = todo.css("left");
       that.y = todo.css("top");
 
