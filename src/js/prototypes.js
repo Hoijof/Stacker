@@ -42,15 +42,16 @@ function selectText(element) {
   }
 }
 
-function getParentTodoId(context) {
+function getParentCardId(context) {
+  if (context.parentElement === null) return;
   return parseInt(context.parentElement.id.split("_")[1]);
 }
 
-function changeDepth(todoId, increment) {
+function changeDepth(cardId, increment) {
   var depth = parseInt(this.parentElement.style.zIndex) + increment;
 
   this.parentElement.style.zIndex = depth;
-  todoManager.todos[todoId].depth = depth;
+  cardManager.cards[cardId].depth = depth;
   this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
 }
 
@@ -81,6 +82,6 @@ module.exports = {
   createDiv: createDiv,
   copySelectionText: copySelectionText,
   selectText: selectText,
-  getParentTodoId: getParentTodoId,
+  getParentCardId: getParentCardId,
   changeDepth: changeDepth
 }

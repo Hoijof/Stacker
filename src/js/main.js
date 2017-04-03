@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   input.addEventListener('keyup', function (event) {
     event.stopPropagation();
-    var todo;
+    var card;
     if (event.keyCode === 13) {
-      todo = cardManager.addCard(new Card(input.value));
-      todo.render();
+      card = cardManager.addCard(new Card(input.value));
+      card.render();
       this.value = "";
       cardManager.saveCards();
     }
@@ -26,12 +26,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   editInput.addEventListener('keyup', function (event) {
     event.stopPropagation();
-    var todo;
+    var card;
     if (event.keyCode === 13) {
-      todo = cardManager.todos[editContainer.todoId];
-      todo.name = editInput.value;
-      todo.derender();
-      todo.render();
+      card = cardManager.cards[editContainer.cardId];
+      card.name = editInput.value;
+      card.derender();
+      card.render();
       this.value = "";
       cardManager.saveCards();
 
@@ -40,26 +40,26 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /*
-   On double click edit the todo
+   On double click edit the card
    */
   mainContainer.on("dblclick", "div", function () {
     var elem = this.querySelector('.cardText'),
-      todoId = parseInt(this.id.split("_")[1]),
-      todo = cardManager.todos[todoId];
+      cardId = parseInt(this.id.split("_")[1]),
+      card = cardManager.cards[cardId];
 
-    editInput.value = todo.name;
-    editContainer.todoId = todoId;
+    editInput.value = card.name;
+    editContainer.cardId = cardId;
     editContainer.style.display = 'block';
     editInput.focus();
   });
 
   /*
-   On click perform the todo
+   On click perform the card
    */
   mainContainer.on("click", "div", function (event) {
     var elem = this.querySelector('.cardText'),
-      todoId = parseInt(this.id.split("_")[1]),
-      todo = cardManager.todos[todoId];
+      cardId = parseInt(this.id.split("_")[1]),
+      card = cardManager.cards[cardId];
 
     if (event.ctrlKey) {
     }
@@ -74,14 +74,14 @@ document.addEventListener('DOMContentLoaded', function () {
   mainContainer.on("click", "div > div", function () {
     var option = $(this).html(),
       selection,
-      todoId = getParentCardId(this);
+      cardId = getParentCardId(this);
 
     switch (option) {
       case '+':
-        changeDepth.apply(this, [todoId, 1]);
+        changeDepth.apply(this, [cardId, 1]);
         break;
       case '-':
-        changeDepth.apply(this, [todoId, -1]);
+        changeDepth.apply(this, [cardId, -1]);
         break;
       case 'C':
         selection = selectText(this.parentElement.getElementsByClassName('cardText')[0]);
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
         selection.empty();
         break;
       case 'x':
-        cardManager.removeCard(todoId, -1);
+        cardManager.removeCard(cardId, -1);
         break;
     }
     cardManager.saveCards();
