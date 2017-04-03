@@ -8,6 +8,15 @@ var buffer = require('vinyl-buffer');
 var gutil = require('gulp-util');
 var sourcemaps = require('gulp-sourcemaps');
 var assign = require('lodash.assign');
+'use strict';
+
+var gulp = require('gulp');
+var rename = require('gulp-rename');
+var uglify = require('gulp-uglify');
+
+var DEST = 'build/';
+
+
 
 // add custom browserify options here
 var customOpts = {
@@ -16,6 +25,16 @@ var customOpts = {
 };
 var opts = assign({}, watchify.args, customOpts);
 var b = watchify(browserify(opts));
+
+gulp.task('uglify', function() {
+  return gulp.src('./dist/js/**/*')
+  // This will output the non-minified version
+    // This will minify and rename to foo.min.js
+    .pipe(uglify())
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(gulp.dest(DEST));
+});
+
 
 // add transformations here
 // i.e. b.transform(coffeeify);
@@ -40,7 +59,7 @@ function bundle () {
 }
 
 function copyStuff () {
-  gulp.src('./src/**/*')
+  gulp.src('./src/{css,fonts,vendor}/**/*')
     .pipe(gulp.dest('./dist'));
 
   gulp.src('./src/index.html')
