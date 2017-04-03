@@ -36,11 +36,11 @@ Card.prototype.render = function () {
 
   $("#todo_" + this.id).draggable({
     stop: function () {
-      var todo = $("#todo_" + that.id);
-      that.x = todo.css("left");
-      that.y = todo.css("top");
+      var card = $("#todo_" + that.id);
+      that.x = card.css("left");
+      that.y = card.css("top");
 
-      todoManager.saveCards();
+      cardManager.saveCards();
     }
   });
 };
@@ -50,4 +50,4 @@ Card.prototype.derender = function () {
   document.getElementById("mainContainer").removeChild(node);
 };
 
-module.expofts = Card;
+module.exports = Card;

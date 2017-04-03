@@ -1,13 +1,14 @@
+var Card = require('./Card');
 
 function CardManager() {
   this.todos = [];
 }
 
-CardManager.prototype.addCard = function (todo) {
-  this.todos.push(todo);
-  todo.id = this.todos.length - 1;
+CardManager.prototype.addCard = function (card) {
+  this.todos.push(card);
+  card.id = this.todos.length - 1;
 
-  return todo;
+  return card;
 };
 
 CardManager.prototype.removeCard = function (id) {
@@ -16,12 +17,12 @@ CardManager.prototype.removeCard = function (id) {
 };
 
 CardManager.prototype.redrawCard = function (todoId, x, y) {
-  var todo = this.todos[todoId];
-  todo.x = x;
-  todo.y = y;
+  var card = this.todos[todoId];
+  card.x = x;
+  card.y = y;
 
-  todo.derender();
-  todo.render();
+  card.derender();
+  card.render();
 };
 
 CardManager.prototype.saveCards = function () {
@@ -36,7 +37,7 @@ CardManager.prototype.loadCards = function () {
   var i;
 
   this.todos = JSON.parse(localStorage.getItem("todos"));
-  if (this.todos == null) this.todos = [];
+  if (this.todos === null) this.todos = [];
 
   this.clearArray();
 };
@@ -55,9 +56,9 @@ CardManager.prototype.clearArray = function () {
 };
 
 CardManager.prototype.renderAllCards = function () {
-  this.todos.forEach(function (todo) {
-    todo.__proto__ = Card.prototype;
-    todo.render();
+  this.todos.forEach(function (card) {
+    card.__proto__ = Card.prototype;
+    card.render();
   })
 };
 

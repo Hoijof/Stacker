@@ -1,8 +1,10 @@
-var prototypes = require('./prototypes');
-var Card = require('./models/Card');
-var todoManager = new require('./models/CardManager')();
+var prototypes = require('./prototypes'),
+  Card = require('./models/Card'),
+  CardManager = require('./models/CardManager');
+window.cardManager = new CardManager();
 
-var testCard = require('./models/Card');
+Object.assign(window, require('./prototypes'));
+
 document.addEventListener('DOMContentLoaded', function () {
   "strict mode";
 
@@ -15,10 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
     event.stopPropagation();
     var todo;
     if (event.keyCode === 13) {
-      todo = todoManager.addCard(new Card(input.value));
+      todo = cardManager.addCard(new Card(input.value));
       todo.render();
       this.value = "";
-      todoManager.saveCards();
+      cardManager.saveCards();
     }
   });
 
@@ -26,12 +28,12 @@ document.addEventListener('DOMContentLoaded', function () {
     event.stopPropagation();
     var todo;
     if (event.keyCode === 13) {
-      todo = todoManager.todos[editContainer.todoId];
+      todo = cardManager.todos[editContainer.todoId];
       todo.name = editInput.value;
       todo.derender();
       todo.render();
       this.value = "";
-      todoManager.saveCards();
+      cardManager.saveCards();
 
       editContainer.style.display = 'none';
     }
@@ -43,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
   mainContainer.on("dblclick", "div", function () {
     var elem = this.querySelector('.cardText'),
       todoId = parseInt(this.id.split("_")[1]),
-      todo = todoManager.todos[todoId];
+      todo = cardManager.todos[todoId];
 
     editInput.value = todo.name;
     editContainer.todoId = todoId;
@@ -57,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
   mainContainer.on("click", "div", function (event) {
     var elem = this.querySelector('.cardText'),
       todoId = parseInt(this.id.split("_")[1]),
-      todo = todoManager.todos[todoId];
+      todo = cardManager.todos[todoId];
 
     if (event.ctrlKey) {
     }
@@ -87,13 +89,13 @@ document.addEventListener('DOMContentLoaded', function () {
         selection.empty();
         break;
       case 'x':
-        todoManager.removeCard(todoId, -1);
+        cardManager.removeCard(todoId, -1);
         break;
     }
-    todoManager.saveCards();
+    cardManager.saveCards();
   });
 
-  todoManager.loadCards();
-  todoManager.renderAllCards();
+  cardManager.loadCards();
+  cardManager.renderAllCards();
   input.focus();
 });

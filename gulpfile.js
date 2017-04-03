@@ -40,7 +40,7 @@ function bundle () {
 }
 
 function copyStuff () {
-  gulp.src('./src/{css,fonts,vendor}/**/*')
+  gulp.src('./src/**/*')
     .pipe(gulp.dest('./dist'));
 
   gulp.src('./src/index.html')
