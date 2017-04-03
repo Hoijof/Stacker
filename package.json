@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/Hoijof/Stacker/issues"
   },
-  "homepage": "https://github.com/Hoijof/Stacker#readme"
+  "homepage": "https://github.com/Hoijof/Stacker#readme",
+  "dependencies": {
+    "browserify": "^14.1.0",
+    "watchify": "^3.9.0"
+  }
 }
