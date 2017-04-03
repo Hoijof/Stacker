@@ -1,6 +1,8 @@
-var todoManager = new TodoManager();
+var prototypes = require('./prototypes');
+var Card = require('./models/Card');
+var todoManager = new require('./models/CardManager')();
 
-
+var testCard = require('./models/Card');
 document.addEventListener('DOMContentLoaded', function () {
   "strict mode";
 
@@ -13,10 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
     event.stopPropagation();
     var todo;
     if (event.keyCode === 13) {
-      todo = todoManager.addTodo(new Todo(input.value));
+      todo = todoManager.addCard(new Card(input.value));
       todo.render();
       this.value = "";
-      todoManager.saveTodos();
+      todoManager.saveCards();
     }
   });
 
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
       todo.derender();
       todo.render();
       this.value = "";
-      todoManager.saveTodos();
+      todoManager.saveCards();
 
       editContainer.style.display = 'none';
     }
@@ -70,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
   mainContainer.on("click", "div > div", function () {
     var option = $(this).html(),
       selection,
-      todoId = getParentTodoId(this);
+      todoId = getParentCardId(this);
 
     switch (option) {
       case '+':
@@ -85,13 +87,13 @@ document.addEventListener('DOMContentLoaded', function () {
         selection.empty();
         break;
       case 'x':
-        todoManager.removeTodo(todoId, -1);
+        todoManager.removeCard(todoId, -1);
         break;
     }
-    todoManager.saveTodos();
+    todoManager.saveCards();
   });
 
-  todoManager.loadTodos();
-  todoManager.renderAllTodos();
+  todoManager.loadCards();
+  todoManager.renderAllCards();
   input.focus();
 });

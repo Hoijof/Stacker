@@ -1,0 +1,29 @@
+{
+  "name": "stacker",
+  "version": "0.0.5",
+  "description": "A simple card stacker",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hoijof/Stacker.git"
+  },
+  "keywords": [
+    "stacker",
+    "cards"
+  ],
+  "author": "Humberto Gómez López",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hoijof/Stacker/issues"
+  },
+  "homepage": "https://github.com/Hoijof/Stacker#readme",
+  "dependencies": {
+    "browserify": "^14.1.0",
+    "gulp-sourcemaps": "^2.5.0",
+    "vinyl-buffer": "^1.0.0",
+    "watchify": "^3.9.0"
+  }
+}
