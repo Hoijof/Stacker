@@ -3,7 +3,6 @@
 *.iml
 out
 gen
-.gitignore
 .idea/
 dist/
 node_modules/

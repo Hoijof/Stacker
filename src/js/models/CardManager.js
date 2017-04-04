@@ -1,4 +1,6 @@
-var Card = require('./Card');
+var Card = require('./Card'),
+  pubsub = require('../lib/pubsub');
+
 
 function CardManager() {
   this.cards = [];
@@ -61,5 +63,14 @@ CardManager.prototype.renderAllCards = function () {
     card.render();
   })
 };
+
+CardManager.getInstance = function() {
+  if (CardManager.instance === undefined) {
+    CardManager.instance = new CardManager();
+    pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
+  }
+
+  return CardManager.instance;
+}
 
 module.exports = CardManager;

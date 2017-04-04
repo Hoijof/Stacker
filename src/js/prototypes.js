@@ -1,3 +1,5 @@
+var cardManager = require('./models/CardManager').getInstance();
+
 function createDiv(text, className) {
   var div = document.createElement('div');
   div.innerHTML = text;

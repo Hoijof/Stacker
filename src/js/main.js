@@ -1,9 +1,14 @@
+window.CONFIG = require('./config.js')
+
 var prototypes = require('./prototypes'),
   Card = require('./models/Card'),
   CardManager = require('./models/CardManager');
-window.cardManager = new CardManager();
+
+
+var cardManager = CardManager.getInstance();
 
 Object.assign(window, require('./prototypes'));
+
 
 document.addEventListener('DOMContentLoaded', function () {
   "strict mode";
@@ -44,8 +49,16 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   mainContainer.on("dblclick", "div", function () {
     var elem = this.querySelector('.cardText'),
-      cardId = parseInt(this.id.split("_")[1]),
-      card = cardManager.cards[cardId];
+      cardId,
+      card;
+
+    if (this.id === "") {
+      cardId = parseInt(this.parentElement.id.split("_")[1]);
+    } else {
+      cardId = parseInt(this.id.split("_")[1]);
+    }
+
+    card = cardManager.cards[cardId];
 
     editInput.value = card.name;
     editContainer.cardId = cardId;
