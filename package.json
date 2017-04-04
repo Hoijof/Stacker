@@ -24,6 +24,8 @@
     "browserify": "^14.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.5.0",
+    "gulp-uglify": "^2.1.2",
+    "lodash.assign": "^4.2.0",
     "vinyl-buffer": "^1.0.0",
     "watchify": "^3.9.0"
   }
