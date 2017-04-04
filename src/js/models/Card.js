@@ -1,3 +1,4 @@
+var pubsub = require('../lib/pubsub');
 
 function Card(name) {
   this.id = -1;
@@ -40,7 +41,8 @@ Card.prototype.render = function () {
       that.x = card.css("left");
       that.y = card.css("top");
 
-      cardManager.saveCards();
+      // cardManager.saveCards();
+      pubsub.pub(window.CONFIG.SAVE_CARDS);
     }
   });
 };
