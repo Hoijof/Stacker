@@ -262,7 +262,8 @@ CardManager.prototype.clearArray = function () {
 
 CardManager.prototype.renderAllCards = function () {
   this.cards.forEach(function (card) {
-    card.__proto__ = Card.prototype;
+    // card.__proto__ = Card.prototype;
+    Object.setPrototypeOf(card, Card.prototype);
     card.render();
   })
 };
