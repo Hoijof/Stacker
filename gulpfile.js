@@ -62,6 +62,6 @@ function copyStuff () {
   gulp.src('./src/{css,fonts,vendor}/**/*')
     .pipe(gulp.dest('./dist'));
 
-  gulp.src('./src/index.html')
+  gulp.src('./src/*')
     .pipe(gulp.dest('./dist'));
 }
