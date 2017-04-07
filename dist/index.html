@@ -1,60 +1,69 @@
 <!DOCTYPE>
 <html>
 <head>
-    <title>Stacker</title>
-    <link rel="stylesheet" type="text/css" href="css/main.css?version=1.0.7">
-    <link rel="shortcut icon" href="favicon_old.ico">
+  <title>Stacker</title>
+  <link rel="stylesheet" type="text/css" href="css/main.css?version=1.0.7">
+  <link rel="shortcut icon" href="favicon_old.ico">
 
-    <script src="bundle.js?version=0.0.5"></script>
+  <script src="bundle.js?version=0.0.60"></script>
 
-    <link rel="stylesheet" href="vendor/jquery-ui-1.12.1.custom/jquery-ui.min.css">
+  <link rel="stylesheet" href="vendor/jquery-ui-1.12.1.custom/jquery-ui.min.css">
 
-    <!--<script src="src/vendor/jquery-3.1.1.slim.min.js"></script>-->
-    <!--<script src="src/vendor/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>-->
-    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
-    <script src="vendor/jquery.ui.touch-punch.min.js"></script>
+  <!--<script src="src/vendor/jquery-3.1.1.slim.min.js"></script>-->
+  <!--<script src="src/vendor/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>-->
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
+  <script src="vendor/jquery.ui.touch-punch.min.js"></script>
 
-    <!-- ADDSENSEEEE -->
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({
-        google_ad_client: "ca-pub-2816896179554108",
-        enable_page_level_ads: true
-      });
-    </script>
-    <!-- Generic Skyscraper add -->
-    <ins class="adsbygoogle"
-         style="display:inline-block;width:300px;height:600px;position:fixed;right:0"
-         data-ad-client="ca-pub-2816896179554108"
-         data-ad-slot="4815575829"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+  <!-- ADDSENSEEEE -->
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: "ca-pub-2816896179554108",
+      enable_page_level_ads: true
+    });
+  </script>
+  <!-- Generic Skyscraper add -->
+  <ins class="adsbygoogle"
+       style="display:inline-block;width:300px;height:600px;position:fixed;right:0"
+       data-ad-client="ca-pub-2816896179554108"
+       data-ad-slot="4815575829"></ins>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+
 </head>
 <body>
 
 <div id="mainContainer"></div>
 <div id="formContainer" class="group">
-    <input type="text" required>
-    <span class="highlight"></span>
-    <span class="bar"></span>
-    <label>Enter something to do</label>
+  <input id="mainInput" type="text" required>
+  <span class="highlight"></span>
+  <span class="bar"></span>
+  <label>Enter something to do</label>
 </div>
 
 
 <div id="editContainer" class="group editContainer">
-    <input class="input" type="text" required>
-    <span class="highlight"></span>
-    <span class="bar"></span>
-    <label>Edit your text</label>
+  <input class="input" type="text" required>
+  <span class="highlight"></span>
+  <span class="bar"></span>
+  <label>Edit your text</label>
 </div>
 
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
   ga('create', 'UA-93260928-1', 'auto');
   ga('send', 'pageview');

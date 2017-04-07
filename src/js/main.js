@@ -1,8 +1,8 @@
 window.CONFIG = require('./config.js')
 
-var prototypes = require('./prototypes'),
-  Card = require('./models/Card'),
-  CardManager = require('./models/CardManager');
+var prototypes  = require('./prototypes'),
+    Card        = require('./models/Card'),
+    CardManager = require('./models/CardManager');
 
 
 var cardManager = CardManager.getInstance();
@@ -14,13 +14,15 @@ document.addEventListener('DOMContentLoaded', function () {
   "strict mode";
 
   var mainContainer = $("#mainContainer"),
-    input = document.querySelector("#formContainer input"),
-    editContainer = document.getElementById('editContainer'),
-    editInput = editContainer.getElementsByClassName('input')[0];
+      input         = document.querySelector("#formContainer input"),
+      editContainer = document.getElementById('editContainer'),
+      editInput     = editContainer.getElementsByClassName('input')[0];
 
   input.addEventListener('keyup', function (event) {
     event.stopPropagation();
-    var card;
+    var card,
+        TABKEY = 9;
+
     if (event.keyCode === 13) {
       card = cardManager.addCard(new Card(input.value));
       card.render();
@@ -28,6 +30,23 @@ document.addEventListener('DOMContentLoaded', function () {
       cardManager.saveCards();
     }
   });
+
+  window.addEventListener('keydown', keyHandler, false);
+
+  function keyHandler(e) {
+    var TABKEY = 9;
+    if(e.keyCode === TABKEY) {
+      if (event.shiftKey) {
+        console.log("MoveToPreviousCard");
+      } else {
+        console.log("MoveToNextCard");
+      }
+      if(e.preventDefault) {
+        e.preventDefault();
+      }
+      return false;
+    }
+  }
 
   editInput.addEventListener('keyup', function (event) {
     event.stopPropagation();
@@ -49,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   mainContainer.on("dblclick", "div", function () {
     var elem = this.querySelector('.cardText'),
-      cardId,
-      card;
+        cardId,
+        card;
 
     if (this.id === "") {
       cardId = parseInt(this.parentElement.id.split("_")[1]);
@@ -70,9 +89,9 @@ document.addEventListener('DOMContentLoaded', function () {
    On click perform the card
    */
   mainContainer.on("click", "div", function (event) {
-    var elem = this.querySelector('.cardText'),
-      cardId = parseInt(this.id.split("_")[1]),
-      card = cardManager.cards[cardId];
+    var elem   = this.querySelector('.cardText'),
+        cardId = parseInt(this.id.split("_")[1]),
+        card   = cardManager.cards[cardId];
 
     if (event.ctrlKey) {
     }
@@ -86,8 +105,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   mainContainer.on("click", "div > div", function () {
     var option = $(this).html(),
-      selection,
-      cardId = getParentCardId(this);
+        selection,
+        cardId = getParentCardId(this);
 
     switch (option) {
       case '+':
