@@ -1,11 +1,11 @@
 window.CONFIG = require('./config.js')
 
-var prototypes  = require('./prototypes'),
+let prototypes  = require('./prototypes'),
     Card        = require('./models/Card'),
     CardManager = require('./models/CardManager');
 
 
-var cardManager = CardManager.getInstance();
+let cardManager = CardManager.getInstance();
 
 Object.assign(window, require('./prototypes'));
 
@@ -13,18 +13,18 @@ Object.assign(window, require('./prototypes'));
 document.addEventListener('DOMContentLoaded', function () {
   "strict mode";
 
-  var mainContainer = $("#mainContainer"),
+  let mainContainer = $("#mainContainer"),
       input         = document.querySelector("#formContainer input"),
       editContainer = document.getElementById('editContainer'),
       editInput     = editContainer.getElementsByClassName('input')[0];
 
   input.addEventListener('keyup', function (event) {
     event.stopPropagation();
-    var card,
+    let card,
         TABKEY = 9;
 
     if (event.keyCode === 13) {
-      card = cardManager.addCard(new Card(input.value));
+      card = cardManager.addCard(Object.create(Card, {}).init(input.value));
       card.render();
       this.value = "";
       cardManager.saveCards();
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('keydown', keyHandler, false);
 
   function keyHandler(e) {
-    var TABKEY = 9;
+    let TABKEY = 9;
     if(e.keyCode === TABKEY) {
       if (event.shiftKey) {
         console.log("MoveToPreviousCard");
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   editInput.addEventListener('keyup', function (event) {
     event.stopPropagation();
-    var card;
+    let card;
     if (event.keyCode === 13) {
       card = cardManager.cards[editContainer.cardId];
       card.name = editInput.value;
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
    On double click edit the card
    */
   mainContainer.on("dblclick", "div", function () {
-    var elem = this.querySelector('.cardText'),
+    let elem = this.querySelector('.cardText'),
         cardId,
         card;
 
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
    On click perform the card
    */
   mainContainer.on("click", "div", function (event) {
-    var elem   = this.querySelector('.cardText'),
+    let elem   = this.querySelector('.cardText'),
         cardId = parseInt(this.id.split("_")[1]),
         card   = cardManager.cards[cardId];
 
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   mainContainer.on("click", "div > div", function () {
-    var option = $(this).html(),
+    let option = $(this).html(),
         selection,
         cardId = getParentCardId(this);
 

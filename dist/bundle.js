@@ -32,12 +32,12 @@ module.exports = {
 },{}],3:[function(require,module,exports){
 window.CONFIG = require('./config.js')
 
-var prototypes  = require('./prototypes'),
+let prototypes  = require('./prototypes'),
     Card        = require('./models/Card'),
     CardManager = require('./models/CardManager');
 
 
-var cardManager = CardManager.getInstance();
+let cardManager = CardManager.getInstance();
 
 Object.assign(window, require('./prototypes'));
 
@@ -45,18 +45,18 @@ Object.assign(window, require('./prototypes'));
 document.addEventListener('DOMContentLoaded', function () {
   "strict mode";
 
-  var mainContainer = $("#mainContainer"),
+  let mainContainer = $("#mainContainer"),
       input         = document.querySelector("#formContainer input"),
       editContainer = document.getElementById('editContainer'),
       editInput     = editContainer.getElementsByClassName('input')[0];
 
   input.addEventListener('keyup', function (event) {
     event.stopPropagation();
-    var card,
+    let card,
         TABKEY = 9;
 
     if (event.keyCode === 13) {
-      card = cardManager.addCard(new Card(input.value));
+      card = cardManager.addCard(Object.create(Card, {}).init(input.value));
       card.render();
       this.value = "";
       cardManager.saveCards();
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('keydown', keyHandler, false);
 
   function keyHandler(e) {
-    var TABKEY = 9;
+    let TABKEY = 9;
     if(e.keyCode === TABKEY) {
       if (event.shiftKey) {
         console.log("MoveToPreviousCard");
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   editInput.addEventListener('keyup', function (event) {
     event.stopPropagation();
-    var card;
+    let card;
     if (event.keyCode === 13) {
       card = cardManager.cards[editContainer.cardId];
       card.name = editInput.value;
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
    On double click edit the card
    */
   mainContainer.on("dblclick", "div", function () {
-    var elem = this.querySelector('.cardText'),
+    let elem = this.querySelector('.cardText'),
         cardId,
         card;
 
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
    On click perform the card
    */
   mainContainer.on("click", "div", function (event) {
-    var elem   = this.querySelector('.cardText'),
+    let elem   = this.querySelector('.cardText'),
         cardId = parseInt(this.id.split("_")[1]),
         card   = cardManager.cards[cardId];
 
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   mainContainer.on("click", "div > div", function () {
-    var option = $(this).html(),
+    let option = $(this).html(),
         selection,
         cardId = getParentCardId(this);
 
@@ -164,136 +164,146 @@ document.addEventListener('DOMContentLoaded', function () {
   input.focus();
 });
 },{"./config.js":1,"./models/Card":4,"./models/CardManager":5,"./prototypes":6}],4:[function(require,module,exports){
-var pubsub = require('../lib/pubsub');
+let pubsub = require('../lib/pubsub');
 
-function Card(name) {
-  this.id = -1;
-  this.name = name;
-  this.depth = 5;
-  this.x = 100;
-  this.y = 100;
-  this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
-}
+let Card = {
+      init: function (name) {
+        this.id = -1;
+        this.name = name;
+        this.depth = 5;
+        this.x = 100;
+        this.y = 100;
+        this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
 
-Card.prototype.render = function () {
-  var node = document.createElement('div'),
-      text = document.createElement('div'),
-      that = this;
+        return this;
+      },
+      render: function () {
+        let node = document.createElement('div'),
+            text = document.createElement('div'),
+            that = this;
 
-  text.innerHTML = this.name;
-  text.className = "cardText";
+        text.innerHTML = this.name;
+        text.className = "cardText";
 
-  node.id = "todo_" + this.id;
-  node.className = "card card-1";
-  node.style.position = "fixed";
-  node.style.left = this.x;
-  node.style.top = this.y;
-  node.style.cursor = "-webkit-grab";
-  node.style.zIndex = this.depth;
+        node.id = "todo_" + this.id;
+        node.className = "card card-1";
+        node.style.position = "fixed";
+        node.style.left = this.x;
+        node.style.top = this.y;
+        node.style.cursor = "-webkit-grab";
+        node.style.zIndex = this.depth;
 
-  document.getElementById("mainContainer").appendChild(node);
+        document.getElementById("mainContainer").appendChild(node);
 
-  node.appendChild(createDiv('x', "control remove"));
-  node.appendChild(createDiv('+', "control up"));
-  node.appendChild(createDiv('-', "control down"));
-  node.appendChild(createDiv('C', "control copy"));
-  node.appendChild(createDiv(this.depth, "depth"));
+        node.appendChild(createDiv('x', "control remove"));
+        node.appendChild(createDiv('+', "control up"));
+        node.appendChild(createDiv('-', "control down"));
+        node.appendChild(createDiv('C', "control copy"));
+        node.appendChild(createDiv(this.depth, "depth"));
 
-  node.appendChild(text);
+        node.appendChild(text);
 
-  $("#todo_" + this.id).draggable({
-    stop: function () {
-      var card = $("#todo_" + that.id);
-      that.x = card.css("left");
-      that.y = card.css("top");
+        $("#todo_" + this.id).draggable({
+          stop: function () {
+            let card = $("#todo_" + that.id);
+            that.x = card.css("left");
+            that.y = card.css("top");
 
-      // cardManager.saveCards();
-      pubsub.pub(window.CONFIG.SAVE_CARDS);
+            // cardManager.saveCards();
+            pubsub.pub(window.CONFIG.SAVE_CARDS);
+          }
+        });
+      },
+      derender: function () {
+        let node = document.getElementById("todo_" + this.id);
+        document.getElementById("mainContainer").removeChild(node);
+      }
     }
-  });
-};
-
-Card.prototype.derender = function () {
-  var node = document.getElementById("todo_" + this.id);
-  document.getElementById("mainContainer").removeChild(node);
-};
 
 module.exports = Card;
 },{"../lib/pubsub":2}],5:[function(require,module,exports){
-var Card = require('./Card'),
+const Card = require('./Card'),
   pubsub = require('../lib/pubsub');
 
+let CardManager = {
+  init: function () {
+    this.cards = [];
 
-function CardManager() {
-  this.cards = [];
-}
+    return this;
+  },
+  addCard: function (card) {
+    this.cards.push(card);
+    card.id = this.cards.length - 1;
 
-CardManager.prototype.addCard = function (card) {
-  this.cards.push(card);
-  card.id = this.cards.length - 1;
+    return card;
+  },
+  removeCard: function (id) {
+    this.cards[id].derender();
+    this.cards[id] = undefined;
 
-  return card;
-};
+    return this;
+  },
+  redrawCard: function (cardId, x, y) {
+    let card = this.cards[cardId];
+    card.x = x;
+    card.y = y;
 
-CardManager.prototype.removeCard = function (id) {
-  this.cards[id].derender();
-  this.cards[id] = undefined;
-};
-
-CardManager.prototype.redrawCard = function (cardId, x, y) {
-  var card = this.cards[cardId];
-  card.x = x;
-  card.y = y;
-
-  card.derender();
-  card.render();
-};
-
-CardManager.prototype.saveCards = function () {
-  if (typeof(Storage) !== "undefined") {
-    localStorage.setItem("cards", JSON.stringify(this.cards));
-  } else {
-    console.log("you don't have local storage :(");
-  }
-};
-
-CardManager.prototype.loadCards = function () {
-  var i;
-
-  this.cards = JSON.parse(localStorage.getItem("cards"));
-  if (this.cards === null) this.cards = [];
-
-  this.clearArray();
-};
-
-CardManager.prototype.clearArray = function () {
-  var i;
-
-  this.cards = this.cards.filter(function (elem) {
-    return elem !== undefined && elem !== null
-  });
-  for (i in this.cards) {
-    if (this.cards.hasOwnProperty(i)) {
-      this.cards[i].id = i;
-    }
-  }
-};
-
-CardManager.prototype.renderAllCards = function () {
-  this.cards.forEach(function (card) {
-    // card.__proto__ = Card.prototype;
-    Object.setPrototypeOf(card, Card.prototype);
+    card.derender();
     card.render();
-  })
-};
 
-CardManager.getInstance = function() {
-  if (CardManager.instance === undefined) {
-    CardManager.instance = new CardManager();
-    pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
+    return this;
+  },
+  saveCards: function () {
+    if (typeof(Storage) !== "undefined") {
+      localStorage.setItem("cards", JSON.stringify(this.cards));
+    } else {
+      console.log("you don't have local storage :(");
+    }
+
+    return this;
+  },
+  loadCards: function () {
+    let i;
+
+    this.cards = JSON.parse(localStorage.getItem("cards"));
+    if (this.cards === null) this.cards = [];
+
+    this.clearArray();
+
+    return this;
+  },
+  clearArray: function () {
+    let i;
+
+    this.cards = this.cards.filter(function (elem) {
+      return elem !== undefined && elem !== null
+    });
+    for (i in this.cards) {
+      if (this.cards.hasOwnProperty(i)) {
+        this.cards[i].id = i;
+      }
+    }
+
+    return this;
+  },
+  renderAllCards: function () {
+    this.cards.forEach(function (card) {
+      // card.__proto__ = Card.prototype;
+      Object.setPrototypeOf(card, Card);
+      card.render();
+    })
+
+    return this;
+  },
+  getInstance: function () {
+    if (CardManager.instance === undefined) {
+      CardManager.instance = Object.create(CardManager, {});
+      pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
+    }
+
+    return CardManager.instance;
+
   }
-
-  return CardManager.instance;
 }
 
 module.exports = CardManager;
