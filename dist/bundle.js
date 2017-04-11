@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
   window.addEventListener('keydown', keyHandler, false);
   input.addEventListener('keydown', mainInputKeyEvent);
   editInput.addEventListener('keydown', editInputKeyEvent);
+  editContainer.addEventListener('click', hideEditContainer);
+  editInput.addEventListener('click', stopPropagation);
   /*
    On double click edit the card
    */
@@ -75,6 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
   input.focus();
 });
 
+function hideEditContainer() {
+  editContainer.style.display = 'none';
+}
+
+function stopPropagation (e) {
+  e.stopPropagation();
+}
 
 function mainInputKeyEvent (event) {
   event.stopPropagation();
@@ -99,9 +108,11 @@ function editInputKeyEvent (event) {
     card.render();
     this.value = '';
     cardManager.saveCards();
-
-    editContainer.style.display = 'none';
+    hideEditContainer();
+  } else if (event.keyCode === 27) {
+    hideEditContainer()
   }
+
 }
 
 function keyHandler (e) {
@@ -116,6 +127,8 @@ function keyHandler (e) {
       e.preventDefault();
     }
     return false;
+  } else if (event.keyCode === 27) {
+    hideEditContainer()
   }
 }
 
