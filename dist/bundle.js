@@ -53,12 +53,12 @@ document.addEventListener('DOMContentLoaded', function () {
   mainContainer = $('#mainContainer');
   input = document.querySelector('#formContainer input');
   editContainer = document.getElementById('editContainer');
-  editInput = editContainer.getElementsByClassName('input')[0];
+  editInput = editContainer.getElementsByClassName('textarea')[0];
 
 
   window.addEventListener('keydown', keyHandler, false);
-  input.addEventListener('keyup', mainInputKeyEvent);
-  editInput.addEventListener('keyup', editInputKeyEvent);
+  input.addEventListener('keydown', mainInputKeyEvent);
+  editInput.addEventListener('keydown', editInputKeyEvent);
   /*
    On double click edit the card
    */
@@ -91,6 +91,7 @@ function mainInputKeyEvent (event) {
 function editInputKeyEvent (event) {
   event.stopPropagation();
   let card;
+  if (event.keyCode === 13 && event.shiftKey) return;
   if (event.keyCode === 13) {
     card = cardManager.cards[editContainer.cardId];
     card.name = editInput.value;
@@ -224,7 +225,7 @@ let Card = {
         // cardManager.saveCards();
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
-    });
+    }).html(this.name.replace(/\r?\n/g,'<br/>'));;
 
     return this;
   },
