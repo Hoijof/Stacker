@@ -1,7 +1,7 @@
-var cardManager = require('./models/CardManager').getInstance();
+let cardManager = require('./models/CardManager').getInstance();
 
 function createDiv(text, className) {
-  var div = document.createElement('div');
+  let div = document.createElement('div');
   div.innerHTML = text;
   div.style.float = "right";
   div.style.cursor = "pointer";
@@ -16,7 +16,7 @@ function createDiv(text, className) {
 }
 
 function copySelectionText() {
-  var copysuccess; // var to check whether execCommand successfully executed
+  let copysuccess; // let to check whether execCommand successfully executed
   try {
     copysuccess = document.execCommand("copy"); // run command to copy selected text to clipboard
   } catch (e) {
@@ -26,7 +26,7 @@ function copySelectionText() {
 }
 
 function selectText(element) {
-  var doc = document
+  let doc = document
     , text = element
     , range, selection
     ;
@@ -50,7 +50,7 @@ function getParentCardId(context) {
 }
 
 function changeDepth(cardId, increment) {
-  var depth = parseInt(this.parentElement.style.zIndex) + increment;
+  let depth = parseInt(this.parentElement.style.zIndex) + increment;
 
   this.parentElement.style.zIndex = depth;
   cardManager.cards[cardId].depth = depth;
@@ -72,7 +72,7 @@ Array.prototype.size = function () {
  * Returns the size of an object
  */
 Object.size = function (obj) {
-  var size = 0, key = "";
+  let size = 0, key = "";
 
   for (key in obj) {
     if (obj.hasOwnProperty(key)) size++;

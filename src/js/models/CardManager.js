@@ -30,10 +30,10 @@ let CardManager = {
     return this;
   },
   saveCards: function () {
-    if (typeof(Storage) !== "undefined") {
-      localStorage.setItem("cards", JSON.stringify(this.cards));
+    if (typeof(Storage) !== 'undefined') {
+      localStorage.setItem('cards', JSON.stringify(this.cards));
     } else {
-      console.log("you don't have local storage :(");
+      console.log('you don\'t have local storage :(');
     }
 
     return this;
@@ -41,7 +41,7 @@ let CardManager = {
   loadCards: function () {
     let i;
 
-    this.cards = JSON.parse(localStorage.getItem("cards"));
+    this.cards = JSON.parse(localStorage.getItem('cards'));
     if (this.cards === null) this.cards = [];
 
     this.clearArray();
@@ -52,7 +52,7 @@ let CardManager = {
     let i;
 
     this.cards = this.cards.filter(function (elem) {
-      return elem !== undefined && elem !== null
+      return elem !== undefined && elem !== null;
     });
     for (i in this.cards) {
       if (this.cards.hasOwnProperty(i)) {
@@ -67,7 +67,7 @@ let CardManager = {
       // card.__proto__ = Card.prototype;
       Object.setPrototypeOf(card, Card);
       card.render();
-    })
+    });
 
     return this;
   },
@@ -79,7 +79,7 @@ let CardManager = {
 
     return CardManager.instance;
 
-  }
-}
+  },
+};
 
 module.exports = CardManager;

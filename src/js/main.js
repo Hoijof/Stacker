@@ -1,13 +1,13 @@
-window.CONFIG = require('./config.js')
+window.CONFIG = require('./config.js');
 
-let prototypes  = require('./prototypes'),
-    Card        = require('./models/Card'),
-    CardManager = require('./models/CardManager');
+let prototypes = require('./prototypes'),
+  Card = require('./models/Card'),
+  CardManager = require('./models/CardManager');
 
 let mainContainer,
-    input,
-    editContainer,
-    editInput;
+  input,
+  editContainer,
+  editInput;
 
 
 let cardManager = CardManager.getInstance();
@@ -16,10 +16,10 @@ Object.assign(window, require('./prototypes'));
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  "strict mode";
+  'strict mode';
 
-  mainContainer = $("#mainContainer");
-  input = document.querySelector("#formContainer input");
+  mainContainer = $('#mainContainer');
+  input = document.querySelector('#formContainer input');
   editContainer = document.getElementById('editContainer');
   editInput = editContainer.getElementsByClassName('input')[0];
 
@@ -30,12 +30,12 @@ document.addEventListener('DOMContentLoaded', function () {
   /*
    On double click edit the card
    */
-  mainContainer.on("dblclick", "div", doubleClickHandler);
+  mainContainer.on('dblclick', 'div', doubleClickHandler);
   /*
    On click perform the card
    */
-  mainContainer.on("click", "div", cardClickEvents);
-  mainContainer.on("click", "div > div", cardMenuEvents);
+  mainContainer.on('click', 'div', cardClickEvents);
+  mainContainer.on('click', 'div > div', cardMenuEvents);
 
 
   cardManager.loadCards();
@@ -51,7 +51,7 @@ function mainInputKeyEvent (event) {
   if (event.keyCode === 13) {
     card = cardManager.addCard(Object.create(Card, {}).init(input.value));
     card.render();
-    this.value = "";
+    this.value = '';
     cardManager.saveCards();
   }
 }
@@ -64,7 +64,7 @@ function editInputKeyEvent (event) {
     card.name = editInput.value;
     card.derender();
     card.render();
-    this.value = "";
+    this.value = '';
     cardManager.saveCards();
 
     editContainer.style.display = 'none';
@@ -75,9 +75,9 @@ function keyHandler (e) {
   let TABKEY = 9;
   if (e.keyCode === TABKEY) {
     if (event.shiftKey) {
-      console.log("MoveToPreviousCard");
+      console.log('MoveToPreviousCard');
     } else {
-      console.log("MoveToNextCard");
+      console.log('MoveToNextCard');
     }
     if (e.preventDefault) {
       e.preventDefault();
@@ -88,13 +88,13 @@ function keyHandler (e) {
 
 function doubleClickHandler () {
   let elem = this.querySelector('.cardText'),
-      cardId,
-      card;
+    cardId,
+    card;
 
-  if (this.id === "") {
-    cardId = parseInt(this.parentElement.id.split("_")[1]);
+  if (this.id === '') {
+    cardId = parseInt(this.parentElement.id.split('_')[1]);
   } else {
-    cardId = parseInt(this.id.split("_")[1]);
+    cardId = parseInt(this.id.split('_')[1]);
   }
 
   card = cardManager.cards[cardId];
@@ -106,9 +106,9 @@ function doubleClickHandler () {
 }
 
 function cardClickEvents (event) {
-  let elem   = this.querySelector('.cardText'),
-      cardId = parseInt(this.id.split("_")[1]),
-      card   = cardManager.cards[cardId];
+  let elem = this.querySelector('.cardText'),
+    cardId = parseInt(this.id.split('_')[1]),
+    card = cardManager.cards[cardId];
 
   if (event.ctrlKey) {
   }
@@ -122,8 +122,8 @@ function cardClickEvents (event) {
 
 function cardMenuEvents () {
   let option = $(this).html(),
-      selection,
-      cardId = getParentCardId(this);
+    selection,
+    cardId = getParentCardId(this);
 
   switch (option) {
     case '+':

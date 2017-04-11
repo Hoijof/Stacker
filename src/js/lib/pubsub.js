@@ -23,4 +23,4 @@ function sub(name, callback, context) {
 module.exports = {
   pub: pub,
   sub: sub
-}
+};

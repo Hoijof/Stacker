@@ -28,18 +28,18 @@ function sub(name, callback, context) {
 module.exports = {
   pub: pub,
   sub: sub
-}
+};
 },{}],3:[function(require,module,exports){
-window.CONFIG = require('./config.js')
+window.CONFIG = require('./config.js');
 
-let prototypes  = require('./prototypes'),
-    Card        = require('./models/Card'),
-    CardManager = require('./models/CardManager');
+let prototypes = require('./prototypes'),
+  Card = require('./models/Card'),
+  CardManager = require('./models/CardManager');
 
 let mainContainer,
-    input,
-    editContainer,
-    editInput;
+  input,
+  editContainer,
+  editInput;
 
 
 let cardManager = CardManager.getInstance();
@@ -48,10 +48,10 @@ Object.assign(window, require('./prototypes'));
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  "strict mode";
+  'strict mode';
 
-  mainContainer = $("#mainContainer");
-  input = document.querySelector("#formContainer input");
+  mainContainer = $('#mainContainer');
+  input = document.querySelector('#formContainer input');
   editContainer = document.getElementById('editContainer');
   editInput = editContainer.getElementsByClassName('input')[0];
 
@@ -62,12 +62,12 @@ document.addEventListener('DOMContentLoaded', function () {
   /*
    On double click edit the card
    */
-  mainContainer.on("dblclick", "div", doubleClickHandler);
+  mainContainer.on('dblclick', 'div', doubleClickHandler);
   /*
    On click perform the card
    */
-  mainContainer.on("click", "div", cardClickEvents);
-  mainContainer.on("click", "div > div", cardMenuEvents);
+  mainContainer.on('click', 'div', cardClickEvents);
+  mainContainer.on('click', 'div > div', cardMenuEvents);
 
 
   cardManager.loadCards();
@@ -83,7 +83,7 @@ function mainInputKeyEvent (event) {
   if (event.keyCode === 13) {
     card = cardManager.addCard(Object.create(Card, {}).init(input.value));
     card.render();
-    this.value = "";
+    this.value = '';
     cardManager.saveCards();
   }
 }
@@ -96,7 +96,7 @@ function editInputKeyEvent (event) {
     card.name = editInput.value;
     card.derender();
     card.render();
-    this.value = "";
+    this.value = '';
     cardManager.saveCards();
 
     editContainer.style.display = 'none';
@@ -107,9 +107,9 @@ function keyHandler (e) {
   let TABKEY = 9;
   if (e.keyCode === TABKEY) {
     if (event.shiftKey) {
-      console.log("MoveToPreviousCard");
+      console.log('MoveToPreviousCard');
     } else {
-      console.log("MoveToNextCard");
+      console.log('MoveToNextCard');
     }
     if (e.preventDefault) {
       e.preventDefault();
@@ -120,13 +120,13 @@ function keyHandler (e) {
 
 function doubleClickHandler () {
   let elem = this.querySelector('.cardText'),
-      cardId,
-      card;
+    cardId,
+    card;
 
-  if (this.id === "") {
-    cardId = parseInt(this.parentElement.id.split("_")[1]);
+  if (this.id === '') {
+    cardId = parseInt(this.parentElement.id.split('_')[1]);
   } else {
-    cardId = parseInt(this.id.split("_")[1]);
+    cardId = parseInt(this.id.split('_')[1]);
   }
 
   card = cardManager.cards[cardId];
@@ -138,9 +138,9 @@ function doubleClickHandler () {
 }
 
 function cardClickEvents (event) {
-  let elem   = this.querySelector('.cardText'),
-      cardId = parseInt(this.id.split("_")[1]),
-      card   = cardManager.cards[cardId];
+  let elem = this.querySelector('.cardText'),
+    cardId = parseInt(this.id.split('_')[1]),
+    card = cardManager.cards[cardId];
 
   if (event.ctrlKey) {
   }
@@ -154,8 +154,8 @@ function cardClickEvents (event) {
 
 function cardMenuEvents () {
   let option = $(this).html(),
-      selection,
-      cardId = getParentCardId(this);
+    selection,
+    cardId = getParentCardId(this);
 
   switch (option) {
     case '+':
@@ -179,58 +179,62 @@ function cardMenuEvents () {
 let pubsub = require('../lib/pubsub');
 
 let Card = {
-      init: function (name) {
-        this.id = -1;
-        this.name = name;
-        this.depth = 5;
-        this.x = 100;
-        this.y = 100;
-        this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+  init: function (name) {
+    this.id = -1;
+    this.name = name;
+    this.depth = 5;
+    this.x = 100;
+    this.y = 100;
+    this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
 
-        return this;
+    return this;
+  },
+  render: function () {
+    let node = document.createElement('div'),
+      text = document.createElement('div'),
+      that = this;
+
+    text.innerHTML = this.name;
+    text.className = 'cardText';
+
+    node.id = 'todo_' + this.id;
+    node.className = 'card card-1';
+    node.style.position = 'fixed';
+    node.style.left = this.x;
+    node.style.top = this.y;
+    node.style.cursor = '-webkit-grab';
+    node.style.zIndex = this.depth;
+
+    document.getElementById('mainContainer').appendChild(node);
+
+    node.appendChild(createDiv('x', 'control remove'));
+    node.appendChild(createDiv('+', 'control up'));
+    node.appendChild(createDiv('-', 'control down'));
+    node.appendChild(createDiv('C', 'control copy'));
+    node.appendChild(createDiv(this.depth, 'depth'));
+
+    node.appendChild(text);
+
+    $('#todo_' + this.id).draggable({
+      stop: function () {
+        let card = $('#todo_' + that.id);
+        that.x = card.css('left');
+        that.y = card.css('top');
+
+        // cardManager.saveCards();
+        pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
-      render: function () {
-        let node = document.createElement('div'),
-            text = document.createElement('div'),
-            that = this;
+    });
 
-        text.innerHTML = this.name;
-        text.className = "cardText";
+    return this;
+  },
+  derender: function () {
+    let node = document.getElementById('todo_' + this.id);
+    document.getElementById('mainContainer').removeChild(node);
 
-        node.id = "todo_" + this.id;
-        node.className = "card card-1";
-        node.style.position = "fixed";
-        node.style.left = this.x;
-        node.style.top = this.y;
-        node.style.cursor = "-webkit-grab";
-        node.style.zIndex = this.depth;
-
-        document.getElementById("mainContainer").appendChild(node);
-
-        node.appendChild(createDiv('x', "control remove"));
-        node.appendChild(createDiv('+', "control up"));
-        node.appendChild(createDiv('-', "control down"));
-        node.appendChild(createDiv('C', "control copy"));
-        node.appendChild(createDiv(this.depth, "depth"));
-
-        node.appendChild(text);
-
-        $("#todo_" + this.id).draggable({
-          stop: function () {
-            let card = $("#todo_" + that.id);
-            that.x = card.css("left");
-            that.y = card.css("top");
-
-            // cardManager.saveCards();
-            pubsub.pub(window.CONFIG.SAVE_CARDS);
-          }
-        });
-      },
-      derender: function () {
-        let node = document.getElementById("todo_" + this.id);
-        document.getElementById("mainContainer").removeChild(node);
-      }
-    }
+    return this;
+  },
+};
 
 module.exports = Card;
 },{"../lib/pubsub":2}],5:[function(require,module,exports){
@@ -266,10 +270,10 @@ let CardManager = {
     return this;
   },
   saveCards: function () {
-    if (typeof(Storage) !== "undefined") {
-      localStorage.setItem("cards", JSON.stringify(this.cards));
+    if (typeof(Storage) !== 'undefined') {
+      localStorage.setItem('cards', JSON.stringify(this.cards));
     } else {
-      console.log("you don't have local storage :(");
+      console.log('you don\'t have local storage :(');
     }
 
     return this;
@@ -277,7 +281,7 @@ let CardManager = {
   loadCards: function () {
     let i;
 
-    this.cards = JSON.parse(localStorage.getItem("cards"));
+    this.cards = JSON.parse(localStorage.getItem('cards'));
     if (this.cards === null) this.cards = [];
 
     this.clearArray();
@@ -288,7 +292,7 @@ let CardManager = {
     let i;
 
     this.cards = this.cards.filter(function (elem) {
-      return elem !== undefined && elem !== null
+      return elem !== undefined && elem !== null;
     });
     for (i in this.cards) {
       if (this.cards.hasOwnProperty(i)) {
@@ -303,7 +307,7 @@ let CardManager = {
       // card.__proto__ = Card.prototype;
       Object.setPrototypeOf(card, Card);
       card.render();
-    })
+    });
 
     return this;
   },
@@ -315,15 +319,15 @@ let CardManager = {
 
     return CardManager.instance;
 
-  }
-}
+  },
+};
 
 module.exports = CardManager;
 },{"../lib/pubsub":2,"./Card":4}],6:[function(require,module,exports){
-var cardManager = require('./models/CardManager').getInstance();
+let cardManager = require('./models/CardManager').getInstance();
 
 function createDiv(text, className) {
-  var div = document.createElement('div');
+  let div = document.createElement('div');
   div.innerHTML = text;
   div.style.float = "right";
   div.style.cursor = "pointer";
@@ -338,7 +342,7 @@ function createDiv(text, className) {
 }
 
 function copySelectionText() {
-  var copysuccess; // var to check whether execCommand successfully executed
+  let copysuccess; // let to check whether execCommand successfully executed
   try {
     copysuccess = document.execCommand("copy"); // run command to copy selected text to clipboard
   } catch (e) {
@@ -348,7 +352,7 @@ function copySelectionText() {
 }
 
 function selectText(element) {
-  var doc = document
+  let doc = document
     , text = element
     , range, selection
     ;
@@ -372,7 +376,7 @@ function getParentCardId(context) {
 }
 
 function changeDepth(cardId, increment) {
-  var depth = parseInt(this.parentElement.style.zIndex) + increment;
+  let depth = parseInt(this.parentElement.style.zIndex) + increment;
 
   this.parentElement.style.zIndex = depth;
   cardManager.cards[cardId].depth = depth;
@@ -394,7 +398,7 @@ Array.prototype.size = function () {
  * Returns the size of an object
  */
 Object.size = function (obj) {
-  var size = 0, key = "";
+  let size = 0, key = "";
 
   for (key in obj) {
     if (obj.hasOwnProperty(key)) size++;
