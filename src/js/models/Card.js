@@ -46,7 +46,7 @@ let Card = {
         // cardManager.saveCards();
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
-    })
+    });
 
     return this;
   },
