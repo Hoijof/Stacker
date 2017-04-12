@@ -180,7 +180,7 @@ body {
     margin: 1rem;
     position: relative;
     width: 200px;
-    word-break: break-all
+    word-break: break-word;
 }
 
 .card-1 {
@@ -215,6 +215,8 @@ body {
 
 .cardText {
     margin-top: 25px;
+    margin-left: 10px;
+    margin-right: 10px;
     font-family: "Roboto", serif;
 }
 
