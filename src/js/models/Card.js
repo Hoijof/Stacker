@@ -16,7 +16,7 @@ let Card = {
       text = document.createElement('div'),
       that = this;
 
-    text.innerHTML = this.name;
+    text.innerHTML = this.name.replace(/\r?\n/g,'<br/>');
     text.className = 'cardText';
 
     node.id = 'todo_' + this.id;
@@ -46,7 +46,7 @@ let Card = {
         // cardManager.saveCards();
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
-    }).html(this.name.replace(/\r?\n/g,'<br/>'));;
+    })
 
     return this;
   },
