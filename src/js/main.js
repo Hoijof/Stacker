@@ -116,6 +116,9 @@ function doubleClickHandler () {
   editInput.value = card.name;
   editContainer.cardId = cardId;
   editContainer.style.display = 'block';
+  editInput.style.top = card.y;
+  editInput.style.left = card.x;
+  editInput.style["padding-top"] = '23px';
   editInput.focus();
 }
 

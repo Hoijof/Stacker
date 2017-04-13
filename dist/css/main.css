@@ -177,7 +177,6 @@ body {
     display: block;
     float: left;
     height: 200px;
-    margin: 1rem;
     position: relative;
     width: 200px;
     word-break: break-word;
@@ -224,7 +223,8 @@ body {
     width: 200px;
     height: 200px;
     padding: 0.6rem;
-    margin-top: 90px;
+    position: fixed;
     font-size: 16px;
     background: rgba(255, 255, 255, 1);
+    font-family: 'Roboto', serif;
 }
