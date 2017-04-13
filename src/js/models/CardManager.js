@@ -39,8 +39,6 @@ let CardManager = {
     return this;
   },
   loadCards: function () {
-    let i;
-
     this.cards = JSON.parse(localStorage.getItem('cards'));
     if (this.cards === null) this.cards = [];
 
@@ -64,7 +62,6 @@ let CardManager = {
   },
   renderAllCards: function () {
     this.cards.forEach(function (card) {
-      // card.__proto__ = Card.prototype;
       Object.setPrototypeOf(card, Card);
       card.render();
     });

@@ -26,6 +26,7 @@ let Card = {
     node.style.top = this.y;
     node.style.cursor = '-webkit-grab';
     node.style.zIndex = this.depth;
+    node.style.backgroundColor = this.color;
 
     document.getElementById('mainContainer').appendChild(node);
 
