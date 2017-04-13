@@ -174,7 +174,10 @@ let prototypes = require('./prototypes'),
 let mainContainer,
   input,
   editContainer,
-  editInput;
+  editInput,
+  importContainer,
+  importInput,
+  importButton;
 
 
 let cardManager = CardManager.getInstance();
@@ -189,6 +192,9 @@ document.addEventListener('DOMContentLoaded', function () {
   input = document.querySelector('#formContainer input');
   editContainer = document.getElementById('editContainer');
   editInput = editContainer.getElementsByClassName('textarea')[0];
+  importContainer = document.getElementById('importContainer');
+  importInput = importContainer.getElementsByClassName('input')[0];
+  importButton = importContainer.getElementsByClassName('button')[0];
 
 
   window.addEventListener('keydown', keyHandler, false);
@@ -205,6 +211,12 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   mainContainer.on('click', 'div', cardClickEvents);
   mainContainer.on('click', 'div > div', cardMenuEvents);
+  document.getElementById('export').addEventListener('click', exportCards);
+  document.getElementById('import').addEventListener('click', showImporter);
+  importButton.addEventListener('click', loadImportCardsCode);
+  importContainer.addEventListener('click', hideImportContainer);
+  importInput.addEventListener('keydown', importInputKeyEvent);
+  importInput.addEventListener('click', stopPropagation);
 
 
   cardManager.loadCards();
@@ -214,6 +226,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function hideEditContainer() {
   editContainer.style.display = 'none';
+}
+
+function hideImportContainer() {
+  importContainer.style.display = 'none';
 }
 
 function stopPropagation (e) {
@@ -248,6 +264,12 @@ function editInputKeyEvent (event) {
     hideEditContainer()
   }
 
+}
+
+function importInputKeyEvent (event) {
+  if (event.keyCode === 27) {
+    hideImportContainer()
+  }
 }
 
 function keyHandler (e) {
@@ -327,6 +349,21 @@ function cardMenuEvents () {
   }
   cardManager.saveCards();
 }
+
+function exportCards () {
+  cardManager.exportCards();
+}
+
+function loadImportCardsCode() {
+  let data = importInput.value;
+  cardManager.importCards(data);
+  importContainer.style.display = "none";
+}
+
+function showImporter() {
+  importContainer.style.display = "block";
+  importInput.focus();
+}
 },{"./config.js":5,"./models/Card":8,"./models/CardManager":9,"./prototypes":10}],8:[function(require,module,exports){
 let pubsub = require('../lib/pubsub'),
   randomMC = require('random-material-color');
@@ -382,21 +419,6 @@ let Card = {
     });
 
     return this;
-  },
-  getBackgroundColor2: function () {
-    let c = Math.floor(Math.random() * 16777215).toString(16),  // strip #
-     rgb = parseInt(c, 16),   // convert rrggbb to decimal
-     r = (rgb >> 16) & 0xff,  // extract red
-     g = (rgb >>  8) & 0xff, // extract green
-     b = (rgb >>  0) & 0xff,  // extract blue
-     // luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
-     luma =(r + g + b)/3;
-
-    if (luma < 128) {
-      console.log ("not enough luma! " + luma);
-      return this.getBackgroundColor();
-    }
-    return "#" + c;
   },
   getBackgroundColor: function () {
     return randomMC.getColor({ shades: ['200', '300']});
@@ -490,6 +512,14 @@ let CardManager = {
     return CardManager.instance;
 
   },
+  exportCards: function () {
+    console.log(btoa(JSON.stringify(this.cards)));
+  },
+  importCards: function (data) {
+    localStorage.setItem('cards', atob(data));
+    this.loadCards();
+    this.renderAllCards();
+  }
 };
 
 module.exports = CardManager;

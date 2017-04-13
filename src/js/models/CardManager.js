@@ -77,6 +77,14 @@ let CardManager = {
     return CardManager.instance;
 
   },
+  exportCards: function () {
+    console.log(btoa(JSON.stringify(this.cards)));
+  },
+  importCards: function (data) {
+    localStorage.setItem('cards', atob(data));
+    this.loadCards();
+    this.renderAllCards();
+  }
 };
 
 module.exports = CardManager;

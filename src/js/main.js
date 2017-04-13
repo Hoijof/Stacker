@@ -7,7 +7,10 @@ let prototypes = require('./prototypes'),
 let mainContainer,
   input,
   editContainer,
-  editInput;
+  editInput,
+  importContainer,
+  importInput,
+  importButton;
 
 
 let cardManager = CardManager.getInstance();
@@ -22,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
   input = document.querySelector('#formContainer input');
   editContainer = document.getElementById('editContainer');
   editInput = editContainer.getElementsByClassName('textarea')[0];
+  importContainer = document.getElementById('importContainer');
+  importInput = importContainer.getElementsByClassName('input')[0];
+  importButton = importContainer.getElementsByClassName('button')[0];
 
 
   window.addEventListener('keydown', keyHandler, false);
@@ -38,6 +44,12 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   mainContainer.on('click', 'div', cardClickEvents);
   mainContainer.on('click', 'div > div', cardMenuEvents);
+  document.getElementById('export').addEventListener('click', exportCards);
+  document.getElementById('import').addEventListener('click', showImporter);
+  importButton.addEventListener('click', loadImportCardsCode);
+  importContainer.addEventListener('click', hideImportContainer);
+  importInput.addEventListener('keydown', importInputKeyEvent);
+  importInput.addEventListener('click', stopPropagation);
 
 
   cardManager.loadCards();
@@ -47,6 +59,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function hideEditContainer() {
   editContainer.style.display = 'none';
+}
+
+function hideImportContainer() {
+  importContainer.style.display = 'none';
 }
 
 function stopPropagation (e) {
@@ -81,6 +97,12 @@ function editInputKeyEvent (event) {
     hideEditContainer()
   }
 
+}
+
+function importInputKeyEvent (event) {
+  if (event.keyCode === 27) {
+    hideImportContainer()
+  }
 }
 
 function keyHandler (e) {
@@ -159,4 +181,19 @@ function cardMenuEvents () {
       break;
   }
   cardManager.saveCards();
+}
+
+function exportCards () {
+  cardManager.exportCards();
+}
+
+function loadImportCardsCode() {
+  let data = importInput.value;
+  cardManager.importCards(data);
+  importContainer.style.display = "none";
+}
+
+function showImporter() {
+  importContainer.style.display = "block";
+  importInput.focus();
 }
