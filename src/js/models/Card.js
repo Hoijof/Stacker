@@ -1,4 +1,6 @@
-let pubsub = require('../lib/pubsub');
+let pubsub = require('../lib/pubsub'),
+  randomMC = require('random-material-color');
+
 
 let Card = {
   init: function (name) {
@@ -7,7 +9,7 @@ let Card = {
     this.depth = 5;
     this.x = 100;
     this.y = 100;
-    this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    this.color = this.getBackgroundColor();
 
     return this;
   },
@@ -50,6 +52,9 @@ let Card = {
     });
 
     return this;
+  },
+  getBackgroundColor: function () {
+    return randomMC.getColor({ shades: ['200', '300']});
   },
   derender: function () {
     let node = document.getElementById('todo_' + this.id);
