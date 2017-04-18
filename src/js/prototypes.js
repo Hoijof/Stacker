@@ -86,4 +86,4 @@ module.exports = {
   selectText: selectText,
   getParentCardId: getParentCardId,
   changeDepth: changeDepth
-}
+};

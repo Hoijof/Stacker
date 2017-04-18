@@ -78,7 +78,7 @@ let CardManager = {
 
   },
   exportCards: function () {
-    console.log(btoa(JSON.stringify(this.cards)));
+    return btoa(JSON.stringify(this.cards));
   },
   importCards: function (data) {
     localStorage.setItem('cards', atob(data));

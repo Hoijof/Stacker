@@ -247,3 +247,12 @@ body {
     background: rgba(255, 255, 255, 1);
     font-family: 'Roboto', serif;
 }
+
+.exportContainer > div {
+    width: 600px;
+    height: 300px;
+    margin: 100px auto auto;
+    word-wrap: break-word;
+    background: white;
+    overflow-y: scroll;
+}

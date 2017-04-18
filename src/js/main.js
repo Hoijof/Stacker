@@ -10,6 +10,8 @@ let mainContainer,
   editInput,
   importContainer,
   importInput,
+  exportContainer,
+  exportContent,
   importButton;
 
 
@@ -28,6 +30,9 @@ document.addEventListener('DOMContentLoaded', function () {
   importContainer = document.getElementById('importContainer');
   importInput = importContainer.getElementsByClassName('input')[0];
   importButton = importContainer.getElementsByClassName('button')[0];
+  exportContainer = document.getElementById('exportContainer');
+  exportContent = exportContainer.getElementsByTagName('div')[0];
+
 
 
   window.addEventListener('keydown', keyHandler, false);
@@ -50,12 +55,18 @@ document.addEventListener('DOMContentLoaded', function () {
   importContainer.addEventListener('click', hideImportContainer);
   importInput.addEventListener('keydown', importInputKeyEvent);
   importInput.addEventListener('click', stopPropagation);
+  exportContainer.addEventListener('click', hideExportContainer);
+  exportContent.addEventListener('click', stopPropagation);
 
 
   cardManager.loadCards();
   cardManager.renderAllCards();
   input.focus();
 });
+
+function hideExportContainer() {
+  exportContainer.style.display = 'none';
+}
 
 function hideEditContainer() {
   editContainer.style.display = 'none';
@@ -184,7 +195,11 @@ function cardMenuEvents () {
 }
 
 function exportCards () {
-  cardManager.exportCards();
+  exportContainer.style.display = "block";
+  exportContent.innerHTML = cardManager.exportCards();
+  selection = selectText(exportContent);
+  copySelectionText();
+  selection.empty();
 }
 
 function loadImportCardsCode() {
