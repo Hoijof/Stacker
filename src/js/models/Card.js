@@ -10,6 +10,7 @@ let Card = {
     this.x = 100;
     this.y = 100;
     this.color = this.getBackgroundColor();
+    this.selected = false;
 
     return this;
   },
@@ -29,6 +30,10 @@ let Card = {
     node.style.cursor = '-webkit-grab';
     node.style.zIndex = this.depth;
     node.style.backgroundColor = this.color;
+
+    if (this.selected === true) {
+      node.classList.push('selected');
+    }
 
     document.getElementById('mainContainer').appendChild(node);
 

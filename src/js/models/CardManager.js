@@ -4,6 +4,7 @@ const Card = require('./Card'),
 let CardManager = {
   init: function () {
     this.cards = [];
+    this.selectedCard = {id:-1};
 
     return this;
   },
@@ -62,6 +63,7 @@ let CardManager = {
   },
   renderAllCards: function () {
     this.cards.forEach(function (card) {
+      card.selected = this.selectedCard.id === card.id;
       Object.setPrototypeOf(card, Card);
       card.render();
     });
@@ -71,6 +73,7 @@ let CardManager = {
   getInstance: function () {
     if (CardManager.instance === undefined) {
       CardManager.instance = Object.create(CardManager, {});
+      CardManager.instance.init();
       pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
     }
 
@@ -84,6 +87,15 @@ let CardManager = {
     localStorage.setItem('cards', atob(data));
     this.loadCards();
     this.renderAllCards();
+  },
+  selectCard: function (cardId) {
+    this.selectedCard = this.cards[cardId];
+  },
+  nextCard: function () {
+    this.selectCard (this.selectedCard.id + 1);
+  },
+  previousCard: function() {
+    this.selectCard (this.selectedCard.id - 1);
   }
 };
 

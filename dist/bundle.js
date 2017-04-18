@@ -225,7 +225,6 @@ document.addEventListener('DOMContentLoaded', function () {
   exportContainer.addEventListener('click', hideExportContainer);
   exportContent.addEventListener('click', stopPropagation);
 
-
   cardManager.loadCards();
   cardManager.renderAllCards();
   input.focus();
@@ -327,6 +326,8 @@ function cardClickEvents (event) {
     cardId = parseInt(this.id.split('_')[1]),
     card = cardManager.cards[cardId];
 
+  cardManager.selectCard(card.id);
+
   if (event.ctrlKey) {
   }
   if (event.altKey) {
@@ -392,6 +393,7 @@ let Card = {
     this.x = 100;
     this.y = 100;
     this.color = this.getBackgroundColor();
+    this.selected = false;
 
     return this;
   },
@@ -411,6 +413,10 @@ let Card = {
     node.style.cursor = '-webkit-grab';
     node.style.zIndex = this.depth;
     node.style.backgroundColor = this.color;
+
+    if (this.selected === true) {
+      node.classList.push('selected');
+    }
 
     document.getElementById('mainContainer').appendChild(node);
 
@@ -454,6 +460,7 @@ const Card = require('./Card'),
 let CardManager = {
   init: function () {
     this.cards = [];
+    this.selectedCard = {id:-1};
 
     return this;
   },
@@ -512,6 +519,7 @@ let CardManager = {
   },
   renderAllCards: function () {
     this.cards.forEach(function (card) {
+      card.selected = this.selectedCard.id === card.id;
       Object.setPrototypeOf(card, Card);
       card.render();
     });
@@ -521,6 +529,7 @@ let CardManager = {
   getInstance: function () {
     if (CardManager.instance === undefined) {
       CardManager.instance = Object.create(CardManager, {});
+      CardManager.instance.init();
       pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
     }
 
@@ -534,6 +543,15 @@ let CardManager = {
     localStorage.setItem('cards', atob(data));
     this.loadCards();
     this.renderAllCards();
+  },
+  selectCard: function (cardId) {
+    this.selectedCard = this.cards[cardId];
+  },
+  nextCard: function () {
+    this.selectCard (this.selectedCard.id + 1);
+  },
+  previousCard: function() {
+    this.selectCard (this.selectedCard.id - 1);
   }
 };
 

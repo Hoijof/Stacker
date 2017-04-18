@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function () {
   exportContainer.addEventListener('click', hideExportContainer);
   exportContent.addEventListener('click', stopPropagation);
 
-
   cardManager.loadCards();
   cardManager.renderAllCards();
   input.focus();
@@ -159,6 +158,8 @@ function cardClickEvents (event) {
   let elem = this.querySelector('.cardText'),
     cardId = parseInt(this.id.split('_')[1]),
     card = cardManager.cards[cardId];
+
+  cardManager.selectCard(card.id);
 
   if (event.ctrlKey) {
   }
