@@ -62,11 +62,13 @@ let CardManager = {
     return this;
   },
   renderAllCards: function () {
-    this.cards.forEach(function (card) {
-      card.selected = this.selectedCard.id === card.id;
-      Object.setPrototypeOf(card, Card);
-      card.render();
-    });
+
+    this.cards.forEach( (card) => {
+        card.selected = this.selectedCard.id === card.id;
+        Object.setPrototypeOf(card, Card);
+        card.render();
+      }
+    );
 
     return this;
   },
@@ -89,13 +91,34 @@ let CardManager = {
     this.renderAllCards();
   },
   selectCard: function (cardId) {
+    if (this.selectedCard.name !== undefined) {
+      this.selectedCard.derender();
+      this.selectedCard.selected = false;
+      this.selectedCard.render();
+    }
     this.selectedCard = this.cards[cardId];
+
+    this.selectedCard.derender();
+    this.selectedCard.selected = true;
+    this.selectedCard.render();
   },
   nextCard: function () {
-    this.selectCard (this.selectedCard.id + 1);
+    let next = +this.selectedCard.id + 1;
+
+    if (next === this.cards.length) {
+      next = 0;
+    }
+
+    this.selectCard (next);
   },
   previousCard: function() {
-    this.selectCard (this.selectedCard.id - 1);
+    let previous = +this.selectedCard.id - 1;
+
+    if (previous < 0) {
+      previous = this.cards.length - 1;
+    }
+
+    this.selectCard (previous);
   }
 };
 

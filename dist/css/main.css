@@ -256,3 +256,8 @@ body {
     background: white;
     overflow-y: scroll;
 }
+
+.selected {
+    border: 2px solid black;
+    z-index: 1000;
+}

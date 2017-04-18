@@ -201,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
   exportContent = exportContainer.getElementsByTagName('div')[0];
 
 
-
   window.addEventListener('keydown', keyHandler, false);
   input.addEventListener('keydown', mainInputKeyEvent);
   editInput.addEventListener('keydown', editInputKeyEvent);
@@ -230,15 +229,15 @@ document.addEventListener('DOMContentLoaded', function () {
   input.focus();
 });
 
-function hideExportContainer() {
+function hideExportContainer () {
   exportContainer.style.display = 'none';
 }
 
-function hideEditContainer() {
+function hideEditContainer () {
   editContainer.style.display = 'none';
 }
 
-function hideImportContainer() {
+function hideImportContainer () {
   importContainer.style.display = 'none';
 }
 
@@ -271,34 +270,66 @@ function editInputKeyEvent (event) {
     cardManager.saveCards();
     hideEditContainer();
   } else if (event.keyCode === 27) {
-    hideEditContainer()
+    hideEditContainer();
   }
 
 }
 
 function importInputKeyEvent (event) {
   if (event.keyCode === 27) {
-    hideImportContainer()
+    hideImportContainer();
   }
 }
 
 function keyHandler (e) {
-  let TABKEY = 9;
-  if (e.keyCode === TABKEY) {
-    if (event.shiftKey) {
-      console.log('MoveToPreviousCard');
-    } else {
-      console.log('MoveToNextCard');
-    }
-    if (e.preventDefault) {
-      e.preventDefault();
-    }
-    return false;
-  } else if (event.keyCode === 27) {
-    hideEditContainer()
+  let TAB_KEY = 9,
+    ESCAPE_KEY = 27,
+    C_KEY = 67,
+    D_KEY = 68,
+    E_KEY = 69,
+    PLUS_KEY = 43,
+    MINUS_KEY = 45,
+    DOT_KEY = 46;
+
+  switch (e.keyCode) {
+    case C_KEY:
+      let elem = cardManager.selectedCard.node;
+      selection = selectText(elem.getElementsByClassName('cardText')[0]);
+      copySelectionText();
+      selection.empty();
+      break;
+    case D_KEY:
+      cardManager.removeCard(cardManager.selectedCard.id, -1);
+      break;
+    case E_KEY:
+      doubleClickHandler.apply(cardManager.selectedCard.node);
+      break;
+    case PLUS_KEY:
+      changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 1]);
+      break;
+    case MINUS_KEY:
+      changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
+      break;
+    case DOT_KEY:
+
+      break;
+
+    case TAB_KEY:
+      if (event.shiftKey) {
+        cardManager.previousCard();
+      } else {
+        cardManager.nextCard();
+      }
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      return false;
+      break;
+    case ESCAPE_KEY:
+      hideEditContainer();
+      break;
   }
 }
-
 function doubleClickHandler () {
   let elem = this.querySelector('.cardText'),
     cardId,
@@ -317,7 +348,7 @@ function doubleClickHandler () {
   editContainer.style.display = 'block';
   editInput.style.top = card.y;
   editInput.style.left = card.x;
-  editInput.style["padding-top"] = '23px';
+  editInput.style['padding-top'] = '23px';
   editInput.focus();
 }
 
@@ -363,21 +394,21 @@ function cardMenuEvents () {
 }
 
 function exportCards () {
-  exportContainer.style.display = "block";
+  exportContainer.style.display = 'block';
   exportContent.innerHTML = cardManager.exportCards();
   selection = selectText(exportContent);
   copySelectionText();
   selection.empty();
 }
 
-function loadImportCardsCode() {
+function loadImportCardsCode () {
   let data = importInput.value;
   cardManager.importCards(data);
-  importContainer.style.display = "none";
+  importContainer.style.display = 'none';
 }
 
-function showImporter() {
-  importContainer.style.display = "block";
+function showImporter () {
+  importContainer.style.display = 'block';
   importInput.focus();
 }
 },{"./config.js":5,"./models/Card":8,"./models/CardManager":9,"./prototypes":10}],8:[function(require,module,exports){
@@ -415,7 +446,7 @@ let Card = {
     node.style.backgroundColor = this.color;
 
     if (this.selected === true) {
-      node.classList.push('selected');
+      node.classList.add('selected');
     }
 
     document.getElementById('mainContainer').appendChild(node);
@@ -438,6 +469,8 @@ let Card = {
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
     });
+
+    this.node = node;
 
     return this;
   },
@@ -518,11 +551,13 @@ let CardManager = {
     return this;
   },
   renderAllCards: function () {
-    this.cards.forEach(function (card) {
-      card.selected = this.selectedCard.id === card.id;
-      Object.setPrototypeOf(card, Card);
-      card.render();
-    });
+
+    this.cards.forEach( (card) => {
+        card.selected = this.selectedCard.id === card.id;
+        Object.setPrototypeOf(card, Card);
+        card.render();
+      }
+    );
 
     return this;
   },
@@ -545,13 +580,34 @@ let CardManager = {
     this.renderAllCards();
   },
   selectCard: function (cardId) {
+    if (this.selectedCard.name !== undefined) {
+      this.selectedCard.derender();
+      this.selectedCard.selected = false;
+      this.selectedCard.render();
+    }
     this.selectedCard = this.cards[cardId];
+
+    this.selectedCard.derender();
+    this.selectedCard.selected = true;
+    this.selectedCard.render();
   },
   nextCard: function () {
-    this.selectCard (this.selectedCard.id + 1);
+    let next = +this.selectedCard.id + 1;
+
+    if (next === this.cards.length) {
+      next = 0;
+    }
+
+    this.selectCard (next);
   },
   previousCard: function() {
-    this.selectCard (this.selectedCard.id - 1);
+    let previous = +this.selectedCard.id - 1;
+
+    if (previous < 0) {
+      previous = this.cards.length - 1;
+    }
+
+    this.selectCard (previous);
   }
 };
 
@@ -616,6 +672,10 @@ function changeDepth(cardId, increment) {
   this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
 }
 
+function getCardHTMLById (mainContainer, id) {
+  return mainContainer.getElementById('todo_' + id);
+}
+
 // PROTOTYPES
 
 /*
@@ -644,7 +704,8 @@ module.exports = {
   copySelectionText: copySelectionText,
   selectText: selectText,
   getParentCardId: getParentCardId,
-  changeDepth: changeDepth
+  changeDepth: changeDepth,
+  getCardHTMLById: getCardHTMLById
 };
 },{"./models/CardManager":9}]},{},[7])
 

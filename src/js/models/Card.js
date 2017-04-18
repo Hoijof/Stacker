@@ -32,7 +32,7 @@ let Card = {
     node.style.backgroundColor = this.color;
 
     if (this.selected === true) {
-      node.classList.push('selected');
+      node.classList.add('selected');
     }
 
     document.getElementById('mainContainer').appendChild(node);
@@ -55,6 +55,8 @@ let Card = {
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
     });
+
+    this.node = node;
 
     return this;
   },

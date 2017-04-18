@@ -57,6 +57,10 @@ function changeDepth(cardId, increment) {
   this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
 }
 
+function getCardHTMLById (mainContainer, id) {
+  return mainContainer.getElementById('todo_' + id);
+}
+
 // PROTOTYPES
 
 /*
@@ -85,5 +89,6 @@ module.exports = {
   copySelectionText: copySelectionText,
   selectText: selectText,
   getParentCardId: getParentCardId,
-  changeDepth: changeDepth
+  changeDepth: changeDepth,
+  getCardHTMLById: getCardHTMLById
 };
