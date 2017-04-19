@@ -743,15 +743,15 @@ function getParentCardId(context) {
 function changeDepth(cardId, increment) {
   let depth = cardManager.cards[cardId].depth + increment;
 
-  this.parentElement.style.zIndex = depth;
+  this.style.zIndex = depth;
   cardManager.cards[cardId].depth = depth;
-  this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
+  this.getElementsByClassName("depth")[0].innerHTML = depth;
 }
 
 function setDepth(cardId, depth) {
-  this.parentElement.style.zIndex = depth;
+  this.style.zIndex = depth;
   cardManager.cards[cardId].depth = depth;
-  this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
+  this.getElementsByClassName("depth")[0].innerHTML = depth;
 }
 
 function getCardHTMLById (mainContainer, id) {
