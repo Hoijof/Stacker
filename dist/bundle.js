@@ -152,7 +152,7 @@ module.exports = {
     KEYS_ARRAY: [27, 9, 67, 68, 69, 187, 189, 190, 65, 73],
   },
   DEFAULT_CONTENT: 'W3siaWQiOiIwIiwibmFtZSI6IlVzZSB0YWIgYW5kIHNoaWZ0IHRhYiB0byBjaXJjbGUgYmV0d2VlbiBjYXJkcyA6RFxuXG5EcmFnZ2luZyBvciBjbGlja2luZyB0aGVtIHdpbGwgYWxzbyBtYXJrIHRoZW0gYXMgc2VsZWN0ZWQiLCJkZXB0aCI6NSwieCI6IjEyM3B4IiwieSI6IjU5cHgiLCJjb2xvciI6IiM0REQwRTEiLCJzZWxlY3RlZCI6dHJ1ZSwibm9kZSI6eyJqUXVlcnkxNzIwODI0MDE1NTE1MTY1MDg3OSI6NH19LHsiaWQiOiIxIiwibmFtZSI6Ik9uIGEgbWFya2VkIGNhcmQgdXNlOlxuJ2MnIHRvIGNvcHkgdGhlIGNvbnRlbnRcbidkJyB0byBkZWxldGUgaXRcbidlJyB0byBlZGl0IGl0XG4nKycgYW5kICctJyB0byBtb2RpZnkgdGhlIGRlcHRoIG9mIHRoZSBjYXJkIGFuZCAnLicgdG8gcmVzZXQgaXRcbidhJyB0byBhcmNoaXZlIG9yIGRlYXJjaGl2ZSBkZSBjYXJkXG4naScgdG8gZm9jdXMgb24gdGhlIGFkZCBuZXcgY2FyZCBpbnB1dCIsImRlcHRoIjo2LCJ4IjoiMzQycHgiLCJ5IjoiNTRweCIsImNvbG9yIjoiIzgwQ0JDNCIsInNlbGVjdGVkIjpmYWxzZSwibm9kZSI6eyJqUXVlcnkxNzIwODI0MDE1NTE1MTY1MDg3OSI6N319LHsiaWQiOiIyIiwibmFtZSI6IldoaWxlIGVkaXRpbmcgdXNlIHNoaWZ0ICsgZW50ZXIgdG8gXG5pbnNlcnRcbmFcbmxpbmVcbmJyZWFrXG46RCIsImRlcHRoIjo1LCJ4IjoiMTIxcHgiLCJ5IjoiMjczcHgiLCJjb2xvciI6IiM2NEI1RjYiLCJzZWxlY3RlZCI6ZmFsc2UsIm5vZGUiOnsialF1ZXJ5MTcyMDgyNDAxNTUxNTE2NTA4NzkiOjZ9fV0=',
-  VERSION: '0.3.3',
+  VERSION: '0.3.4',
 };
 },{}],6:[function(require,module,exports){
 const CONFIG = require('../config');
@@ -550,7 +550,7 @@ let Card = {
     return this;
   },
   toggleArchived: function() {
-    if (this.isArchived === false) {
+    if (this.isArchived === false || this.isArchived === undefined) {
       this.node.classList.remove('notCompleted');
       void this.node.offsetWidth;
       this.node.classList.add('completed');

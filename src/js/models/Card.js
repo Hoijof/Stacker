@@ -78,7 +78,7 @@ let Card = {
     return this;
   },
   toggleArchived: function() {
-    if (this.isArchived === false) {
+    if (this.isArchived === false || this.isArchived === undefined) {
       this.node.classList.remove('notCompleted');
       void this.node.offsetWidth;
       this.node.classList.add('completed');
