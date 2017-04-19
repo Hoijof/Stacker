@@ -106,6 +106,7 @@ let CardManager = {
     this.selectedCard.node.classList.add('selected');
 
     this.persistSelectedCard();
+    document.activeElement.blur();
   },
   nextCard: function () {
     let it = +this.selectedCard.id + 1;

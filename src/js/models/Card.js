@@ -52,7 +52,6 @@ let Card = {
         that.x = card.css('left');
         that.y = card.css('top');
 
-        document.activeElement.blur();
         pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
