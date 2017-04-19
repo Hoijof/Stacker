@@ -13,5 +13,5 @@ module.exports = {
     A_KEY : 97,
     KEYS_ARRAY :[27, 9, 67, 68, 69, 187, 189, 190, 97]
   },
-  VERSION: '0.0.8'
+  VERSION: '0.3.0'
 };

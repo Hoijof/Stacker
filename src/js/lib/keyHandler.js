@@ -188,8 +188,16 @@ function doubleClickHandler () {
 
 function cardClickEvents (event) {
   let elem = this.querySelector('.cardText'),
-    cardId = parseInt(this.id.split('_')[1]),
-    card = cardManager.cards[cardId];
+    cardId,
+    card;
+
+  if (this.id === "") {
+    cardId = parseInt(this.parentElement.id.split('_')[1]);
+  } else {
+    cardId = parseInt(this.id.split('_')[1]);
+  }
+
+  card = cardManager.cards[cardId];
 
   cardManager.selectCard(card.id);
 

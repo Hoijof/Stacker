@@ -149,7 +149,7 @@ module.exports = {
     A_KEY : 97,
     KEYS_ARRAY :[27, 9, 67, 68, 69, 187, 189, 190, 97]
   },
-  VERSION: '0.0.8'
+  VERSION: '0.3.0'
 };
 },{}],6:[function(require,module,exports){
 const CONFIG = require('../config');
@@ -342,8 +342,16 @@ function doubleClickHandler () {
 
 function cardClickEvents (event) {
   let elem = this.querySelector('.cardText'),
-    cardId = parseInt(this.id.split('_')[1]),
-    card = cardManager.cards[cardId];
+    cardId,
+    card;
+
+  if (this.id === "") {
+    cardId = parseInt(this.parentElement.id.split('_')[1]);
+  } else {
+    cardId = parseInt(this.id.split('_')[1]);
+  }
+
+  card = cardManager.cards[cardId];
 
   cardManager.selectCard(card.id);
 
