@@ -260,7 +260,7 @@ function keyHandlerUp (e) {
       changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
       break;
     case CONFIG.ASCII.A_KEY:
-      input.focus();
+      cardManager.selectedCard.toggleArchived();
       break;
     case CONFIG.ASCII.DOT_KEY:
       setDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 5]);
@@ -475,6 +475,7 @@ let Card = {
     this.y = 100;
     this.color = this.getBackgroundColor();
     this.selected = false;
+    this.isArchived = false;
 
     return this;
   },
@@ -499,6 +500,10 @@ let Card = {
       node.classList.add('selected');
     }
 
+    if (this.isArchived) {
+      node.classList.add('completed');
+    }
+
     document.getElementById('mainContainer').appendChild(node);
 
     node.appendChild(createDiv('x', 'control remove'));
@@ -506,6 +511,7 @@ let Card = {
     node.appendChild(createDiv('-', 'control down'));
     node.appendChild(createDiv('C', 'control copy'));
     node.appendChild(createDiv(this.depth, 'depth'));
+    node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchied'));
 
     node.appendChild(text);
 
@@ -534,6 +540,17 @@ let Card = {
 
     return this;
   },
+  toggleArchived: function() {
+    if (this.isArchived === false) {
+      this.node.classList.add('completed');
+    } else {
+      this.node.classList.remove('completed');
+    }
+
+    this.isArchived = !this.isArchived;
+
+    pubsub.pub(window.CONFIG.SAVE_CARDS);
+  }
 };
 
 module.exports = Card;

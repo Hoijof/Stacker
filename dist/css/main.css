@@ -318,6 +318,10 @@ body {
 }
 
 .selected {
-    border: 2px solid black;
+    border: 2px solid black !important;
     z-index: 1000 !important;
+}
+
+.completed {
+    border: 5px solid green;
 }

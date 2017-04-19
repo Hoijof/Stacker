@@ -105,7 +105,7 @@ function keyHandlerUp (e) {
       changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
       break;
     case CONFIG.ASCII.A_KEY:
-      input.focus();
+      cardManager.selectedCard.toggleArchived();
       break;
     case CONFIG.ASCII.DOT_KEY:
       setDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 5]);
