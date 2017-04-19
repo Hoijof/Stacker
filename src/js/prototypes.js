@@ -50,8 +50,14 @@ function getParentCardId(context) {
 }
 
 function changeDepth(cardId, increment) {
-  let depth = parseInt(this.parentElement.style.zIndex) + increment;
+  let depth = cardManager.cards[cardId].depth + increment;
 
+  this.parentElement.style.zIndex = depth;
+  cardManager.cards[cardId].depth = depth;
+  this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
+}
+
+function setDepth(cardId, depth) {
   this.parentElement.style.zIndex = depth;
   cardManager.cards[cardId].depth = depth;
   this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
@@ -90,5 +96,6 @@ module.exports = {
   selectText: selectText,
   getParentCardId: getParentCardId,
   changeDepth: changeDepth,
+  setDepth: setDepth,
   getCardHTMLById: getCardHTMLById
 };

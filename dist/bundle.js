@@ -135,41 +135,26 @@ if(typeof module !== "undefined") {
 }
 },{}],5:[function(require,module,exports){
 module.exports = {
-  SAVE_CARDS: 'SAVE_CARDS'
-}
-},{}],6:[function(require,module,exports){
-
-var subs = {};
-
-
-function pub(name, params) {
-  subs[name].forEach(function(elem) {
-    elem.callback.apply(elem.context, params);
-  });
-}
-
-function sub(name, callback, context) {
-  if (subs[name] === undefined) {
-    subs[name] = [];
+  SAVE_CARDS: 'SAVE_CARDS',
+  SELECT_CARD: 'SELECT_CARD',
+  ASCII: {
+    ESCAPE_KEY : 27,
+    TAB_KEY : 9,
+    C_KEY : 67,
+    D_KEY : 68,
+    E_KEY : 69,
+    PLUS_KEY : 187,
+    MINUS_KEY : 189,
+    DOT_KEY : 190,
+    A_KEY : 97,
+    KEYS_ARRAY :[27, 9, 67, 68, 69, 187, 189, 190, 97]
   }
-
-  subs[name].push({
-    callback: callback,
-    context: context
-  });
-}
-
-
-module.exports = {
-  pub: pub,
-  sub: sub
 };
-},{}],7:[function(require,module,exports){
-window.CONFIG = require('./config.js');
+},{}],6:[function(require,module,exports){
+const CONFIG = require('../config');
 
-let prototypes = require('./prototypes'),
-  Card = require('./models/Card'),
-  CardManager = require('./models/CardManager');
+let cardManager,
+    Card = require('../models/Card');
 
 let mainContainer,
   input,
@@ -182,14 +167,12 @@ let mainContainer,
   importButton;
 
 
-let cardManager = CardManager.getInstance();
+function init(options) {
+  cardManager = options.cardManager;
+  bindings();
+}
 
-Object.assign(window, require('./prototypes'));
-
-
-document.addEventListener('DOMContentLoaded', function () {
-  'strict mode';
-
+function bindings() {
   mainContainer = $('#mainContainer');
   input = document.querySelector('#formContainer input');
   editContainer = document.getElementById('editContainer');
@@ -201,7 +184,8 @@ document.addEventListener('DOMContentLoaded', function () {
   exportContent = exportContainer.getElementsByTagName('div')[0];
 
 
-  window.addEventListener('keydown', keyHandler, false);
+  window.addEventListener('keyup', keyHandlerUp, false);
+  window.addEventListener('keydown', keyHandlerDown, false);
   input.addEventListener('keydown', mainInputKeyEvent);
   editInput.addEventListener('keydown', editInputKeyEvent);
   editContainer.addEventListener('click', hideEditContainer);
@@ -223,11 +207,64 @@ document.addEventListener('DOMContentLoaded', function () {
   importInput.addEventListener('click', stopPropagation);
   exportContainer.addEventListener('click', hideExportContainer);
   exportContent.addEventListener('click', stopPropagation);
+}
 
-  cardManager.loadCards();
-  cardManager.renderAllCards();
-  input.focus();
-});
+function keyHandlerDown (e) {
+
+  if (e.keyCode === CONFIG.ASCII.TAB_KEY) {
+    document.activeElement.blur();
+    if (event.shiftKey) {
+      cardManager.previousCard();
+    } else {
+      cardManager.nextCard();
+    }
+    if (e.preventDefault) {
+      e.preventDefault();
+    }
+  }
+}
+
+function keyHandlerUp (e) {
+
+  if (document.activeElement !== document.body || CONFIG.ASCII.KEYS_ARRAY.indexOf(e.keyCode) === -1) {
+    return;
+  }
+
+  e.stopPropagation();
+  e.preventDefault();
+
+  switch (e.keyCode) {
+    case CONFIG.ASCII.C_KEY:
+      let elem = cardManager.selectedCard.node,
+        selection;
+
+      selection = selectText(elem.getElementsByClassName('cardText')[0]);
+      copySelectionText();
+      selection.empty();
+      break;
+    case CONFIG.ASCII.D_KEY:
+      let card = cardManager.selectedCard;
+      cardManager.nextCard();
+      cardManager.removeCard(card.id);
+      cardManager.saveCards();
+      break;
+    case CONFIG.ASCII.E_KEY:
+      doubleClickHandler.apply(cardManager.selectedCard.node);
+      break;
+    case CONFIG.ASCII.PLUS_KEY:
+      changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 1]);
+      break;
+    case CONFIG.ASCII.MINUS_KEY:
+      changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
+      break;
+    case CONFIG.ASCII.A_KEY:
+      input.focus();
+      break;
+    case CONFIG.ASCII.DOT_KEY:
+      setDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 5]);
+      break;
+  }
+}
 
 function hideExportContainer () {
   exportContainer.style.display = 'none';
@@ -246,7 +283,6 @@ function stopPropagation (e) {
 }
 
 function mainInputKeyEvent (event) {
-  event.stopPropagation();
   let card;
 
   if (event.keyCode === 13) {
@@ -281,55 +317,6 @@ function importInputKeyEvent (event) {
   }
 }
 
-function keyHandler (e) {
-  let TAB_KEY = 9,
-    ESCAPE_KEY = 27,
-    C_KEY = 67,
-    D_KEY = 68,
-    E_KEY = 69,
-    PLUS_KEY = 43,
-    MINUS_KEY = 45,
-    DOT_KEY = 46;
-
-  switch (e.keyCode) {
-    case C_KEY:
-      let elem = cardManager.selectedCard.node;
-      selection = selectText(elem.getElementsByClassName('cardText')[0]);
-      copySelectionText();
-      selection.empty();
-      break;
-    case D_KEY:
-      cardManager.removeCard(cardManager.selectedCard.id, -1);
-      break;
-    case E_KEY:
-      doubleClickHandler.apply(cardManager.selectedCard.node);
-      break;
-    case PLUS_KEY:
-      changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 1]);
-      break;
-    case MINUS_KEY:
-      changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
-      break;
-    case DOT_KEY:
-
-      break;
-
-    case TAB_KEY:
-      if (event.shiftKey) {
-        cardManager.previousCard();
-      } else {
-        cardManager.nextCard();
-      }
-      if (e.preventDefault) {
-        e.preventDefault();
-      }
-      return false;
-      break;
-    case ESCAPE_KEY:
-      hideEditContainer();
-      break;
-  }
-}
 function doubleClickHandler () {
   let elem = this.querySelector('.cardText'),
     cardId,
@@ -411,7 +398,58 @@ function showImporter () {
   importContainer.style.display = 'block';
   importInput.focus();
 }
-},{"./config.js":5,"./models/Card":8,"./models/CardManager":9,"./prototypes":10}],8:[function(require,module,exports){
+
+module.exports = {
+  init: init
+};
+},{"../config":5,"../models/Card":9}],7:[function(require,module,exports){
+
+var subs = {};
+
+
+function pub(name, params) {
+  subs[name].forEach(function(elem) {
+    elem.callback.apply(elem.context, params);
+  });
+}
+
+function sub(name, callback, context) {
+  if (subs[name] === undefined) {
+    subs[name] = [];
+  }
+
+  subs[name].push({
+    callback: callback,
+    context: context
+  });
+}
+
+
+module.exports = {
+  pub: pub,
+  sub: sub
+};
+},{}],8:[function(require,module,exports){
+window.CONFIG = require('./config.js');
+
+let keyHandler = require('./lib/keyHandler'),
+  cardManager = require('./models/CardManager').getInstance();
+
+Object.assign(window, require('./prototypes'));
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  'strict mode';
+
+  keyHandler.init({
+    cardManager: cardManager
+  });
+
+  cardManager.loadCards();
+  cardManager.renderAllCards();
+});
+
+},{"./config.js":5,"./lib/keyHandler":6,"./models/CardManager":10,"./prototypes":11}],9:[function(require,module,exports){
 let pubsub = require('../lib/pubsub'),
   randomMC = require('random-material-color');
 
@@ -462,10 +500,12 @@ let Card = {
     $('#todo_' + this.id).draggable({
       stop: function () {
         let card = $('#todo_' + that.id);
+
         that.x = card.css('left');
         that.y = card.css('top');
 
-        // cardManager.saveCards();
+        document.activeElement.blur();
+        pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
     });
@@ -486,7 +526,7 @@ let Card = {
 };
 
 module.exports = Card;
-},{"../lib/pubsub":6,"random-material-color":1}],9:[function(require,module,exports){
+},{"../lib/pubsub":7,"random-material-color":1}],10:[function(require,module,exports){
 const Card = require('./Card'),
   pubsub = require('../lib/pubsub');
 
@@ -526,6 +566,8 @@ let CardManager = {
       console.log('you don\'t have local storage :(');
     }
 
+    this.persistSelectedCard();
+
     return this;
   },
   loadCards: function () {
@@ -533,6 +575,10 @@ let CardManager = {
     if (this.cards === null) this.cards = [];
 
     this.clearArray();
+
+    this.loadSelectedCard();
+
+    document.activeElement.blur();
 
     return this;
   },
@@ -553,7 +599,7 @@ let CardManager = {
   renderAllCards: function () {
 
     this.cards.forEach( (card) => {
-        card.selected = this.selectedCard.id === card.id;
+        card.selected = this.selectedCard && (this.selectedCard.id === card.id);
         Object.setPrototypeOf(card, Card);
         card.render();
       }
@@ -566,6 +612,7 @@ let CardManager = {
       CardManager.instance = Object.create(CardManager, {});
       CardManager.instance.init();
       pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
+      pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
     }
 
     return CardManager.instance;
@@ -580,39 +627,59 @@ let CardManager = {
     this.renderAllCards();
   },
   selectCard: function (cardId) {
-    if (this.selectedCard.name !== undefined) {
-      this.selectedCard.derender();
-      this.selectedCard.selected = false;
-      this.selectedCard.render();
+    if (this.selectedCard !== undefined) {
+      this.selectedCard.node.classList.remove('selected');
     }
     this.selectedCard = this.cards[cardId];
 
-    this.selectedCard.derender();
-    this.selectedCard.selected = true;
-    this.selectedCard.render();
+    this.selectedCard.node.classList.add('selected');
+
+    this.persistSelectedCard();
   },
   nextCard: function () {
-    let next = +this.selectedCard.id + 1;
+    let it = +this.selectedCard.id + 1;
 
-    if (next === this.cards.length) {
-      next = 0;
+    while (it !== +this.selectedCard.id) {
+      if (this.cards[it] !== undefined) {
+        break;
+      }
+      if (++it >= this.cards.length) {
+        it = 0;
+      }
     }
 
-    this.selectCard (next);
+    this.selectCard (it);
   },
   previousCard: function() {
-    let previous = +this.selectedCard.id - 1;
+    let it = +this.selectedCard.id - 1;
 
-    if (previous < 0) {
-      previous = this.cards.length - 1;
+    while (it !== +this.selectedCard.id) {
+      if (this.cards[it] !== undefined) {
+        break;
+      }
+      if (--it <= 0) {
+        it = this.cards.length;
+      }
     }
 
-    this.selectCard (previous);
+    this.selectCard (it);
+  },
+  persistSelectedCard: function() {
+    if (this.selectedCard && this.selectedCard.id > -1) {
+      localStorage.setItem('selectedCard', this.selectedCard.id);
+    }
+  },
+  loadSelectedCard: function() {
+    let selectedCardId = +localStorage.getItem('selectedCard');
+
+    if (selectedCardId !== undefined && selectedCardId > -1) {
+      this.selectedCard = this.cards[selectedCardId];
+    }
   }
 };
 
 module.exports = CardManager;
-},{"../lib/pubsub":6,"./Card":8}],10:[function(require,module,exports){
+},{"../lib/pubsub":7,"./Card":9}],11:[function(require,module,exports){
 let cardManager = require('./models/CardManager').getInstance();
 
 function createDiv(text, className) {
@@ -665,8 +732,14 @@ function getParentCardId(context) {
 }
 
 function changeDepth(cardId, increment) {
-  let depth = parseInt(this.parentElement.style.zIndex) + increment;
+  let depth = cardManager.cards[cardId].depth + increment;
 
+  this.parentElement.style.zIndex = depth;
+  cardManager.cards[cardId].depth = depth;
+  this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
+}
+
+function setDepth(cardId, depth) {
   this.parentElement.style.zIndex = depth;
   cardManager.cards[cardId].depth = depth;
   this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
@@ -705,8 +778,9 @@ module.exports = {
   selectText: selectText,
   getParentCardId: getParentCardId,
   changeDepth: changeDepth,
+  setDepth: setDepth,
   getCardHTMLById: getCardHTMLById
 };
-},{"./models/CardManager":9}]},{},[7])
+},{"./models/CardManager":10}]},{},[8])
 
 //# sourceMappingURL=bundle.js.map

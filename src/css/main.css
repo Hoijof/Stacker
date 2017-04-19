@@ -259,5 +259,5 @@ body {
 
 .selected {
     border: 2px solid black;
-    z-index: 1000;
+    z-index: 1000 !important;
 }

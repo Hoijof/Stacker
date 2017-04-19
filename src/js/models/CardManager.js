@@ -37,6 +37,8 @@ let CardManager = {
       console.log('you don\'t have local storage :(');
     }
 
+    this.persistSelectedCard();
+
     return this;
   },
   loadCards: function () {
@@ -44,6 +46,10 @@ let CardManager = {
     if (this.cards === null) this.cards = [];
 
     this.clearArray();
+
+    this.loadSelectedCard();
+
+    document.activeElement.blur();
 
     return this;
   },
@@ -64,7 +70,7 @@ let CardManager = {
   renderAllCards: function () {
 
     this.cards.forEach( (card) => {
-        card.selected = this.selectedCard.id === card.id;
+        card.selected = this.selectedCard && (this.selectedCard.id === card.id);
         Object.setPrototypeOf(card, Card);
         card.render();
       }
@@ -77,6 +83,7 @@ let CardManager = {
       CardManager.instance = Object.create(CardManager, {});
       CardManager.instance.init();
       pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
+      pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
     }
 
     return CardManager.instance;
@@ -91,34 +98,54 @@ let CardManager = {
     this.renderAllCards();
   },
   selectCard: function (cardId) {
-    if (this.selectedCard.name !== undefined) {
-      this.selectedCard.derender();
-      this.selectedCard.selected = false;
-      this.selectedCard.render();
+    if (this.selectedCard !== undefined) {
+      this.selectedCard.node.classList.remove('selected');
     }
     this.selectedCard = this.cards[cardId];
 
-    this.selectedCard.derender();
-    this.selectedCard.selected = true;
-    this.selectedCard.render();
+    this.selectedCard.node.classList.add('selected');
+
+    this.persistSelectedCard();
   },
   nextCard: function () {
-    let next = +this.selectedCard.id + 1;
+    let it = +this.selectedCard.id + 1;
 
-    if (next === this.cards.length) {
-      next = 0;
+    while (it !== +this.selectedCard.id) {
+      if (this.cards[it] !== undefined) {
+        break;
+      }
+      if (++it >= this.cards.length) {
+        it = 0;
+      }
     }
 
-    this.selectCard (next);
+    this.selectCard (it);
   },
   previousCard: function() {
-    let previous = +this.selectedCard.id - 1;
+    let it = +this.selectedCard.id - 1;
 
-    if (previous < 0) {
-      previous = this.cards.length - 1;
+    while (it !== +this.selectedCard.id) {
+      if (this.cards[it] !== undefined) {
+        break;
+      }
+      if (--it <= 0) {
+        it = this.cards.length;
+      }
     }
 
-    this.selectCard (previous);
+    this.selectCard (it);
+  },
+  persistSelectedCard: function() {
+    if (this.selectedCard && this.selectedCard.id > -1) {
+      localStorage.setItem('selectedCard', this.selectedCard.id);
+    }
+  },
+  loadSelectedCard: function() {
+    let selectedCardId = +localStorage.getItem('selectedCard');
+
+    if (selectedCardId !== undefined && selectedCardId > -1) {
+      this.selectedCard = this.cards[selectedCardId];
+    }
   }
 };
 

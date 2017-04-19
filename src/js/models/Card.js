@@ -48,10 +48,12 @@ let Card = {
     $('#todo_' + this.id).draggable({
       stop: function () {
         let card = $('#todo_' + that.id);
+
         that.x = card.css('left');
         that.y = card.css('top');
 
-        // cardManager.saveCards();
+        document.activeElement.blur();
+        pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
     });
