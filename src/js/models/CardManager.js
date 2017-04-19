@@ -1,5 +1,6 @@
 const Card = require('./Card'),
-  pubsub = require('../lib/pubsub');
+  pubsub = require('../lib/pubsub'),
+  CONFIG = require('../config');
 
 let CardManager = {
   init: function () {
@@ -43,7 +44,9 @@ let CardManager = {
   },
   loadCards: function () {
     this.cards = JSON.parse(localStorage.getItem('cards'));
-    if (this.cards === null) this.cards = [];
+    if (this.cards === null) {
+      this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
+    }
 
     this.clearArray();
 

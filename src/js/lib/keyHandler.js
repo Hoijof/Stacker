@@ -199,6 +199,8 @@ function cardClickEvents (event) {
 
   card = cardManager.cards[cardId];
 
+  if (card === undefined) return;
+
   cardManager.selectCard(card.id);
 
   if (event.ctrlKey) {

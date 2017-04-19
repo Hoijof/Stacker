@@ -149,6 +149,7 @@ module.exports = {
     A_KEY : 97,
     KEYS_ARRAY :[27, 9, 67, 68, 69, 187, 189, 190, 97]
   },
+  DEFAULT_CONTENT: 'W3siaWQiOjAsIm5hbWUiOiJVc2UgdGFiIGFuZCBzaGlmdCB0YWIgdG8gY2lyY2xlIGJldHdlZW4gY2FyZHMgOkRcblxuRHJhZ2dpbmcgb3IgY2xpY2tpbmcgdGhlbSB3aWxsIGFsc28gbWFyayB0aGVtIGFzIHNlbGVjdGVkIiwiZGVwdGgiOjUsIngiOiIxMjNweCIsInkiOiI1OXB4IiwiY29sb3IiOiIjNEREMEUxIiwic2VsZWN0ZWQiOmZhbHNlLCJub2RlIjp7ImpRdWVyeTE3MjA4MDc0NDM4ODQ5MDk2MTUzIjo5fX0seyJpZCI6MSwibmFtZSI6Ik9uIGEgbWFya2VkIGNhcmQgdXNlOlxuJ2MnIHRvIGNvcHkgdGhlIGNvbnRlbnRcbidkJyB0byBkZWxldGUgaXRcbidlJyB0byBlZGl0IGl0XG4nKycgYW5kICctJyB0byBtb2RpZnkgdGhlIGRlcHRoIG9mIHRoZSBjYXJkIGFuZCAnLicgdG8gcmVzZXQgaXQiLCJkZXB0aCI6NiwieCI6IjM0MnB4IiwieSI6IjU0cHgiLCJjb2xvciI6IiM4MENCQzQiLCJzZWxlY3RlZCI6ZmFsc2UsIm5vZGUiOnsialF1ZXJ5MTcyMDgwNzQ0Mzg4NDkwOTYxNTMiOjEzfX0seyJpZCI6MiwibmFtZSI6IldoaWxlIGVkaXRpbmcgdXNlIHNoaWZ0ICsgZW50ZXIgdG8gXG5pbnNlcnRcbmFcbmxpbmVcbmJyZWFrXG46RCIsImRlcHRoIjo1LCJ4IjoiMTIxcHgiLCJ5IjoiMjczcHgiLCJjb2xvciI6IiM2NEI1RjYiLCJzZWxlY3RlZCI6ZmFsc2UsIm5vZGUiOnsialF1ZXJ5MTcyMDgwNzQ0Mzg4NDkwOTYxNTMiOjE1fX1d',
   VERSION: '0.3.0'
 };
 },{}],6:[function(require,module,exports){
@@ -353,6 +354,8 @@ function cardClickEvents (event) {
 
   card = cardManager.cards[cardId];
 
+  if (card === undefined) return;
+
   cardManager.selectCard(card.id);
 
   if (event.ctrlKey) {
@@ -536,7 +539,8 @@ let Card = {
 module.exports = Card;
 },{"../lib/pubsub":7,"random-material-color":1}],10:[function(require,module,exports){
 const Card = require('./Card'),
-  pubsub = require('../lib/pubsub');
+  pubsub = require('../lib/pubsub'),
+  CONFIG = require('../config');
 
 let CardManager = {
   init: function () {
@@ -580,7 +584,9 @@ let CardManager = {
   },
   loadCards: function () {
     this.cards = JSON.parse(localStorage.getItem('cards'));
-    if (this.cards === null) this.cards = [];
+    if (this.cards === null) {
+      this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
+    }
 
     this.clearArray();
 
@@ -688,7 +694,7 @@ let CardManager = {
 };
 
 module.exports = CardManager;
-},{"../lib/pubsub":7,"./Card":9}],11:[function(require,module,exports){
+},{"../config":5,"../lib/pubsub":7,"./Card":9}],11:[function(require,module,exports){
 let cardManager = require('./models/CardManager').getInstance();
 
 function createDiv(text, className) {
