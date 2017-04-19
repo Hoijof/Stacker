@@ -32,14 +32,6 @@ let Card = {
     node.style.zIndex = this.depth;
     node.style.backgroundColor = this.color;
 
-    if (this.selected === true) {
-      node.classList.add('selected');
-    }
-
-    if (this.isArchived) {
-      node.classList.add('completed');
-    }
-
     document.getElementById('mainContainer').appendChild(node);
 
     node.appendChild(createDiv('x', 'control remove'));
@@ -65,6 +57,16 @@ let Card = {
 
     this.node = node;
 
+
+    if (this.selected === true) {
+      node.classList.add('selected');
+    }
+
+    if (this.isArchived) {
+      node.classList.add('completed');
+      this.minimize();
+    }
+
     return this;
   },
   getBackgroundColor: function () {
@@ -79,13 +81,24 @@ let Card = {
   toggleArchived: function() {
     if (this.isArchived === false) {
       this.node.classList.add('completed');
+      this.minimize();
     } else {
       this.node.classList.remove('completed');
+      this.restoreSize();
     }
 
     this.isArchived = !this.isArchived;
 
     pubsub.pub(window.CONFIG.SAVE_CARDS);
+    pubsub.pub(window.CONFIG.RERENDER);
+  },
+  restoreSize: function() {
+    this.node.style.height = '200px';
+    this.node.style.width = '200px';
+  },
+  minimize: function() {
+    this.node.style.height = '50px';
+    this.node.style.width = '200px';
   }
 };
 

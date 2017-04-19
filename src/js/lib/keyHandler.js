@@ -233,6 +233,8 @@ function cardMenuEvents () {
     case 'x':
       cardManager.removeCard(cardId, -1);
       break;
+    case 'V': case 'O':
+      cardManager.cards[cardId].toggleArchived();
   }
   cardManager.saveCards();
 }

@@ -240,6 +240,7 @@ body {
     position: relative;
     width: 200px;
     word-break: break-word;
+    overflow: hidden;
 }
 
 .card-1 {
@@ -323,5 +324,5 @@ body {
 }
 
 .completed {
-    border: 5px solid green;
+
 }

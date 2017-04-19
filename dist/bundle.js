@@ -137,6 +137,7 @@ if(typeof module !== "undefined") {
 module.exports = {
   SAVE_CARDS: 'SAVE_CARDS',
   SELECT_CARD: 'SELECT_CARD',
+  RERENDER: 'RERENDER',
   ASCII: {
     ESCAPE_KEY : 27,
     TAB_KEY : 9,
@@ -388,6 +389,8 @@ function cardMenuEvents () {
     case 'x':
       cardManager.removeCard(cardId, -1);
       break;
+    case 'V': case 'O':
+      cardManager.cards[cardId].toggleArchived();
   }
   cardManager.saveCards();
 }
@@ -445,7 +448,8 @@ module.exports = {
 window.CONFIG = require('./config.js');
 
 let keyHandler = require('./lib/keyHandler'),
-  cardManager = require('./models/CardManager').getInstance();
+  cardManager = require('./models/CardManager').getInstance(),
+  pubsub = require('./lib/pubsub');
 
 Object.assign(window, require('./prototypes'));
 
@@ -461,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function () {
   cardManager.renderAllCards();
 });
 
-},{"./config.js":5,"./lib/keyHandler":6,"./models/CardManager":10,"./prototypes":11}],9:[function(require,module,exports){
+},{"./config.js":5,"./lib/keyHandler":6,"./lib/pubsub":7,"./models/CardManager":10,"./prototypes":11}],9:[function(require,module,exports){
 let pubsub = require('../lib/pubsub'),
   randomMC = require('random-material-color');
 
@@ -496,14 +500,6 @@ let Card = {
     node.style.zIndex = this.depth;
     node.style.backgroundColor = this.color;
 
-    if (this.selected === true) {
-      node.classList.add('selected');
-    }
-
-    if (this.isArchived) {
-      node.classList.add('completed');
-    }
-
     document.getElementById('mainContainer').appendChild(node);
 
     node.appendChild(createDiv('x', 'control remove'));
@@ -529,6 +525,16 @@ let Card = {
 
     this.node = node;
 
+
+    if (this.selected === true) {
+      node.classList.add('selected');
+    }
+
+    if (this.isArchived) {
+      node.classList.add('completed');
+      this.minimize();
+    }
+
     return this;
   },
   getBackgroundColor: function () {
@@ -543,13 +549,24 @@ let Card = {
   toggleArchived: function() {
     if (this.isArchived === false) {
       this.node.classList.add('completed');
+      this.minimize();
     } else {
       this.node.classList.remove('completed');
+      this.restoreSize();
     }
 
     this.isArchived = !this.isArchived;
 
     pubsub.pub(window.CONFIG.SAVE_CARDS);
+    pubsub.pub(window.CONFIG.RERENDER);
+  },
+  restoreSize: function() {
+    this.node.style.height = '200px';
+    this.node.style.width = '200px';
+  },
+  minimize: function() {
+    this.node.style.height = '50px';
+    this.node.style.width = '200px';
   }
 };
 
@@ -627,6 +644,12 @@ let CardManager = {
 
     return this;
   },
+  reRenderAllCards: function() {
+    this.cards.forEach((card) => {
+      card.derender();
+    });
+    this.renderAllCards();
+  },
   renderAllCards: function () {
 
     this.cards.forEach( (card) => {
@@ -644,6 +667,7 @@ let CardManager = {
       CardManager.instance.init();
       pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
       pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
+      pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
     }
 
     return CardManager.instance;

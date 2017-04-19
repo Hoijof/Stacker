@@ -70,6 +70,12 @@ let CardManager = {
 
     return this;
   },
+  reRenderAllCards: function() {
+    this.cards.forEach((card) => {
+      card.derender();
+    });
+    this.renderAllCards();
+  },
   renderAllCards: function () {
 
     this.cards.forEach( (card) => {
@@ -87,6 +93,7 @@ let CardManager = {
       CardManager.instance.init();
       pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
       pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
+      pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
     }
 
     return CardManager.instance;

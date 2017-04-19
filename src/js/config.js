@@ -1,6 +1,7 @@
 module.exports = {
   SAVE_CARDS: 'SAVE_CARDS',
   SELECT_CARD: 'SELECT_CARD',
+  RERENDER: 'RERENDER',
   ASCII: {
     ESCAPE_KEY : 27,
     TAB_KEY : 9,

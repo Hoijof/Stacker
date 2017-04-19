@@ -1,7 +1,8 @@
 window.CONFIG = require('./config.js');
 
 let keyHandler = require('./lib/keyHandler'),
-  cardManager = require('./models/CardManager').getInstance();
+  cardManager = require('./models/CardManager').getInstance(),
+  pubsub = require('./lib/pubsub');
 
 Object.assign(window, require('./prototypes'));
 
