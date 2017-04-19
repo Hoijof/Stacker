@@ -8,6 +8,7 @@ var buffer = require('vinyl-buffer');
 var gutil = require('gulp-util');
 var sourcemaps = require('gulp-sourcemaps');
 var assign = require('lodash.assign');
+var minify = require('gulp-minify');
 'use strict';
 
 var gulp = require('gulp');
@@ -33,6 +34,19 @@ gulp.task('uglify', function() {
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
     .pipe(gulp.dest(DEST));
+});
+
+gulp.task('compress', function() {
+  gulp.src('dist/bundle.js')
+  .pipe(minify({
+    ext:{
+      src:'-debug.js',
+      min:'.js'
+    },
+    exclude: ['tasks'],
+    ignoreFiles: ['.combo.js', '-min.js']
+  }))
+  .pipe(gulp.dest('dist'))
 });
 
 

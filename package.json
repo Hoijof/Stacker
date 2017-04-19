@@ -29,5 +29,8 @@
     "random-material-color": "^1.0.3",
     "vinyl-buffer": "^1.0.0",
     "watchify": "^3.9.0"
+  },
+  "devDependencies": {
+    "gulp-minify": "0.0.15"
   }
 }
