@@ -323,6 +323,19 @@ body {
     z-index: 1000 !important;
 }
 
-.completed {
+@keyframes unfold {
+    from {height: 200px;}
+    to {height: 50px;}
+}
 
+.completed {
+    animation-name: unfold;
+    animation-duration: 1s;
+    height: 50px !important;
+}
+
+.notCompleted {
+    animation-name: unfold;
+    animation-duration: 1s;
+    animation-direction: reverse;
 }

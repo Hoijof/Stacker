@@ -139,19 +139,20 @@ module.exports = {
   SELECT_CARD: 'SELECT_CARD',
   RERENDER: 'RERENDER',
   ASCII: {
-    ESCAPE_KEY : 27,
-    TAB_KEY : 9,
-    C_KEY : 67,
-    D_KEY : 68,
-    E_KEY : 69,
-    PLUS_KEY : 187,
-    MINUS_KEY : 189,
-    DOT_KEY : 190,
-    A_KEY : 65,
-    KEYS_ARRAY :[27, 9, 67, 68, 69, 187, 189, 190, 65]
+    ESCAPE_KEY: 27,
+    TAB_KEY: 9,
+    C_KEY: 67,
+    D_KEY: 68,
+    E_KEY: 69,
+    PLUS_KEY: 187,
+    MINUS_KEY: 189,
+    DOT_KEY: 190,
+    A_KEY: 65,
+    I_KEY: 73,
+    KEYS_ARRAY: [27, 9, 67, 68, 69, 187, 189, 190, 65, 73],
   },
-  DEFAULT_CONTENT: 'W3siaWQiOjAsIm5hbWUiOiJVc2UgdGFiIGFuZCBzaGlmdCB0YWIgdG8gY2lyY2xlIGJldHdlZW4gY2FyZHMgOkRcblxuRHJhZ2dpbmcgb3IgY2xpY2tpbmcgdGhlbSB3aWxsIGFsc28gbWFyayB0aGVtIGFzIHNlbGVjdGVkIiwiZGVwdGgiOjUsIngiOiIxMjNweCIsInkiOiI1OXB4IiwiY29sb3IiOiIjNEREMEUxIiwic2VsZWN0ZWQiOmZhbHNlLCJub2RlIjp7ImpRdWVyeTE3MjA4MDc0NDM4ODQ5MDk2MTUzIjo5fX0seyJpZCI6MSwibmFtZSI6Ik9uIGEgbWFya2VkIGNhcmQgdXNlOlxuJ2MnIHRvIGNvcHkgdGhlIGNvbnRlbnRcbidkJyB0byBkZWxldGUgaXRcbidlJyB0byBlZGl0IGl0XG4nKycgYW5kICctJyB0byBtb2RpZnkgdGhlIGRlcHRoIG9mIHRoZSBjYXJkIGFuZCAnLicgdG8gcmVzZXQgaXQiLCJkZXB0aCI6NiwieCI6IjM0MnB4IiwieSI6IjU0cHgiLCJjb2xvciI6IiM4MENCQzQiLCJzZWxlY3RlZCI6ZmFsc2UsIm5vZGUiOnsialF1ZXJ5MTcyMDgwNzQ0Mzg4NDkwOTYxNTMiOjEzfX0seyJpZCI6MiwibmFtZSI6IldoaWxlIGVkaXRpbmcgdXNlIHNoaWZ0ICsgZW50ZXIgdG8gXG5pbnNlcnRcbmFcbmxpbmVcbmJyZWFrXG46RCIsImRlcHRoIjo1LCJ4IjoiMTIxcHgiLCJ5IjoiMjczcHgiLCJjb2xvciI6IiM2NEI1RjYiLCJzZWxlY3RlZCI6ZmFsc2UsIm5vZGUiOnsialF1ZXJ5MTcyMDgwNzQ0Mzg4NDkwOTYxNTMiOjE1fX1d',
-  VERSION: '0.3.3'
+  DEFAULT_CONTENT: 'W3siaWQiOiIwIiwibmFtZSI6IlVzZSB0YWIgYW5kIHNoaWZ0IHRhYiB0byBjaXJjbGUgYmV0d2VlbiBjYXJkcyA6RFxuXG5EcmFnZ2luZyBvciBjbGlja2luZyB0aGVtIHdpbGwgYWxzbyBtYXJrIHRoZW0gYXMgc2VsZWN0ZWQiLCJkZXB0aCI6NSwieCI6IjEyM3B4IiwieSI6IjU5cHgiLCJjb2xvciI6IiM0REQwRTEiLCJzZWxlY3RlZCI6dHJ1ZSwibm9kZSI6eyJqUXVlcnkxNzIwODI0MDE1NTE1MTY1MDg3OSI6NH19LHsiaWQiOiIxIiwibmFtZSI6Ik9uIGEgbWFya2VkIGNhcmQgdXNlOlxuJ2MnIHRvIGNvcHkgdGhlIGNvbnRlbnRcbidkJyB0byBkZWxldGUgaXRcbidlJyB0byBlZGl0IGl0XG4nKycgYW5kICctJyB0byBtb2RpZnkgdGhlIGRlcHRoIG9mIHRoZSBjYXJkIGFuZCAnLicgdG8gcmVzZXQgaXRcbidhJyB0byBhcmNoaXZlIG9yIGRlYXJjaGl2ZSBkZSBjYXJkXG4naScgdG8gZm9jdXMgb24gdGhlIGFkZCBuZXcgY2FyZCBpbnB1dCIsImRlcHRoIjo2LCJ4IjoiMzQycHgiLCJ5IjoiNTRweCIsImNvbG9yIjoiIzgwQ0JDNCIsInNlbGVjdGVkIjpmYWxzZSwibm9kZSI6eyJqUXVlcnkxNzIwODI0MDE1NTE1MTY1MDg3OSI6N319LHsiaWQiOiIyIiwibmFtZSI6IldoaWxlIGVkaXRpbmcgdXNlIHNoaWZ0ICsgZW50ZXIgdG8gXG5pbnNlcnRcbmFcbmxpbmVcbmJyZWFrXG46RCIsImRlcHRoIjo1LCJ4IjoiMTIxcHgiLCJ5IjoiMjczcHgiLCJjb2xvciI6IiM2NEI1RjYiLCJzZWxlY3RlZCI6ZmFsc2UsIm5vZGUiOnsialF1ZXJ5MTcyMDgyNDAxNTUxNTE2NTA4NzkiOjZ9fV0=',
+  VERSION: '0.3.3',
 };
 },{}],6:[function(require,module,exports){
 const CONFIG = require('../config');
@@ -232,7 +233,6 @@ function keyHandlerUp (e) {
   if (document.activeElement !== document.body || CONFIG.ASCII.KEYS_ARRAY.indexOf(e.keyCode) === -1) {
     return;
   }
-
   e.stopPropagation();
   e.preventDefault();
 
@@ -254,14 +254,17 @@ function keyHandlerUp (e) {
     case CONFIG.ASCII.E_KEY:
       doubleClickHandler.apply(cardManager.selectedCard.node);
       break;
+    case CONFIG.ASCII.A_KEY:
+      cardManager.selectedCard.toggleArchived();
+      break;
+    case CONFIG.ASCII.I_KEY:
+      input.focus();
+      break;
     case CONFIG.ASCII.PLUS_KEY:
       changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 1]);
       break;
     case CONFIG.ASCII.MINUS_KEY:
       changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
-      break;
-    case CONFIG.ASCII.A_KEY:
-      cardManager.selectedCard.toggleArchived();
       break;
     case CONFIG.ASCII.DOT_KEY:
       setDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 5]);
@@ -293,6 +296,7 @@ function mainInputKeyEvent (event) {
     card.render();
     this.value = '';
     cardManager.saveCards();
+    cardManager.selectCard(card.id);
   }
 }
 
@@ -532,7 +536,6 @@ let Card = {
 
     if (this.isArchived) {
       node.classList.add('completed');
-      this.minimize();
     }
 
     return this;
@@ -548,25 +551,18 @@ let Card = {
   },
   toggleArchived: function() {
     if (this.isArchived === false) {
+      this.node.classList.remove('notCompleted');
+      void this.node.offsetWidth;
       this.node.classList.add('completed');
-      this.minimize();
     } else {
       this.node.classList.remove('completed');
-      this.restoreSize();
+      void this.node.offsetWidth;
+      this.node.classList.add('notCompleted');
     }
 
     this.isArchived = !this.isArchived;
 
     pubsub.pub(window.CONFIG.SAVE_CARDS);
-    pubsub.pub(window.CONFIG.RERENDER);
-  },
-  restoreSize: function() {
-    this.node.style.height = '200px';
-    this.node.style.width = '200px';
-  },
-  minimize: function() {
-    this.node.style.height = '50px';
-    this.node.style.width = '200px';
   }
 };
 

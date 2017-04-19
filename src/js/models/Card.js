@@ -64,7 +64,6 @@ let Card = {
 
     if (this.isArchived) {
       node.classList.add('completed');
-      this.minimize();
     }
 
     return this;
@@ -80,25 +79,18 @@ let Card = {
   },
   toggleArchived: function() {
     if (this.isArchived === false) {
+      this.node.classList.remove('notCompleted');
+      void this.node.offsetWidth;
       this.node.classList.add('completed');
-      this.minimize();
     } else {
       this.node.classList.remove('completed');
-      this.restoreSize();
+      void this.node.offsetWidth;
+      this.node.classList.add('notCompleted');
     }
 
     this.isArchived = !this.isArchived;
 
     pubsub.pub(window.CONFIG.SAVE_CARDS);
-    pubsub.pub(window.CONFIG.RERENDER);
-  },
-  restoreSize: function() {
-    this.node.style.height = '200px';
-    this.node.style.width = '200px';
-  },
-  minimize: function() {
-    this.node.style.height = '50px';
-    this.node.style.width = '200px';
   }
 };
 
