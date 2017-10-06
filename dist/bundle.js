@@ -137,19 +137,22 @@ var defaultPalette={50:["#FFEBEE","#FCE4EC","#F3E5F5","#EDE7F6","#E8EAF6","#E3F2
 module.exports = {
   SAVE_CARDS: 'SAVE_CARDS',
   SELECT_CARD: 'SELECT_CARD',
+  RERENDER: 'RERENDER',
   ASCII: {
-    ESCAPE_KEY : 27,
-    TAB_KEY : 9,
-    C_KEY : 67,
-    D_KEY : 68,
-    E_KEY : 69,
-    PLUS_KEY : 187,
-    MINUS_KEY : 189,
-    DOT_KEY : 190,
-    A_KEY : 97,
-    KEYS_ARRAY :[27, 9, 67, 68, 69, 187, 189, 190, 97]
+    ESCAPE_KEY: 27,
+    TAB_KEY: 9,
+    C_KEY: 67,
+    D_KEY: 68,
+    E_KEY: 69,
+    PLUS_KEY: 187,
+    MINUS_KEY: 189,
+    DOT_KEY: 190,
+    A_KEY: 65,
+    I_KEY: 73,
+    KEYS_ARRAY: [27, 9, 67, 68, 69, 187, 189, 190, 65, 73],
   },
-  VERSION: '0.3.0'
+  DEFAULT_CONTENT: 'W3siaWQiOiIwIiwibmFtZSI6IlVzZSB0YWIgYW5kIHNoaWZ0IHRhYiB0byBjaXJjbGUgYmV0d2VlbiBjYXJkcyA6RFxuXG5EcmFnZ2luZyBvciBjbGlja2luZyB0aGVtIHdpbGwgYWxzbyBtYXJrIHRoZW0gYXMgc2VsZWN0ZWQiLCJkZXB0aCI6NSwieCI6IjEyM3B4IiwieSI6IjU5cHgiLCJjb2xvciI6IiM0REQwRTEiLCJzZWxlY3RlZCI6dHJ1ZSwibm9kZSI6eyJqUXVlcnkxNzIwODI0MDE1NTE1MTY1MDg3OSI6NH19LHsiaWQiOiIxIiwibmFtZSI6Ik9uIGEgbWFya2VkIGNhcmQgdXNlOlxuJ2MnIHRvIGNvcHkgdGhlIGNvbnRlbnRcbidkJyB0byBkZWxldGUgaXRcbidlJyB0byBlZGl0IGl0XG4nKycgYW5kICctJyB0byBtb2RpZnkgdGhlIGRlcHRoIG9mIHRoZSBjYXJkIGFuZCAnLicgdG8gcmVzZXQgaXRcbidhJyB0byBhcmNoaXZlIG9yIGRlYXJjaGl2ZSBkZSBjYXJkXG4naScgdG8gZm9jdXMgb24gdGhlIGFkZCBuZXcgY2FyZCBpbnB1dCIsImRlcHRoIjo2LCJ4IjoiMzQycHgiLCJ5IjoiNTRweCIsImNvbG9yIjoiIzgwQ0JDNCIsInNlbGVjdGVkIjpmYWxzZSwibm9kZSI6eyJqUXVlcnkxNzIwODI0MDE1NTE1MTY1MDg3OSI6N319LHsiaWQiOiIyIiwibmFtZSI6IldoaWxlIGVkaXRpbmcgdXNlIHNoaWZ0ICsgZW50ZXIgdG8gXG5pbnNlcnRcbmFcbmxpbmVcbmJyZWFrXG46RCIsImRlcHRoIjo1LCJ4IjoiMTIxcHgiLCJ5IjoiMjczcHgiLCJjb2xvciI6IiM2NEI1RjYiLCJzZWxlY3RlZCI6ZmFsc2UsIm5vZGUiOnsialF1ZXJ5MTcyMDgyNDAxNTUxNTE2NTA4NzkiOjZ9fV0=',
+  VERSION: '0.3.4',
 };
 },{}],6:[function(require,module,exports){
 const CONFIG = require('../config');
@@ -230,7 +233,6 @@ function keyHandlerUp (e) {
   if (document.activeElement !== document.body || CONFIG.ASCII.KEYS_ARRAY.indexOf(e.keyCode) === -1) {
     return;
   }
-
   e.stopPropagation();
   e.preventDefault();
 
@@ -252,14 +254,17 @@ function keyHandlerUp (e) {
     case CONFIG.ASCII.E_KEY:
       doubleClickHandler.apply(cardManager.selectedCard.node);
       break;
+    case CONFIG.ASCII.A_KEY:
+      cardManager.selectedCard.toggleArchived();
+      break;
+    case CONFIG.ASCII.I_KEY:
+      input.focus();
+      break;
     case CONFIG.ASCII.PLUS_KEY:
       changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 1]);
       break;
     case CONFIG.ASCII.MINUS_KEY:
       changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
-      break;
-    case CONFIG.ASCII.A_KEY:
-      input.focus();
       break;
     case CONFIG.ASCII.DOT_KEY:
       setDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 5]);
@@ -291,6 +296,7 @@ function mainInputKeyEvent (event) {
     card.render();
     this.value = '';
     cardManager.saveCards();
+    cardManager.selectCard(card.id);
   }
 }
 
@@ -353,6 +359,8 @@ function cardClickEvents (event) {
 
   card = cardManager.cards[cardId];
 
+  if (card === undefined) return;
+
   cardManager.selectCard(card.id);
 
   if (event.ctrlKey) {
@@ -385,6 +393,8 @@ function cardMenuEvents () {
     case 'x':
       cardManager.removeCard(cardId, -1);
       break;
+    case 'V': case 'O':
+      cardManager.cards[cardId].toggleArchived();
   }
   cardManager.saveCards();
 }
@@ -442,7 +452,8 @@ module.exports = {
 window.CONFIG = require('./config.js');
 
 let keyHandler = require('./lib/keyHandler'),
-  cardManager = require('./models/CardManager').getInstance();
+  cardManager = require('./models/CardManager').getInstance(),
+  pubsub = require('./lib/pubsub');
 
 Object.assign(window, require('./prototypes'));
 
@@ -458,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function () {
   cardManager.renderAllCards();
 });
 
-},{"./config.js":5,"./lib/keyHandler":6,"./models/CardManager":10,"./prototypes":11}],9:[function(require,module,exports){
+},{"./config.js":5,"./lib/keyHandler":6,"./lib/pubsub":7,"./models/CardManager":10,"./prototypes":11}],9:[function(require,module,exports){
 let pubsub = require('../lib/pubsub'),
   randomMC = require('random-material-color');
 
@@ -472,6 +483,7 @@ let Card = {
     this.y = 100;
     this.color = this.getBackgroundColor();
     this.selected = false;
+    this.isArchived = false;
 
     return this;
   },
@@ -492,10 +504,6 @@ let Card = {
     node.style.zIndex = this.depth;
     node.style.backgroundColor = this.color;
 
-    if (this.selected === true) {
-      node.classList.add('selected');
-    }
-
     document.getElementById('mainContainer').appendChild(node);
 
     node.appendChild(createDiv('x', 'control remove'));
@@ -503,6 +511,7 @@ let Card = {
     node.appendChild(createDiv('-', 'control down'));
     node.appendChild(createDiv('C', 'control copy'));
     node.appendChild(createDiv(this.depth, 'depth'));
+    node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchied'));
 
     node.appendChild(text);
 
@@ -513,13 +522,21 @@ let Card = {
         that.x = card.css('left');
         that.y = card.css('top');
 
-        document.activeElement.blur();
         pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
     });
 
     this.node = node;
+
+
+    if (this.selected === true) {
+      node.classList.add('selected');
+    }
+
+    if (this.isArchived) {
+      node.classList.add('completed');
+    }
 
     return this;
   },
@@ -532,12 +549,28 @@ let Card = {
 
     return this;
   },
+  toggleArchived: function() {
+    if (this.isArchived === false || this.isArchived === undefined) {
+      this.node.classList.remove('notCompleted');
+      void this.node.offsetWidth;
+      this.node.classList.add('completed');
+    } else {
+      this.node.classList.remove('completed');
+      void this.node.offsetWidth;
+      this.node.classList.add('notCompleted');
+    }
+
+    this.isArchived = !this.isArchived;
+
+    pubsub.pub(window.CONFIG.SAVE_CARDS);
+  }
 };
 
 module.exports = Card;
 },{"../lib/pubsub":7,"random-material-color":4}],10:[function(require,module,exports){
 const Card = require('./Card'),
-  pubsub = require('../lib/pubsub');
+  pubsub = require('../lib/pubsub'),
+  CONFIG = require('../config');
 
 let CardManager = {
   init: function () {
@@ -581,7 +614,9 @@ let CardManager = {
   },
   loadCards: function () {
     this.cards = JSON.parse(localStorage.getItem('cards'));
-    if (this.cards === null) this.cards = [];
+    if (this.cards === null) {
+      this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
+    }
 
     this.clearArray();
 
@@ -605,6 +640,12 @@ let CardManager = {
 
     return this;
   },
+  reRenderAllCards: function() {
+    this.cards.forEach((card) => {
+      card.derender();
+    });
+    this.renderAllCards();
+  },
   renderAllCards: function () {
 
     this.cards.forEach( (card) => {
@@ -622,6 +663,7 @@ let CardManager = {
       CardManager.instance.init();
       pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
       pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
+      pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
     }
 
     return CardManager.instance;
@@ -644,6 +686,7 @@ let CardManager = {
     this.selectedCard.node.classList.add('selected');
 
     this.persistSelectedCard();
+    document.activeElement.blur();
   },
   nextCard: function () {
     let it = +this.selectedCard.id + 1;
@@ -688,7 +731,7 @@ let CardManager = {
 };
 
 module.exports = CardManager;
-},{"../lib/pubsub":7,"./Card":9}],11:[function(require,module,exports){
+},{"../config":5,"../lib/pubsub":7,"./Card":9}],11:[function(require,module,exports){
 let cardManager = require('./models/CardManager').getInstance();
 
 function createDiv(text, className) {
@@ -743,15 +786,15 @@ function getParentCardId(context) {
 function changeDepth(cardId, increment) {
   let depth = cardManager.cards[cardId].depth + increment;
 
-  this.parentElement.style.zIndex = depth;
+  this.style.zIndex = depth;
   cardManager.cards[cardId].depth = depth;
-  this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
+  this.getElementsByClassName("depth")[0].innerHTML = depth;
 }
 
 function setDepth(cardId, depth) {
-  this.parentElement.style.zIndex = depth;
+  this.style.zIndex = depth;
   cardManager.cards[cardId].depth = depth;
-  this.parentElement.getElementsByClassName("depth")[0].innerHTML = depth;
+  this.getElementsByClassName("depth")[0].innerHTML = depth;
 }
 
 function getCardHTMLById (mainContainer, id) {

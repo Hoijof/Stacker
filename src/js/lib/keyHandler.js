@@ -76,7 +76,6 @@ function keyHandlerUp (e) {
   if (document.activeElement !== document.body || CONFIG.ASCII.KEYS_ARRAY.indexOf(e.keyCode) === -1) {
     return;
   }
-
   e.stopPropagation();
   e.preventDefault();
 
@@ -98,14 +97,17 @@ function keyHandlerUp (e) {
     case CONFIG.ASCII.E_KEY:
       doubleClickHandler.apply(cardManager.selectedCard.node);
       break;
+    case CONFIG.ASCII.A_KEY:
+      cardManager.selectedCard.toggleArchived();
+      break;
+    case CONFIG.ASCII.I_KEY:
+      input.focus();
+      break;
     case CONFIG.ASCII.PLUS_KEY:
       changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 1]);
       break;
     case CONFIG.ASCII.MINUS_KEY:
       changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
-      break;
-    case CONFIG.ASCII.A_KEY:
-      input.focus();
       break;
     case CONFIG.ASCII.DOT_KEY:
       setDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 5]);
@@ -137,6 +139,7 @@ function mainInputKeyEvent (event) {
     card.render();
     this.value = '';
     cardManager.saveCards();
+    cardManager.selectCard(card.id);
   }
 }
 
@@ -199,6 +202,8 @@ function cardClickEvents (event) {
 
   card = cardManager.cards[cardId];
 
+  if (card === undefined) return;
+
   cardManager.selectCard(card.id);
 
   if (event.ctrlKey) {
@@ -231,6 +236,8 @@ function cardMenuEvents () {
     case 'x':
       cardManager.removeCard(cardId, -1);
       break;
+    case 'V': case 'O':
+      cardManager.cards[cardId].toggleArchived();
   }
   cardManager.saveCards();
 }

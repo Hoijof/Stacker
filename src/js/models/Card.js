@@ -11,6 +11,7 @@ let Card = {
     this.y = 100;
     this.color = this.getBackgroundColor();
     this.selected = false;
+    this.isArchived = false;
 
     return this;
   },
@@ -31,10 +32,6 @@ let Card = {
     node.style.zIndex = this.depth;
     node.style.backgroundColor = this.color;
 
-    if (this.selected === true) {
-      node.classList.add('selected');
-    }
-
     document.getElementById('mainContainer').appendChild(node);
 
     node.appendChild(createDiv('x', 'control remove'));
@@ -42,6 +39,7 @@ let Card = {
     node.appendChild(createDiv('-', 'control down'));
     node.appendChild(createDiv('C', 'control copy'));
     node.appendChild(createDiv(this.depth, 'depth'));
+    node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchied'));
 
     node.appendChild(text);
 
@@ -52,13 +50,21 @@ let Card = {
         that.x = card.css('left');
         that.y = card.css('top');
 
-        document.activeElement.blur();
         pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
         pubsub.pub(window.CONFIG.SAVE_CARDS);
       },
     });
 
     this.node = node;
+
+
+    if (this.selected === true) {
+      node.classList.add('selected');
+    }
+
+    if (this.isArchived) {
+      node.classList.add('completed');
+    }
 
     return this;
   },
@@ -71,6 +77,21 @@ let Card = {
 
     return this;
   },
+  toggleArchived: function() {
+    if (this.isArchived === false || this.isArchived === undefined) {
+      this.node.classList.remove('notCompleted');
+      void this.node.offsetWidth;
+      this.node.classList.add('completed');
+    } else {
+      this.node.classList.remove('completed');
+      void this.node.offsetWidth;
+      this.node.classList.add('notCompleted');
+    }
+
+    this.isArchived = !this.isArchived;
+
+    pubsub.pub(window.CONFIG.SAVE_CARDS);
+  }
 };
 
 module.exports = Card;

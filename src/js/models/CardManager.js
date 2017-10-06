@@ -1,5 +1,6 @@
 const Card = require('./Card'),
-  pubsub = require('../lib/pubsub');
+  pubsub = require('../lib/pubsub'),
+  CONFIG = require('../config');
 
 let CardManager = {
   init: function () {
@@ -43,7 +44,9 @@ let CardManager = {
   },
   loadCards: function () {
     this.cards = JSON.parse(localStorage.getItem('cards'));
-    if (this.cards === null) this.cards = [];
+    if (this.cards === null) {
+      this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
+    }
 
     this.clearArray();
 
@@ -67,6 +70,12 @@ let CardManager = {
 
     return this;
   },
+  reRenderAllCards: function() {
+    this.cards.forEach((card) => {
+      card.derender();
+    });
+    this.renderAllCards();
+  },
   renderAllCards: function () {
 
     this.cards.forEach( (card) => {
@@ -84,6 +93,7 @@ let CardManager = {
       CardManager.instance.init();
       pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
       pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
+      pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
     }
 
     return CardManager.instance;
@@ -106,6 +116,7 @@ let CardManager = {
     this.selectedCard.node.classList.add('selected');
 
     this.persistSelectedCard();
+    document.activeElement.blur();
   },
   nextCard: function () {
     let it = +this.selectedCard.id + 1;
