@@ -249,7 +249,8 @@ function keyHandlerUp(e) {
         case CONFIG.ASCII.D_KEY:
             let card = cardManager.selectedCard;
             cardManager.nextCard();
-            cardManager.removeCard(card.id);
+            // cardManager.removeCard(card.id);
+            card.delete();
             cardManager.saveCards();
             break;
         case CONFIG.ASCII.E_KEY:
@@ -462,6 +463,10 @@ let keyHandler = require('./lib/keyHandler'),
   cardManager = require('./models/CardManager').getInstance(),
   pubsub = require('./lib/pubsub');
 
+window.cm = {
+  cardManager: cardManager
+};
+
 Object.assign(window, require('./prototypes'));
 
 
@@ -478,100 +483,110 @@ document.addEventListener('DOMContentLoaded', function () {
 
 },{"./config.js":5,"./lib/keyHandler":6,"./lib/pubsub":7,"./models/CardManager":10,"./prototypes":11}],9:[function(require,module,exports){
 let pubsub = require('../lib/pubsub'),
-  randomMC = require('random-material-color');
+    randomMC = require('random-material-color');
 
 
 let Card = {
-  init: function (name) {
-    this.id = -1;
-    this.name = name;
-    this.depth = 5;
-    this.x = 100;
-    this.y = 100;
-    this.color = this.getBackgroundColor();
-    this.selected = false;
-    this.isArchived = false;
+    init: function(name) {
+        this.id = -1;
+        this.name = name;
+        this.depth = 5;
+        this.x = 100;
+        this.y = 100;
+        this.color = this.getBackgroundColor();
+        this.selected = false;
+        this.isArchived = false;
+        this.isDeleted = false;
 
-    return this;
-  },
-  render: function () {
-    let node = document.createElement('div'),
-      text = document.createElement('div'),
-      that = this;
+        return this;
+    },
+    render: function(always = false) {
+        if (this.isDeleted === true && always === false) {
+            return;
+        }
 
-    text.innerHTML = this.name.replace(/\r?\n/g,'<br/>');
-    text.className = 'cardText';
+        let node = document.createElement('div'),
+            text = document.createElement('div'),
+            that = this;
 
-    node.id = 'todo_' + this.id;
-    node.className = 'card card-1';
-    node.style.position = 'fixed';
-    node.style.left = this.x;
-    node.style.top = this.y;
-    node.style.cursor = '-webkit-grab';
-    node.style.zIndex = this.depth;
-    node.style.backgroundColor = this.color;
+        text.innerHTML = this.name.replace(/\r?\n/g, '<br/>');
+        text.className = 'cardText';
 
-    document.getElementById('mainContainer').appendChild(node);
+        node.id = 'todo_' + this.id;
+        node.className = 'card card-1';
+        node.style.position = 'fixed';
+        node.style.left = this.x;
+        node.style.top = this.y;
+        node.style.cursor = '-webkit-grab';
+        node.style.zIndex = this.depth;
+        node.style.backgroundColor = this.color;
 
-    node.appendChild(createDiv('x', 'control remove'));
-    node.appendChild(createDiv('+', 'control up'));
-    node.appendChild(createDiv('-', 'control down'));
-    node.appendChild(createDiv('C', 'control copy'));
-    node.appendChild(createDiv(this.depth, 'depth'));
-    node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
-    node.appendChild(createDiv(this.id + '|', 'id'));
+        document.getElementById('mainContainer').appendChild(node);
 
-    node.appendChild(text);
+        node.appendChild(createDiv('x', 'control remove'));
+        node.appendChild(createDiv('+', 'control up'));
+        node.appendChild(createDiv('-', 'control down'));
+        node.appendChild(createDiv('C', 'control copy'));
+        node.appendChild(createDiv(this.depth, 'depth'));
+        node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
+        node.appendChild(createDiv(this.id + '|', 'id'));
 
-    $('#todo_' + this.id).draggable({
-      stop: function () {
-        let card = $('#todo_' + that.id);
+        node.appendChild(text);
 
-        that.x = card.css('left');
-        that.y = card.css('top');
+        $('#todo_' + this.id).draggable({
+            stop: function() {
+                let card = $('#todo_' + that.id);
 
-        pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
+                that.x = card.css('left');
+                that.y = card.css('top');
+
+                pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
+                pubsub.pub(window.CONFIG.SAVE_CARDS);
+            },
+        });
+
+        this.node = node;
+
+
+        if (this.selected === true) {
+            node.classList.add('selected');
+        }
+
+        if (this.isArchived) {
+            node.classList.add('completed');
+        }
+
+        return this;
+    },
+    getBackgroundColor: function() {
+        return randomMC.getColor({shades: ['200', '300']});
+    },
+    derender: function() {
+        let node = document.getElementById('todo_' + this.id);
+        document.getElementById('mainContainer').removeChild(node);
+
+        return this;
+    },
+    toggleArchived: function() {
+        if (this.isArchived === false || this.isArchived === undefined) {
+            this.node.classList.remove('notCompleted');
+            void this.node.offsetWidth;
+            this.node.classList.add('completed');
+        } else {
+            this.node.classList.remove('completed');
+            void this.node.offsetWidth;
+            this.node.classList.add('notCompleted');
+        }
+
+        this.isArchived = !this.isArchived;
+
         pubsub.pub(window.CONFIG.SAVE_CARDS);
-      },
-    });
+    },
+    delete: function() {
+        this.isDeleted = true;
 
-    this.node = node;
-
-
-    if (this.selected === true) {
-      node.classList.add('selected');
+        this.derender();
     }
-
-    if (this.isArchived) {
-      node.classList.add('completed');
-    }
-
-    return this;
-  },
-  getBackgroundColor: function () {
-    return randomMC.getColor({ shades: ['200', '300']});
-  },
-  derender: function () {
-    let node = document.getElementById('todo_' + this.id);
-    document.getElementById('mainContainer').removeChild(node);
-
-    return this;
-  },
-  toggleArchived: function() {
-    if (this.isArchived === false || this.isArchived === undefined) {
-      this.node.classList.remove('notCompleted');
-      void this.node.offsetWidth;
-      this.node.classList.add('completed');
-    } else {
-      this.node.classList.remove('completed');
-      void this.node.offsetWidth;
-      this.node.classList.add('notCompleted');
-    }
-
-    this.isArchived = !this.isArchived;
-
-    pubsub.pub(window.CONFIG.SAVE_CARDS);
-  }
 };
 
 module.exports = Card;

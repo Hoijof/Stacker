@@ -91,7 +91,8 @@ function keyHandlerUp(e) {
         case CONFIG.ASCII.D_KEY:
             let card = cardManager.selectedCard;
             cardManager.nextCard();
-            cardManager.removeCard(card.id);
+            // cardManager.removeCard(card.id);
+            card.delete();
             cardManager.saveCards();
             break;
         case CONFIG.ASCII.E_KEY:
