@@ -39,7 +39,8 @@ let Card = {
     node.appendChild(createDiv('-', 'control down'));
     node.appendChild(createDiv('C', 'control copy'));
     node.appendChild(createDiv(this.depth, 'depth'));
-    node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchied'));
+    node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
+    node.appendChild(createDiv(this.id + '|', 'id'));
 
     node.appendChild(text);
 
