@@ -138,6 +138,7 @@ module.exports = {
   SAVE_CARDS: 'SAVE_CARDS',
   SELECT_CARD: 'SELECT_CARD',
   RERENDER: 'RERENDER',
+  LESS_PRISTINE: 'LESS_PRISTINE',
   ASCII: {
     ESCAPE_KEY: 27,
     TAB_KEY: 9,
@@ -529,7 +530,7 @@ let pubsub = require('../lib/pubsub'),
 
 
 let Card = {
-    init: function(title, description) {
+    init: function(title, description, pristine) {
         this.id = -1;
         this.title = title;
         this.description = description;
@@ -542,6 +543,7 @@ let Card = {
         this.isDeleted = false;
         this.createdAt = +new Date();
         this.archivedAt = null;
+        this.isPristine = true;
 
         return this;
     },
@@ -595,6 +597,12 @@ let Card = {
         $('#todo_' + this.id).draggable({
             stop: function() {
                 let card = $('#todo_' + that.id);
+
+                if (that.isPristine === true) {
+                    that.isPristine = false;
+
+                    pubsub.pub(window.CONFIG.LESS_PRISTINE);
+                }
 
                 that.x = + card.css('left').replace('px', '');
                 that.y = + card.css('top').replace('px', '');
@@ -676,12 +684,18 @@ let CardManager = {
         this.cards = [];
         this.selectedCard = {id: -1};
         this.deletedCards = [];
+        this.pristine = 0;
 
         return this;
     },
     addCard: function(card) {
         this.cards.push(card);
         card.id = this.cards.length - 1;
+
+        card.x = card.x + this.pristine * 10;
+        card.y = card.y + this.pristine * 10;
+
+        this.pristine++;
 
         return card;
     },
@@ -767,10 +781,14 @@ let CardManager = {
             pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
             pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
             pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
+            pubsub.sub(window.CONFIG.LESS_PRISTINE, CardManager.instance.lessPristine, CardManager.instance);
         }
 
         return CardManager.instance;
 
+    },
+    lessPristine: function() {
+        this.pristine--;
     },
     exportCards: function() {
         return btoa(JSON.stringify(this.cards));

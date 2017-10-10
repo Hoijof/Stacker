@@ -3,7 +3,7 @@ let pubsub = require('../lib/pubsub'),
 
 
 let Card = {
-    init: function(title, description) {
+    init: function(title, description, pristine) {
         this.id = -1;
         this.title = title;
         this.description = description;
@@ -16,6 +16,7 @@ let Card = {
         this.isDeleted = false;
         this.createdAt = +new Date();
         this.archivedAt = null;
+        this.isPristine = true;
 
         return this;
     },
@@ -69,6 +70,12 @@ let Card = {
         $('#todo_' + this.id).draggable({
             stop: function() {
                 let card = $('#todo_' + that.id);
+
+                if (that.isPristine === true) {
+                    that.isPristine = false;
+
+                    pubsub.pub(window.CONFIG.LESS_PRISTINE);
+                }
 
                 that.x = + card.css('left').replace('px', '');
                 that.y = + card.css('top').replace('px', '');

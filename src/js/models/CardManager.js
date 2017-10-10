@@ -7,12 +7,18 @@ let CardManager = {
         this.cards = [];
         this.selectedCard = {id: -1};
         this.deletedCards = [];
+        this.pristine = 0;
 
         return this;
     },
     addCard: function(card) {
         this.cards.push(card);
         card.id = this.cards.length - 1;
+
+        card.x = card.x + this.pristine * 10;
+        card.y = card.y + this.pristine * 10;
+
+        this.pristine++;
 
         return card;
     },
@@ -98,10 +104,14 @@ let CardManager = {
             pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
             pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
             pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
+            pubsub.sub(window.CONFIG.LESS_PRISTINE, CardManager.instance.lessPristine, CardManager.instance);
         }
 
         return CardManager.instance;
 
+    },
+    lessPristine: function() {
+        this.pristine--;
     },
     exportCards: function() {
         return btoa(JSON.stringify(this.cards));
