@@ -68,6 +68,8 @@ function keyHandlerDown(e) {
         if (e.preventDefault) {
             e.preventDefault();
         }
+    } else if (e.keyCode === CONFIG.ASCII.CMD_KEY) {
+        window.cmdPress = true;
     }
 }
 
@@ -81,7 +83,7 @@ function keyHandlerUp(e) {
 
     switch (e.keyCode) {
         case CONFIG.ASCII.C_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 let elem = cardManager.selectedCard.node,
                     selection;
 
@@ -92,7 +94,7 @@ function keyHandlerUp(e) {
 
             break;
         case CONFIG.ASCII.D_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 let card = cardManager.selectedCard;
                 cardManager.nextCard();
 
@@ -102,17 +104,17 @@ function keyHandlerUp(e) {
             }
             break;
         case CONFIG.ASCII.E_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 doubleClickHandler.apply(cardManager.selectedCard.node);
             }
             break;
         case CONFIG.ASCII.A_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 cardManager.selectedCard.toggleArchived();
             }
             break;
         case CONFIG.ASCII.I_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 // input.focus();
                 createCard();
             }
@@ -134,10 +136,12 @@ function keyHandlerUp(e) {
             cardManager.saveCards();
             break;
         case CONFIG.ASCII.Z_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 cardManager.undeleteLastCard();
             }
             break;
+        case CONFIG.ASCII.CMD_KEY:
+            window.cmdPress = false;
     }
 }
 

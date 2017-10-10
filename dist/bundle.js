@@ -151,7 +151,8 @@ module.exports = {
     I_KEY: 73,
     R_KEY: 82,
     Z_KEY: 90,
-    KEYS_ARRAY: [27, 9, 67, 68, 69, 187, 189, 190, 65, 73, 82, 90],
+    CMD_KEY: 91,
+    KEYS_ARRAY: [27, 9, 67, 68, 69, 187, 189, 190, 65, 73, 82, 90, 91],
   },
   DEFAULT_CONTENT: 'W3siaWQiOiIwIiwibmFtZSI6IlVzZSB0YWIgYW5kIHNoaWZ0IHRhYiB0byBjaXJjbGUgYmV0d2VlbiBjYXJkcyA6RFxuXG5EcmFnZ2luZyBvciBjbGlja2luZyB0aGVtIHdpbGwgYWxzbyBtYXJrIHRoZW0gYXMgc2VsZWN0ZWQiLCJkZXB0aCI6NSwieCI6IjEyM3B4IiwieSI6IjU5cHgiLCJjb2xvciI6IiM0REQwRTEiLCJzZWxlY3RlZCI6dHJ1ZSwibm9kZSI6eyJqUXVlcnkxNzIwODI0MDE1NTE1MTY1MDg3OSI6NH19LHsiaWQiOiIxIiwibmFtZSI6Ik9uIGEgbWFya2VkIGNhcmQgdXNlOlxuJ2MnIHRvIGNvcHkgdGhlIGNvbnRlbnRcbidkJyB0byBkZWxldGUgaXRcbidlJyB0byBlZGl0IGl0XG4nKycgYW5kICctJyB0byBtb2RpZnkgdGhlIGRlcHRoIG9mIHRoZSBjYXJkIGFuZCAnLicgdG8gcmVzZXQgaXRcbidhJyB0byBhcmNoaXZlIG9yIGRlYXJjaGl2ZSBkZSBjYXJkXG4naScgdG8gZm9jdXMgb24gdGhlIGFkZCBuZXcgY2FyZCBpbnB1dCIsImRlcHRoIjo2LCJ4IjoiMzQycHgiLCJ5IjoiNTRweCIsImNvbG9yIjoiIzgwQ0JDNCIsInNlbGVjdGVkIjpmYWxzZSwibm9kZSI6eyJqUXVlcnkxNzIwODI0MDE1NTE1MTY1MDg3OSI6N319LHsiaWQiOiIyIiwibmFtZSI6IldoaWxlIGVkaXRpbmcgdXNlIHNoaWZ0ICsgZW50ZXIgdG8gXG5pbnNlcnRcbmFcbmxpbmVcbmJyZWFrXG46RCIsImRlcHRoIjo1LCJ4IjoiMTIxcHgiLCJ5IjoiMjczcHgiLCJjb2xvciI6IiM2NEI1RjYiLCJzZWxlY3RlZCI6ZmFsc2UsIm5vZGUiOnsialF1ZXJ5MTcyMDgyNDAxNTUxNTE2NTA4NzkiOjZ9fV0=',
   VERSION: '0.5.0',
@@ -227,6 +228,8 @@ function keyHandlerDown(e) {
         if (e.preventDefault) {
             e.preventDefault();
         }
+    } else if (e.keyCode === CONFIG.ASCII.CMD_KEY) {
+        window.cmdPress = true;
     }
 }
 
@@ -240,7 +243,7 @@ function keyHandlerUp(e) {
 
     switch (e.keyCode) {
         case CONFIG.ASCII.C_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 let elem = cardManager.selectedCard.node,
                     selection;
 
@@ -251,7 +254,7 @@ function keyHandlerUp(e) {
 
             break;
         case CONFIG.ASCII.D_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 let card = cardManager.selectedCard;
                 cardManager.nextCard();
 
@@ -261,17 +264,17 @@ function keyHandlerUp(e) {
             }
             break;
         case CONFIG.ASCII.E_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 doubleClickHandler.apply(cardManager.selectedCard.node);
             }
             break;
         case CONFIG.ASCII.A_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 cardManager.selectedCard.toggleArchived();
             }
             break;
         case CONFIG.ASCII.I_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 // input.focus();
                 createCard();
             }
@@ -293,10 +296,12 @@ function keyHandlerUp(e) {
             cardManager.saveCards();
             break;
         case CONFIG.ASCII.Z_KEY:
-            if (event.ctrlKey) {
+            if (event.ctrlKey || window.cmdPress) {
                 cardManager.undeleteLastCard();
             }
             break;
+        case CONFIG.ASCII.CMD_KEY:
+            window.cmdPress = false;
     }
 }
 
