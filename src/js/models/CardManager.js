@@ -40,11 +40,13 @@ let CardManager = {
         }
 
         this.persistSelectedCard();
+        this.persistDeletedCards();
 
         return this;
     },
     loadCards: function() {
         this.cards = JSON.parse(localStorage.getItem('cards'));
+
         if (this.cards === null) {
             this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
         }
@@ -52,6 +54,7 @@ let CardManager = {
         this.clearArray();
 
         this.loadSelectedCard();
+        this.loadDeletedCards();
 
         document.activeElement.blur();
 
@@ -65,7 +68,7 @@ let CardManager = {
         });
         for (i in this.cards) {
             if (this.cards.hasOwnProperty(i)) {
-                this.cards[i].id = i;
+                this.cards[+i].id = +i;
             }
         }
 
@@ -159,8 +162,16 @@ let CardManager = {
             this.selectedCard = this.cards[selectedCardId];
         }
     },
+    persistDeletedCards: function() {
+        localStorage.setItem('deletedCards', JSON.stringify(this.deletedCards));
+    },
+    loadDeletedCards: function() {
+        console.log(localStorage.getItem('deletedCards'));
+        this.deletedCards = JSON.parse(localStorage.getItem('deletedCards')) || [];
+
+    },
     deleteCard: function(card) {
-        this.deletedCards.push(card);
+        this.deletedCards.push(card.id);
 
         card.delete();
     },
@@ -169,7 +180,7 @@ let CardManager = {
             return;
         }
 
-        this.deletedCards.splice(this.deletedCards.length -1)[0].undelete();
+        this.selectCard(this.cards[this.deletedCards.splice(this.deletedCards.length - 1)].undelete().id);
 
         this.saveCards();
     }

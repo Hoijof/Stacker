@@ -115,6 +115,8 @@ let Card = {
         this.isDeleted = false;
 
         this.render();
+
+        return this;
     },
     findLink: function() {
         const regex = /(https?:\/\/[^\s]+|www.[^\s]+)/;
