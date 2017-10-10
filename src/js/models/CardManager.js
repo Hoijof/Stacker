@@ -48,8 +48,7 @@ let CardManager = {
         this.cards = JSON.parse(localStorage.getItem('cards'));
 
         if (this.cards === null) {
-            // this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
-            this.cards = []
+            this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
         }
 
         this.clearArray();

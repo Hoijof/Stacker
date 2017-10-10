@@ -216,11 +216,12 @@ function doubleClickHandler() {
     card = cardManager.cards[cardId];
 
     titleInput.value = card.title;
+    editInput.value = card.description;
     titleInput.style.top = card.y;
     titleInput.style.left = card.x;
     editContainer.cardId = cardId;
     editContainer.style.display = 'block';
-    editInput.style.top = (+card.y.replace('px', '') + 23) + "px";
+    editInput.style.top = card.y + 23;
     editInput.style.left = card.x;
     titleInput.focus();
 }

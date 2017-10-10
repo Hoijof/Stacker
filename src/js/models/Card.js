@@ -70,8 +70,8 @@ let Card = {
             stop: function() {
                 let card = $('#todo_' + that.id);
 
-                that.x = card.css('left');
-                that.y = card.css('top');
+                that.x = + card.css('left').replace('px', '');
+                that.y = + card.css('top').replace('px', '');
 
                 pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
                 pubsub.pub(window.CONFIG.SAVE_CARDS);
