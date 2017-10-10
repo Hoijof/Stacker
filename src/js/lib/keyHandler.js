@@ -113,7 +113,8 @@ function keyHandlerUp(e) {
             break;
         case CONFIG.ASCII.I_KEY:
             if (event.ctrlKey) {
-                input.focus();
+                // input.focus();
+                createCard();
             }
             break;
         case CONFIG.ASCII.PLUS_KEY:
@@ -129,6 +130,8 @@ function keyHandlerUp(e) {
             cardManager.selectedCard.color = cardManager.selectedCard.getBackgroundColor();
             cardManager.selectedCard.derender();
             cardManager.selectedCard.render();
+
+            cardManager.saveCards();
             break;
         case CONFIG.ASCII.Z_KEY:
             if (event.ctrlKey) {
@@ -283,6 +286,15 @@ function loadImportCardsCode() {
 function showImporter() {
     importContainer.style.display = 'block';
     importInput.focus();
+}
+
+function createCard() {
+    const card = cardManager.addCard(Object.create(Card, {}).init(''));
+    card.render();
+    cardManager.selectCard(card.id);
+
+    // and now we autoedit :D
+    doubleClickHandler.apply(card.node);
 }
 
 module.exports = {
