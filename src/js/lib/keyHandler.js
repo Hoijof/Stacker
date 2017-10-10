@@ -7,6 +7,7 @@ let mainContainer,
     input,
     editContainer,
     editInput,
+    titleInput,
     importContainer,
     importInput,
     exportContainer,
@@ -24,6 +25,7 @@ function bindings() {
     input = document.querySelector('#formContainer input');
     editContainer = document.getElementById('editContainer');
     editInput = editContainer.getElementsByClassName('textarea')[0];
+    titleInput = editContainer.getElementsByClassName('input')[0];
     importContainer = document.getElementById('importContainer');
     importInput = importContainer.getElementsByClassName('input')[0];
     importButton = importContainer.getElementsByClassName('button')[0];
@@ -35,8 +37,10 @@ function bindings() {
     window.addEventListener('keydown', keyHandlerDown, false);
     input.addEventListener('keydown', mainInputKeyEvent);
     editInput.addEventListener('keydown', editInputKeyEvent);
+    titleInput.addEventListener('keydown', editInputKeyEvent);
     editContainer.addEventListener('click', hideEditContainer);
     editInput.addEventListener('click', stopPropagation);
+    titleInput.addEventListener('click', stopPropagation);
     /*
      On double click edit the card
      */
@@ -179,7 +183,8 @@ function editInputKeyEvent(event) {
     if (event.keyCode === 13 && event.shiftKey) return;
     if (event.keyCode === 13) {
         card = cardManager.cards[editContainer.cardId];
-        card.name = editInput.value;
+        card.title = titleInput.value;
+        card.description = editInput.value;
         card.derender();
         card.render();
         this.value = '';
@@ -210,13 +215,14 @@ function doubleClickHandler() {
 
     card = cardManager.cards[cardId];
 
-    editInput.value = card.name;
+    titleInput.value = card.title;
+    titleInput.style.top = card.y;
+    titleInput.style.left = card.x;
     editContainer.cardId = cardId;
     editContainer.style.display = 'block';
-    editInput.style.top = card.y;
+    editInput.style.top = (+card.y.replace('px', '') + 23) + "px";
     editInput.style.left = card.x;
-    editInput.style['padding-top'] = '23px';
-    editInput.focus();
+    titleInput.focus();
 }
 
 function cardClickEvents(event) {

@@ -48,7 +48,8 @@ let CardManager = {
         this.cards = JSON.parse(localStorage.getItem('cards'));
 
         if (this.cards === null) {
-            this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
+            // this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
+            this.cards = []
         }
 
         this.clearArray();
@@ -112,7 +113,7 @@ let CardManager = {
         this.renderAllCards();
     },
     selectCard: function(cardId) {
-        if (this.selectedCard !== undefined) {
+        if (this.selectedCard !== undefined && this.selectedCard.node.classList !== undefined) {
             this.selectedCard.node.classList.remove('selected');
         }
         this.selectedCard = this.cards[cardId];

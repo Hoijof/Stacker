@@ -167,6 +167,7 @@ let mainContainer,
     input,
     editContainer,
     editInput,
+    titleInput,
     importContainer,
     importInput,
     exportContainer,
@@ -184,6 +185,7 @@ function bindings() {
     input = document.querySelector('#formContainer input');
     editContainer = document.getElementById('editContainer');
     editInput = editContainer.getElementsByClassName('textarea')[0];
+    titleInput = editContainer.getElementsByClassName('input')[0];
     importContainer = document.getElementById('importContainer');
     importInput = importContainer.getElementsByClassName('input')[0];
     importButton = importContainer.getElementsByClassName('button')[0];
@@ -195,8 +197,10 @@ function bindings() {
     window.addEventListener('keydown', keyHandlerDown, false);
     input.addEventListener('keydown', mainInputKeyEvent);
     editInput.addEventListener('keydown', editInputKeyEvent);
+    titleInput.addEventListener('keydown', editInputKeyEvent);
     editContainer.addEventListener('click', hideEditContainer);
     editInput.addEventListener('click', stopPropagation);
+    titleInput.addEventListener('click', stopPropagation);
     /*
      On double click edit the card
      */
@@ -339,7 +343,8 @@ function editInputKeyEvent(event) {
     if (event.keyCode === 13 && event.shiftKey) return;
     if (event.keyCode === 13) {
         card = cardManager.cards[editContainer.cardId];
-        card.name = editInput.value;
+        card.title = titleInput.value;
+        card.description = editInput.value;
         card.derender();
         card.render();
         this.value = '';
@@ -370,13 +375,14 @@ function doubleClickHandler() {
 
     card = cardManager.cards[cardId];
 
-    editInput.value = card.name;
+    titleInput.value = card.title;
+    titleInput.style.top = card.y;
+    titleInput.style.left = card.x;
     editContainer.cardId = cardId;
     editContainer.style.display = 'block';
-    editInput.style.top = card.y;
+    editInput.style.top = (+card.y.replace('px', '') + 23) + "px";
     editInput.style.left = card.x;
-    editInput.style['padding-top'] = '23px';
-    editInput.focus();
+    titleInput.focus();
 }
 
 function cardClickEvents(event) {
@@ -522,9 +528,10 @@ let pubsub = require('../lib/pubsub'),
 
 
 let Card = {
-    init: function(name) {
+    init: function(title, description) {
         this.id = -1;
-        this.name = name;
+        this.title = title;
+        this.description = description;
         this.depth = 5;
         this.x = 100;
         this.y = 100;
@@ -532,7 +539,7 @@ let Card = {
         this.selected = false;
         this.isArchived = false;
         this.isDeleted = false;
-        this.createdAt = + new Date();
+        this.createdAt = +new Date();
         this.archivedAt = null;
 
         return this;
@@ -543,11 +550,20 @@ let Card = {
         }
 
         let node = document.createElement('div'),
+            title = document.createElement('div'),
             text = document.createElement('div'),
             link = this.findLink(),
             that = this;
 
-        text.innerHTML = this.name.replace(/\r?\n/g, '<br/>');
+        if (this.title) {
+            title.innerHTML = this.title;
+        }
+
+        if (this.description) {
+            text.innerHTML = this.description.replace(/\r?\n/g, '<br/>');
+        }
+
+        title.className = 'cardTitle';
         text.className = 'cardText';
 
         node.id = 'todo_' + this.id;
@@ -572,6 +588,7 @@ let Card = {
             node.appendChild(createDiv(`<a target="_blank" href="${link}">Link!</a>`, 'link'));
         }
 
+        node.appendChild(title);
         node.appendChild(text);
 
         $('#todo_' + this.id).draggable({
@@ -613,7 +630,7 @@ let Card = {
             this.node.classList.remove('notCompleted');
             void this.node.offsetWidth;
             this.node.classList.add('completed');
-            this.archivedAt = + new Date();
+            this.archivedAt = +new Date();
         } else {
             this.node.classList.remove('completed');
             void this.node.offsetWidth;
@@ -639,7 +656,7 @@ let Card = {
     },
     findLink: function() {
         const regex = /(https?:\/\/[^\s]+|www.[^\s]+)/;
-        const link = regex.exec(this.name);
+        const link = regex.exec(this.title);
 
         if (link) {
             return link[0];
@@ -699,7 +716,8 @@ let CardManager = {
         this.cards = JSON.parse(localStorage.getItem('cards'));
 
         if (this.cards === null) {
-            this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
+            // this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
+            this.cards = []
         }
 
         this.clearArray();
@@ -763,7 +781,7 @@ let CardManager = {
         this.renderAllCards();
     },
     selectCard: function(cardId) {
-        if (this.selectedCard !== undefined) {
+        if (this.selectedCard !== undefined && this.selectedCard.node.classList !== undefined) {
             this.selectedCard.node.classList.remove('selected');
         }
         this.selectedCard = this.cards[cardId];

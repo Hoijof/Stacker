@@ -299,9 +299,19 @@ body {
     font-family: "Roboto", serif;
 }
 
+.input {
+    width: 200px;
+    height: 23px;
+    padding: 0.6rem;
+    position: fixed;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 1);
+    font-family: 'Roboto', serif;
+}
+
 .textArea {
     width: 200px;
-    height: 200px;
+    height: 177px;
     padding: 0.6rem;
     position: fixed;
     font-size: 16px;

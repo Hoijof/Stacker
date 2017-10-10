@@ -3,9 +3,10 @@ let pubsub = require('../lib/pubsub'),
 
 
 let Card = {
-    init: function(name) {
+    init: function(title, description) {
         this.id = -1;
-        this.name = name;
+        this.title = title;
+        this.description = description;
         this.depth = 5;
         this.x = 100;
         this.y = 100;
@@ -13,7 +14,7 @@ let Card = {
         this.selected = false;
         this.isArchived = false;
         this.isDeleted = false;
-        this.createdAt = + new Date();
+        this.createdAt = +new Date();
         this.archivedAt = null;
 
         return this;
@@ -24,11 +25,20 @@ let Card = {
         }
 
         let node = document.createElement('div'),
+            title = document.createElement('div'),
             text = document.createElement('div'),
             link = this.findLink(),
             that = this;
 
-        text.innerHTML = this.name.replace(/\r?\n/g, '<br/>');
+        if (this.title) {
+            title.innerHTML = this.title;
+        }
+
+        if (this.description) {
+            text.innerHTML = this.description.replace(/\r?\n/g, '<br/>');
+        }
+
+        title.className = 'cardTitle';
         text.className = 'cardText';
 
         node.id = 'todo_' + this.id;
@@ -53,6 +63,7 @@ let Card = {
             node.appendChild(createDiv(`<a target="_blank" href="${link}">Link!</a>`, 'link'));
         }
 
+        node.appendChild(title);
         node.appendChild(text);
 
         $('#todo_' + this.id).draggable({
@@ -94,7 +105,7 @@ let Card = {
             this.node.classList.remove('notCompleted');
             void this.node.offsetWidth;
             this.node.classList.add('completed');
-            this.archivedAt = + new Date();
+            this.archivedAt = +new Date();
         } else {
             this.node.classList.remove('completed');
             void this.node.offsetWidth;
@@ -120,7 +131,7 @@ let Card = {
     },
     findLink: function() {
         const regex = /(https?:\/\/[^\s]+|www.[^\s]+)/;
-        const link = regex.exec(this.name);
+        const link = regex.exec(this.title);
 
         if (link) {
             return link[0];
