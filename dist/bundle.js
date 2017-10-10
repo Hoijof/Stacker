@@ -527,6 +527,7 @@ let Card = {
 
         let node = document.createElement('div'),
             text = document.createElement('div'),
+            link = this.findLink(),
             that = this;
 
         text.innerHTML = this.name.replace(/\r?\n/g, '<br/>');
@@ -550,6 +551,9 @@ let Card = {
         node.appendChild(createDiv('depth: ' + this.depth, 'depth'));
         // node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
         node.appendChild(createDiv('id: ' + this.id, 'id'));
+        if (link) {
+            node.appendChild(createDiv(`<a target="_blank" href="${link}">Link!</a>`, 'link'));
+        }
 
         node.appendChild(text);
 
@@ -613,6 +617,14 @@ let Card = {
         this.isDeleted = false;
 
         this.render();
+    },
+    findLink: function() {
+        const regex = /(https?:\/\/[^\s]+|www.[^\s]+)/;
+        const link = regex.exec(this.name);
+
+        if (link) {
+            return link[0];
+        }
     }
 };
 
