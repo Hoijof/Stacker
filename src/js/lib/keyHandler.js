@@ -120,7 +120,9 @@ function keyHandlerUp(e) {
             cardManager.selectedCard.render();
             break;
         case CONFIG.ASCII.Z_KEY:
-            cardManager.undeleteLastCard();
+            if (event.ctrlKey) {
+                cardManager.undeleteLastCard();
+            }
             break;
     }
 }
