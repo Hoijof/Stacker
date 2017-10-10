@@ -106,6 +106,11 @@ let Card = {
         this.isDeleted = true;
 
         this.derender();
+    },
+    undelete: function() {
+        this.isDeleted = false;
+
+        this.render();
     }
 };
 

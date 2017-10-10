@@ -72,7 +72,7 @@ function keyHandlerDown(e) {
 }
 
 function keyHandlerUp(e) {
-
+    console.log(e.keyCode);
     if (document.activeElement !== document.body || CONFIG.ASCII.KEYS_ARRAY.indexOf(e.keyCode) === -1) {
         return;
     }
@@ -91,8 +91,9 @@ function keyHandlerUp(e) {
         case CONFIG.ASCII.D_KEY:
             let card = cardManager.selectedCard;
             cardManager.nextCard();
-            // cardManager.removeCard(card.id);
-            card.delete();
+
+            cardManager.deleteCard(card);
+
             cardManager.saveCards();
             break;
         case CONFIG.ASCII.E_KEY:
@@ -117,6 +118,9 @@ function keyHandlerUp(e) {
             cardManager.selectedCard.color = cardManager.selectedCard.getBackgroundColor();
             cardManager.selectedCard.derender();
             cardManager.selectedCard.render();
+            break;
+        case CONFIG.ASCII.Z_KEY:
+            cardManager.undeleteLastCard();
             break;
     }
 }
@@ -240,7 +244,7 @@ function cardMenuEvents() {
             selection.empty();
             break;
         case 'x':
-            cardManager.removeCard(cardId, -1);
+            cardManager.deleteCard(cardManager.cards[cardId]);
             break;
         case 'V':
         case 'O':
