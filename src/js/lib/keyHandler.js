@@ -81,29 +81,40 @@ function keyHandlerUp(e) {
 
     switch (e.keyCode) {
         case CONFIG.ASCII.C_KEY:
-            let elem = cardManager.selectedCard.node,
-                selection;
+            if (event.ctrlKey) {
+                let elem = cardManager.selectedCard.node,
+                    selection;
 
-            selection = selectText(elem.getElementsByClassName('cardText')[0]);
-            copySelectionText();
-            selection.empty();
+                selection = selectText(elem.getElementsByClassName('cardText')[0]);
+                copySelectionText();
+                selection.empty();
+            }
+
             break;
         case CONFIG.ASCII.D_KEY:
-            let card = cardManager.selectedCard;
-            cardManager.nextCard();
+            if (event.ctrlKey) {
+                let card = cardManager.selectedCard;
+                cardManager.nextCard();
 
-            cardManager.deleteCard(card);
+                cardManager.deleteCard(card);
 
-            cardManager.saveCards();
+                cardManager.saveCards();
+            }
             break;
         case CONFIG.ASCII.E_KEY:
-            doubleClickHandler.apply(cardManager.selectedCard.node);
+            if (event.ctrlKey) {
+                doubleClickHandler.apply(cardManager.selectedCard.node);
+            }
             break;
         case CONFIG.ASCII.A_KEY:
-            cardManager.selectedCard.toggleArchived();
+            if (event.ctrlKey) {
+                cardManager.selectedCard.toggleArchived();
+            }
             break;
         case CONFIG.ASCII.I_KEY:
-            input.focus();
+            if (event.ctrlKey) {
+                input.focus();
+            }
             break;
         case CONFIG.ASCII.PLUS_KEY:
             changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 1]);
