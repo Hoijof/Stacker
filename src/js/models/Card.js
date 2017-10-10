@@ -13,6 +13,8 @@ let Card = {
         this.selected = false;
         this.isArchived = false;
         this.isDeleted = false;
+        this.createdAt = + new Date();
+        this.archivedAt = null;
 
         return this;
     },
@@ -40,12 +42,12 @@ let Card = {
         document.getElementById('mainContainer').appendChild(node);
 
         node.appendChild(createDiv('x', 'control remove'));
-        node.appendChild(createDiv('+', 'control up'));
-        node.appendChild(createDiv('-', 'control down'));
+        // node.appendChild(createDiv('+', 'control up'));
+        // node.appendChild(createDiv('-', 'control down'));
         node.appendChild(createDiv('C', 'control copy'));
-        node.appendChild(createDiv(this.depth, 'depth'));
-        node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
-        node.appendChild(createDiv(this.id, 'id'));
+        node.appendChild(createDiv('depth: ' + this.depth, 'depth'));
+        // node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
+        node.appendChild(createDiv('id: ' + this.id, 'id'));
 
         node.appendChild(text);
 
@@ -88,10 +90,12 @@ let Card = {
             this.node.classList.remove('notCompleted');
             void this.node.offsetWidth;
             this.node.classList.add('completed');
+            this.archivedAt = + new Date();
         } else {
             this.node.classList.remove('completed');
             void this.node.offsetWidth;
             this.node.classList.add('notCompleted');
+            this.archivedAt = null;
         }
 
         this.isArchived = !this.isArchived;

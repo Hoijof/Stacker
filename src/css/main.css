@@ -254,7 +254,7 @@ body {
 /* MINE */
 
 .depth {
-    width: 30px !important;
+    /*width: 30px !important;*/
 }
 
 .control:hover {

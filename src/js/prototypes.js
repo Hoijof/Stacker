@@ -5,8 +5,9 @@ function createDiv(text, className) {
     div.innerHTML = text;
     div.style.float = "right";
     div.style.cursor = "pointer";
-    div.style.width = "16px";
+    div.style.width = "auto";
     div.style.textAlign = "center";
+    div.style.margin = "0 3px";
 
     if (className !== undefined) {
         div.className = className;
