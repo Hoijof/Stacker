@@ -4,7 +4,6 @@ let cardManager,
     Card = require('../models/Card');
 
 let mainContainer,
-    input,
     editContainer,
     editInput,
     titleInput,
@@ -22,7 +21,6 @@ function init(options) {
 
 function bindings() {
     mainContainer = $('#mainContainer');
-    input = document.querySelector('#formContainer input');
     editContainer = document.getElementById('editContainer');
     editInput = editContainer.getElementsByClassName('textarea')[0];
     titleInput = editContainer.getElementsByClassName('input')[0];
@@ -35,7 +33,6 @@ function bindings() {
 
     window.addEventListener('keyup', keyHandlerUp, false);
     window.addEventListener('keydown', keyHandlerDown, false);
-    input.addEventListener('keydown', mainInputKeyEvent);
     editInput.addEventListener('keydown', editInputKeyEvent);
     titleInput.addEventListener('keydown', editInputKeyEvent);
     editContainer.addEventListener('click', hideEditContainer);
@@ -79,6 +76,7 @@ function keyHandlerDown(e) {
 
 function keyHandlerUp(e) {
     console.log(e.keyCode);
+    console.log(document.activeElement);
     if (document.activeElement !== document.body || CONFIG.ASCII.KEYS_ARRAY.indexOf(e.keyCode) === -1) {
         return;
     }
@@ -163,18 +161,6 @@ function hideImportContainer() {
 
 function stopPropagation(e) {
     e.stopPropagation();
-}
-
-function mainInputKeyEvent(event) {
-    let card;
-
-    if (event.keyCode === 13) {
-        card = cardManager.addCard(Object.create(Card, {}).init(input.value));
-        card.render();
-        this.value = '';
-        cardManager.saveCards();
-        cardManager.selectCard(card.id);
-    }
 }
 
 function editInputKeyEvent(event) {
