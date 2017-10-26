@@ -24,6 +24,7 @@
   "dependencies": {
     "browserify": "^14.1.0",
     "eslint": "^4.9.0",
+    "eslint-plugin-import": "^2.8.0",
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.5.0",

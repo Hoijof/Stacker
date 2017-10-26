@@ -1,14 +1,13 @@
 
 var subs = {};
 
-
-function pub(name, params) {
-  subs[name].forEach(function(elem) {
+function pub (name, params) {
+  subs[name].forEach(function (elem) {
     elem.callback.apply(elem.context, params);
   });
 }
 
-function sub(name, callback, context) {
+function sub (name, callback, context) {
   if (subs[name] === undefined) {
     subs[name] = [];
   }
@@ -18,7 +17,6 @@ function sub(name, callback, context) {
     context: context
   });
 }
-
 
 module.exports = {
   pub: pub,

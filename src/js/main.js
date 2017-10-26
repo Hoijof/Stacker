@@ -1,8 +1,8 @@
 window.CONFIG = require('./config.js');
 
-let keyHandler = require('./lib/keyHandler'),
-  cardManager = require('./models/CardManager').getInstance(),
-  pubsub = require('./lib/pubsub');
+let keyHandler = require('./lib/keyHandler');
+let cardManager = require('./models/CardManager').getInstance();
+let pubsub = require('./lib/pubsub');
 
 window.cm = {
   cardManager: cardManager
@@ -10,14 +10,13 @@ window.cm = {
 
 Object.assign(window, require('./prototypes'));
 
-
 document.addEventListener('DOMContentLoaded', function () {
   'strict mode';
 
   keyHandler.init({
     cardManager: cardManager
   });
-
+    
   cardManager.loadCards();
   cardManager.renderAllCards();
 });

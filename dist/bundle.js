@@ -153,323 +153,305 @@ module.exports = {
     R_KEY: 82,
     Z_KEY: 90,
     CMD_KEY: 91,
-    KEYS_ARRAY: [27, 9, 67, 68, 69, 187, 189, 190, 65, 73, 82, 90, 91],
+    KEYS_ARRAY: [27, 9, 67, 68, 69, 187, 189, 190, 65, 73, 82, 90, 91]
   },
   DEFAULT_CONTENT: 'W3siaWQiOjAsInRpdGxlIjoiMSIsImRlc2NyaXB0aW9uIjoiVXNlIHRhYiBhbmQgc2hpZnQgdGFiIHRvIGNpcmNsZSBiZXR3ZWVuIGNhcmRzIDpEXG5cbkRyYWdnaW5nIG9yIGNsaWNraW5nIHRoZW0gd2lsbCBhbHNvIG1hcmsgdGhlbSBhcyBzZWxlY3RlZCIsImRlcHRoIjo1LCJ4IjoxNjksInkiOjc5LCJjb2xvciI6IiNBNUQ2QTciLCJzZWxlY3RlZCI6dHJ1ZSwiaXNBcmNoaXZlZCI6ZmFsc2UsImlzRGVsZXRlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6MTUwNzY0Njc1ODE4NiwiYXJjaGl2ZWRBdCI6bnVsbCwibm9kZSI6eyJqUXVlcnkxNzIwNDI0NzE4MTg1NzEyOTY0MDUiOjR9fSx7ImlkIjoxLCJ0aXRsZSI6IjIiLCJkZXNjcmlwdGlvbiI6Ik9uIGEgbWFya2VkIGNhcmQgdXNlIGN0cmwgKzpcbidjJyB0byBjb3B5IHRoZSBjb250ZW50XG4nZCcgdG8gZGVsZXRlIGl0XG4nZScgdG8gZWRpdCBpdFxuJ2EnIHRvIGFyY2hpdmUgb3IgZGVhcmNoaXZlIGRlIGNhcmQiLCJkZXB0aCI6NSwieCI6MzgyLCJ5Ijo3NiwiY29sb3IiOiIjQUVENTgxIiwic2VsZWN0ZWQiOmZhbHNlLCJpc0FyY2hpdmVkIjpmYWxzZSwiaXNEZWxldGVkIjpmYWxzZSwiY3JlYXRlZEF0IjoxNTA3NjQ2NzcxNzQwLCJhcmNoaXZlZEF0IjpudWxsLCJub2RlIjp7ImpRdWVyeTE3MjA0MjQ3MTgxODU3MTI5NjQwNSI6OH19LHsiaWQiOjIsInRpdGxlIjoiZW50ZXJzIiwiZGVzY3JpcHRpb24iOiJXaGlsZSBlZGl0aW5nIHVzZSBzaGlmdCArIGVudGVyIHRvIFxuaW5zZXJ0XG5hXG5saW5lXG5icmVha1xuOkQiLCJkZXB0aCI6NSwieCI6MTU5LCJ5IjozMTIsImNvbG9yIjoiI0ZGQjc0RCIsInNlbGVjdGVkIjpmYWxzZSwiaXNBcmNoaXZlZCI6ZmFsc2UsImlzRGVsZXRlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6MTUwNzY0Njc5MjI5NywiYXJjaGl2ZWRBdCI6bnVsbCwibm9kZSI6eyJqUXVlcnkxNzIwNDI0NzE4MTg1NzEyOTY0MDUiOjZ9fSx7ImlkIjozLCJ0aXRsZSI6IkdlbmVyaWMiLCJkZXNjcmlwdGlvbiI6IllvdSBjYW4gYWxzbyB1c2UgZ2VuZXJpYyBjb21tYW5kcyBzdWNoIGFzIGN0cmwrXG4naScgdG8gY3JlYXRlIGEgY2FyZFxuJ3onIHRvIHJldml2ZSB0aGUgbGFzdCBkZWxldGVkIGNhcmQiLCJkZXB0aCI6NSwieCI6NDQxLCJ5IjoyOTYsImNvbG9yIjoiI0ZGRTA4MiIsInNlbGVjdGVkIjpmYWxzZSwiaXNBcmNoaXZlZCI6ZmFsc2UsImlzRGVsZXRlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6MTUwNzY0ODYzODM4NiwiYXJjaGl2ZWRBdCI6bnVsbCwiaXNQcmlzdGluZSI6ZmFsc2UsIm5vZGUiOnsialF1ZXJ5MTcyMDQyNDcxODE4NTcxMjk2NDA1IjoxMH19XQ',
-  VERSION: '0.5.0',
+  VERSION: '0.5.0'
 };
+
 },{}],6:[function(require,module,exports){
 const CONFIG = require('../config');
 
-let cardManager,
-    Card = require('../models/Card');
+let cardManager;
+let Card = require('../models/Card');
 
 let mainContainer,
-    editContainer,
-    editInput,
-    titleInput,
-    importContainer,
-    importInput,
-    exportContainer,
-    exportContent,
-    importButton;
+  editContainer,
+  editInput,
+  titleInput,
+  importContainer,
+  importInput,
+  exportContainer,
+  exportContent,
+  importButton;
 
-
-function init(options) {
-    cardManager = options.cardManager;
-    bindings();
+function init (options) {
+  cardManager = options.cardManager;
+  bindings();
 }
 
-function bindings() {
-    mainContainer = $('#mainContainer');
-    editContainer = document.getElementById('editContainer');
-    editInput = editContainer.getElementsByClassName('textarea')[0];
-    titleInput = editContainer.getElementsByClassName('input')[0];
-    importContainer = document.getElementById('importContainer');
-    importInput = importContainer.getElementsByClassName('input')[0];
-    importButton = importContainer.getElementsByClassName('button')[0];
-    exportContainer = document.getElementById('exportContainer');
-    exportContent = exportContainer.getElementsByTagName('div')[0];
+function bindings () {
+  mainContainer = $('#mainContainer');
+  editContainer = document.getElementById('editContainer');
+  editInput = editContainer.getElementsByClassName('textarea')[0];
+  titleInput = editContainer.getElementsByClassName('input')[0];
+  importContainer = document.getElementById('importContainer');
+  importInput = importContainer.getElementsByClassName('input')[0];
+  importButton = importContainer.getElementsByClassName('button')[0];
+  exportContainer = document.getElementById('exportContainer');
+  exportContent = exportContainer.getElementsByTagName('div')[0];
 
-
-    window.addEventListener('keyup', keyHandlerUp, false);
-    window.addEventListener('keydown', keyHandlerDown, false);
-    editInput.addEventListener('keydown', editInputKeyEvent);
-    titleInput.addEventListener('keydown', editInputKeyEvent);
-    editContainer.addEventListener('click', hideEditContainer);
-    editInput.addEventListener('click', stopPropagation);
-    titleInput.addEventListener('click', stopPropagation);
-    /*
+  window.addEventListener('keyup', keyHandlerUp, false);
+  window.addEventListener('keydown', keyHandlerDown, false);
+  editInput.addEventListener('keydown', editInputKeyEvent);
+  titleInput.addEventListener('keydown', editInputKeyEvent);
+  editContainer.addEventListener('click', hideEditContainer);
+  editInput.addEventListener('click', stopPropagation);
+  titleInput.addEventListener('click', stopPropagation);
+  /*
      On double click edit the card
      */
-    mainContainer.on('dblclick', 'div', doubleClickHandler);
-    /*
+  mainContainer.on('dblclick', 'div', doubleClickHandler);
+  /*
      On click perform the card
      */
-    mainContainer.on('click', 'div', cardClickEvents);
-    mainContainer.on('click', 'div > div', cardMenuEvents);
-    document.getElementById('export').addEventListener('click', exportCards);
-    document.getElementById('import').addEventListener('click', showImporter);
-    importButton.addEventListener('click', loadImportCardsCode);
-    importContainer.addEventListener('click', hideImportContainer);
-    importInput.addEventListener('keydown', importInputKeyEvent);
-    importInput.addEventListener('click', stopPropagation);
-    exportContainer.addEventListener('click', hideExportContainer);
-    exportContent.addEventListener('click', stopPropagation);
+  mainContainer.on('click', 'div', cardClickEvents);
+  mainContainer.on('click', 'div > div', cardMenuEvents);
+  document.getElementById('export').addEventListener('click', exportCards);
+  document.getElementById('import').addEventListener('click', showImporter);
+  importButton.addEventListener('click', loadImportCardsCode);
+  importContainer.addEventListener('click', hideImportContainer);
+  importInput.addEventListener('keydown', importInputKeyEvent);
+  importInput.addEventListener('click', stopPropagation);
+  exportContainer.addEventListener('click', hideExportContainer);
+  exportContent.addEventListener('click', stopPropagation);
 }
 
-function keyHandlerDown(e) {
-
-    if (e.keyCode === CONFIG.ASCII.TAB_KEY) {
-        document.activeElement.blur();
-        if (event.shiftKey) {
-            cardManager.previousCard();
-        } else {
-            cardManager.nextCard();
-        }
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
-    } else if (e.keyCode === CONFIG.ASCII.CMD_KEY) {
-        window.cmdPress = true;
-    }
-}
-
-function keyHandlerUp(e) {
-    console.log(e.keyCode);
-    console.log(document.activeElement);
-    if (document.activeElement !== document.body || CONFIG.ASCII.KEYS_ARRAY.indexOf(e.keyCode) === -1) {
-        return;
-    }
-    e.stopPropagation();
-    e.preventDefault();
-
-    switch (e.keyCode) {
-        case CONFIG.ASCII.C_KEY:
-            if (event.ctrlKey || window.cmdPress || true) {
-                let elem = cardManager.selectedCard.node,
-                    selection;
-
-                selection = selectText(elem.getElementsByClassName('cardText')[0]);
-                copySelectionText();
-                selection.empty();
-            }
-
-            break;
-        case CONFIG.ASCII.D_KEY:
-            if (event.ctrlKey || window.cmdPress || true) {
-                let card = cardManager.selectedCard;
-                cardManager.nextCard();
-
-                cardManager.deleteCard(card);
-
-                cardManager.saveCards();
-            }
-            break;
-        case CONFIG.ASCII.E_KEY:
-            if (event.ctrlKey || window.cmdPress || true) {
-                doubleClickHandler.apply(cardManager.selectedCard.node);
-            }
-            break;
-        case CONFIG.ASCII.A_KEY:
-            if (event.ctrlKey || window.cmdPress || true) {
-                cardManager.selectedCard.toggleArchived();
-            }
-            break;
-        case CONFIG.ASCII.I_KEY:
-            if (event.ctrlKey || window.cmdPress || true) {
-                // input.focus();
-                createCard();
-            }
-            break;
-        case CONFIG.ASCII.PLUS_KEY:
-            changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 1]);
-            break;
-        case CONFIG.ASCII.MINUS_KEY:
-            changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
-            break;
-        case CONFIG.ASCII.DOT_KEY:
-            setDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 5]);
-            break;
-        case CONFIG.ASCII.R_KEY:
-            cardManager.selectedCard.color = cardManager.selectedCard.getBackgroundColor();
-            cardManager.selectedCard.derender();
-            cardManager.selectedCard.render();
-
-            cardManager.saveCards();
-            break;
-        case CONFIG.ASCII.Z_KEY:
-            if (event.ctrlKey || window.cmdPress || true) {
-                cardManager.undeleteLastCard();
-            }
-            break;
-        case CONFIG.ASCII.CMD_KEY:
-            window.cmdPress = false;
-    }
-}
-
-function hideExportContainer() {
-    exportContainer.style.display = 'none';
-}
-
-function hideEditContainer() {
-    editContainer.style.display = 'none';
-}
-
-function hideImportContainer() {
-    importContainer.style.display = 'none';
-}
-
-function stopPropagation(e) {
-    e.stopPropagation();
-}
-
-function editInputKeyEvent(event) {
-    event.stopPropagation();
-    let card;
-    if (event.keyCode === 13 && event.shiftKey) return;
-    if (event.keyCode === 13) {
-        card = cardManager.cards[editContainer.cardId];
-        card.title = titleInput.value;
-        card.description = editInput.value;
-        card.derender();
-        card.render();
-        this.value = '';
-        cardManager.saveCards();
-        hideEditContainer();
-    } else if (event.keyCode === 27) {
-        hideEditContainer();
-    }
-
-}
-
-function importInputKeyEvent(event) {
-    if (event.keyCode === 27) {
-        hideImportContainer();
-    }
-}
-
-function doubleClickHandler() {
-    let elem = this.querySelector('.cardText'),
-        cardId,
-        card;
-
-    if (this.id === '') {
-        cardId = parseInt(this.parentElement.id.split('_')[1]);
+function keyHandlerDown (e) {
+  if (e.keyCode === CONFIG.ASCII.TAB_KEY) {
+    document.activeElement.blur();
+    if (e.shiftKey) {
+      cardManager.previousCard();
     } else {
-        cardId = parseInt(this.id.split('_')[1]);
+      cardManager.nextCard();
     }
-
-    card = cardManager.cards[cardId];
-
-    titleInput.value = card.title;
-    editInput.value = card.description;
-    titleInput.style.top = card.y;
-    titleInput.style.left = card.x;
-    editContainer.cardId = cardId;
-    editContainer.style.display = 'block';
-    editInput.style.top = card.y + 23;
-    editInput.style.left = card.x;
-    titleInput.focus();
+    if (e.preventDefault) {
+      e.preventDefault();
+    }
+  } else if (e.keyCode === CONFIG.ASCII.CMD_KEY) {
+    window.cmdPress = true;
+  }
 }
 
-function cardClickEvents(event) {
-    let elem = this.querySelector('.cardText'),
-        cardId,
-        card;
+function keyHandlerUp (e) {
+  console.log(e.keyCode);
+  console.log(document.activeElement);
+  if (document.activeElement !== document.body || CONFIG.ASCII.KEYS_ARRAY.indexOf(e.keyCode) === -1) {
+    return;
+  }
+  e.stopPropagation();
+  e.preventDefault();
 
-    if (this.id === "") {
-        cardId = parseInt(this.parentElement.id.split('_')[1]);
-    } else {
-        cardId = parseInt(this.id.split('_')[1]);
-    }
+  switch (e.keyCode) {
+    case CONFIG.ASCII.C_KEY:
+      let elem = cardManager.selectedCard.node;
+      let selection;
 
-    card = cardManager.cards[cardId];
+      selection = selectText(elem.getElementsByClassName('cardText')[0]);
+      copySelectionText();
+      selection.empty();
 
-    if (card === undefined) return;
+      break;
+    case CONFIG.ASCII.D_KEY:
+      let card = cardManager.selectedCard;
+      cardManager.nextCard();
+      cardManager.deleteCard(card);
+      cardManager.saveCards();
+      break;
+    case CONFIG.ASCII.E_KEY:
+      doubleClickHandler.apply(cardManager.selectedCard.node);
 
-    cardManager.selectCard(card.id);
+      break;
+    case CONFIG.ASCII.A_KEY:
+      cardManager.selectedCard.toggleArchived();
+      break;
+    case CONFIG.ASCII.I_KEY:
+      // input.focus();
+      createCard();
+      break;
+    case CONFIG.ASCII.PLUS_KEY:
+      changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 1]);
+      break;
+    case CONFIG.ASCII.MINUS_KEY:
+      changeDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, -1]);
+      break;
+    case CONFIG.ASCII.DOT_KEY:
+      setDepth.apply(cardManager.selectedCard.node, [cardManager.selectedCard.id, 5]);
+      break;
+    case CONFIG.ASCII.R_KEY:
+      cardManager.selectedCard.color = cardManager.selectedCard.getBackgroundColor();
+      cardManager.selectedCard.derender();
+      cardManager.selectedCard.render();
 
-    if (event.ctrlKey) {
-    }
-    if (event.altKey) {
-        this.querySelector('.copy').click();
-    }
-    if (event.shiftKey) {
-
-    }
+      cardManager.saveCards();
+      break;
+    case CONFIG.ASCII.Z_KEY:
+      cardManager.undeleteLastCard();
+      break;
+    case CONFIG.ASCII.CMD_KEY:
+      window.cmdPress = false;
+  }
 }
 
-function cardMenuEvents() {
-    let option = $(this).html(),
-        selection,
-        cardId = getParentCardId(this);
-
-    switch (option) {
-        case '+':
-            changeDepth.apply(this, [cardId, 1]);
-            break;
-        case '-':
-            changeDepth.apply(this, [cardId, -1]);
-            break;
-        case 'C':
-            selection = selectText(this.parentElement.getElementsByClassName('cardText')[0]);
-            copySelectionText();
-            selection.empty();
-            break;
-        case 'x':
-            cardManager.deleteCard(cardManager.cards[cardId]);
-            break;
-        case 'V':
-        case 'O':
-            cardManager.cards[cardId].toggleArchived();
-    }
-    cardManager.saveCards();
+function hideExportContainer () {
+  exportContainer.style.display = 'none';
 }
 
-function exportCards() {
-    exportContainer.style.display = 'block';
-    exportContent.innerHTML = cardManager.exportCards();
-    selection = selectText(exportContent);
-    copySelectionText();
-    selection.empty();
+function hideEditContainer () {
+  editContainer.style.display = 'none';
 }
 
-function loadImportCardsCode() {
-    let data = importInput.value;
-    cardManager.importCards(data);
-    importContainer.style.display = 'none';
+function hideImportContainer () {
+  importContainer.style.display = 'none';
 }
 
-function showImporter() {
-    importContainer.style.display = 'block';
-    importInput.focus();
+function stopPropagation (e) {
+  e.stopPropagation();
 }
 
-function createCard() {
-    const card = cardManager.addCard(Object.create(Card, {}).init(''));
+function editInputKeyEvent (event) {
+  event.stopPropagation();
+  let card;
+  if (event.keyCode === 13 && event.shiftKey) return;
+  if (event.keyCode === 13) {
+    card = cardManager.cards[editContainer.cardId];
+    card.title = titleInput.value;
+    card.description = editInput.value;
+    card.derender();
     card.render();
-    cardManager.selectCard(card.id);
+    this.value = '';
+    cardManager.saveCards();
+    hideEditContainer();
+  } else if (event.keyCode === 27) {
+    hideEditContainer();
+  }
+}
 
-    // and now we autoedit :D
-    doubleClickHandler.apply(card.node);
+function importInputKeyEvent (event) {
+  if (event.keyCode === 27) {
+    hideImportContainer();
+  }
+}
+
+function doubleClickHandler () {
+  let cardId;
+  let card;
+
+  if (this.id === '') {
+    cardId = parseInt(this.parentElement.id.split('_')[1]);
+  } else {
+    cardId = parseInt(this.id.split('_')[1]);
+  }
+
+  card = cardManager.cards[cardId];
+
+  titleInput.value = card.title;
+  editInput.value = card.description;
+  titleInput.style.top = card.y;
+  titleInput.style.left = card.x;
+  editContainer.cardId = cardId;
+  editContainer.style.display = 'block';
+  editInput.style.top = card.y + 23;
+  editInput.style.left = card.x;
+  titleInput.focus();
+}
+
+function cardClickEvents (event) {
+  let cardId;
+  let card;
+
+  if (this.id === '') {
+    cardId = parseInt(this.parentElement.id.split('_')[1]);
+  } else {
+    cardId = parseInt(this.id.split('_')[1]);
+  }
+
+  card = cardManager.cards[cardId];
+
+  if (card === undefined) return;
+
+  cardManager.selectCard(card.id);
+
+  if (event.ctrlKey) {
+  }
+  if (event.altKey) {
+    this.querySelector('.copy').click();
+  }
+  if (event.shiftKey) {
+
+  }
+}
+
+function cardMenuEvents () {
+  let option = $(this).html();
+  let selection;
+  let cardId = getParentCardId(this);
+
+  switch (option) {
+    case '+':
+      changeDepth.apply(this, [cardId, 1]);
+      break;
+    case '-':
+      changeDepth.apply(this, [cardId, -1]);
+      break;
+    case 'C':
+      selection = selectText(this.parentElement.getElementsByClassName('cardText')[0]);
+      copySelectionText();
+      selection.empty();
+      break;
+    case 'x':
+      cardManager.deleteCard(cardManager.cards[cardId]);
+      break;
+    case 'V':
+    case 'O':
+      cardManager.cards[cardId].toggleArchived();
+  }
+  cardManager.saveCards();
+}
+
+function exportCards () {
+  exportContainer.style.display = 'block';
+  exportContent.innerHTML = cardManager.exportCards();
+  selection = selectText(exportContent);
+  copySelectionText();
+  selection.empty();
+}
+
+function loadImportCardsCode () {
+  let data = importInput.value;
+  cardManager.importCards(data);
+  importContainer.style.display = 'none';
+}
+
+function showImporter () {
+  importContainer.style.display = 'block';
+  importInput.focus();
+}
+
+function createCard () {
+  const card = cardManager.addCard(Object.create(Card, {}).init(''));
+  card.render();
+  cardManager.selectCard(card.id);
+
+  // and now we autoedit :D
+  doubleClickHandler.apply(card.node);
 }
 
 module.exports = {
-    init: init
+  init: init
 };
+
 },{"../config":5,"../models/Card":9}],7:[function(require,module,exports){
 
 var subs = {};
 
-
-function pub(name, params) {
-  subs[name].forEach(function(elem) {
+function pub (name, params) {
+  subs[name].forEach(function (elem) {
     elem.callback.apply(elem.context, params);
   });
 }
 
-function sub(name, callback, context) {
+function sub (name, callback, context) {
   if (subs[name] === undefined) {
     subs[name] = [];
   }
@@ -480,17 +462,17 @@ function sub(name, callback, context) {
   });
 }
 
-
 module.exports = {
   pub: pub,
   sub: sub
 };
+
 },{}],8:[function(require,module,exports){
 window.CONFIG = require('./config.js');
 
-let keyHandler = require('./lib/keyHandler'),
-  cardManager = require('./models/CardManager').getInstance(),
-  pubsub = require('./lib/pubsub');
+let keyHandler = require('./lib/keyHandler');
+let cardManager = require('./models/CardManager').getInstance();
+let pubsub = require('./lib/pubsub');
 
 window.cm = {
   cardManager: cardManager
@@ -498,459 +480,455 @@ window.cm = {
 
 Object.assign(window, require('./prototypes'));
 
-
 document.addEventListener('DOMContentLoaded', function () {
   'strict mode';
 
   keyHandler.init({
     cardManager: cardManager
   });
-
+    
   cardManager.loadCards();
   cardManager.renderAllCards();
 });
 
 },{"./config.js":5,"./lib/keyHandler":6,"./lib/pubsub":7,"./models/CardManager":10,"./prototypes":11}],9:[function(require,module,exports){
-let pubsub = require('../lib/pubsub'),
-    randomMC = require('random-material-color');
-
+let pubsub = require('../lib/pubsub');
+let randomMC = require('random-material-color');
 
 let Card = {
-    init: function (title, description, pristine) {
-        this.id = -1;
-        this.title = title;
-        this.description = description;
-        this.depth = 5;
-        this.x = 100;
-        this.y = 100;
-        this.color = this.getBackgroundColor();
-        this.selected = false;
-        this.isArchived = false;
-        this.isDeleted = false;
-        this.createdAt = +new Date();
-        this.archivedAt = null;
-        this.isPristine = true;
+  init: function (title, description, pristine) {
+    this.id = -1;
+    this.title = title;
+    this.description = description;
+    this.depth = 5;
+    this.x = 100;
+    this.y = 100;
+    this.color = this.getBackgroundColor();
+    this.selected = false;
+    this.isArchived = false;
+    this.isDeleted = false;
+    this.createdAt = +new Date();
+    this.archivedAt = null;
+    this.isPristine = true;
 
-        return this;
-    },
-    render: function (always = false) {
-        if (this.isDeleted === true && always === false) {
-            return;
-        }
-
-        let node = document.createElement('div'),
-            title = document.createElement('div'),
-            text = document.createElement('div'),
-            link = this.findLink(),
-            that = this;
-
-        if (this.title) {
-            if (link) {
-                title.innerHTML = `<a target="_blank" href="${link}">${this.title}</a>`;
-            } else {
-                title.innerHTML = this.title;
-            }
-        } else {
-            if (link) {
-                title.innerHTML = `<a target="_blank" href="${link}">Link!</a>`;
-            } 
-        }
-
-        if (this.description) {
-            text.innerHTML = this.description.replace(/\r?\n/g, '<br/>');
-        }
-
-        title.className = 'cardTitle';
-        text.className = 'cardText';
-
-        node.id = 'todo_' + this.id;
-        node.className = 'card card-1';
-        node.style.position = 'fixed';
-        node.style.left = this.x;
-        node.style.top = this.y;
-        node.style.cursor = '-webkit-grab';
-        node.style.zIndex = this.depth;
-        node.style.backgroundColor = this.color;
-
-        document.getElementById('mainContainer').appendChild(node);
-
-        node.appendChild(createDiv('x', 'control remove'));
-        // node.appendChild(createDiv('+', 'control up'));
-        // node.appendChild(createDiv('-', 'control down'));
-        node.appendChild(createDiv('C', 'control copy'));
-        node.appendChild(createDiv('depth: ' + this.depth, 'depth'));
-        // node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
-        node.appendChild(createDiv('id: ' + this.id, 'id'));
-
-        node.appendChild(title);
-        node.appendChild(text);
-
-        $('#todo_' + this.id).draggable({
-            stop: function () {
-                let card = $('#todo_' + that.id);
-
-                if (that.isPristine === true) {
-                    that.isPristine = false;
-
-                    pubsub.pub(window.CONFIG.LESS_PRISTINE);
-                }
-
-                that.x = + card.css('left').replace('px', '');
-                that.y = + card.css('top').replace('px', '');
-
-                pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
-                pubsub.pub(window.CONFIG.SAVE_CARDS);
-            },
-        });
-
-        this.node = node;
-
-
-        if (this.selected === true) {
-            node.classList.add('selected');
-        }
-
-        if (this.isArchived) {
-            node.classList.add('completed');
-        }
-
-        return this;
-    },
-    getBackgroundColor: function () {
-        return randomMC.getColor({ shades: ['200', '300'] });
-    },
-    derender: function () {
-        let node = document.getElementById('todo_' + this.id);
-        document.getElementById('mainContainer').removeChild(node);
-
-        return this;
-    },
-    toggleArchived: function () {
-        if (this.isArchived === false || this.isArchived === undefined) {
-            this.node.classList.remove('notCompleted');
-            void this.node.offsetWidth;
-            this.node.classList.add('completed');
-            this.archivedAt = +new Date();
-        } else {
-            this.node.classList.remove('completed');
-            void this.node.offsetWidth;
-            this.node.classList.add('notCompleted');
-            this.archivedAt = null;
-        }
-
-        this.isArchived = !this.isArchived;
-
-        pubsub.pub(window.CONFIG.SAVE_CARDS);
-    },
-    delete: function () {
-        this.isDeleted = true;
-
-        this.derender();
-    },
-    undelete: function () {
-        this.isDeleted = false;
-
-        this.render();
-
-        return this;
-    },
-    findLink: function () {
-        const regex = /(https?:\/\/[^\s]+|www.[^\s]+)/;
-        let link = regex.exec(this.title);
-
-        if (link == null) {
-            link = regex.exec(this.description);
-        }
-
-        if (link) {
-            return link[0];
-        }
+    return this;
+  },
+  render: function (always = false) {
+    if (this.isDeleted === true && always === false) {
+      return;
     }
+
+    let node = document.createElement('div');
+    let title = document.createElement('div');
+    let text = document.createElement('div');
+    let link = this.findLink();
+    let that = this;
+
+    if (this.title) {
+      if (link) {
+        title.innerHTML = `<a target="_blank" href="${link}">${this.title}</a>`;
+      } else {
+        title.innerHTML = this.title;
+      }
+    } else {
+      if (link) {
+        title.innerHTML = `<a target="_blank" href="${link}">Link!</a>`;
+      }
+    }
+
+    if (this.description) {
+      text.innerHTML = this.description.replace(/\r?\n/g, '<br/>');
+    }
+
+    title.className = 'cardTitle';
+    text.className = 'cardText';
+
+    node.id = 'todo_' + this.id;
+    node.className = 'card card-1';
+    node.style.position = 'fixed';
+    node.style.left = this.x;
+    node.style.top = this.y;
+    node.style.cursor = '-webkit-grab';
+    node.style.zIndex = this.depth;
+    node.style.backgroundColor = this.color;
+
+    document.getElementById('mainContainer').appendChild(node);
+
+    node.appendChild(createDiv('x', 'control remove'));
+    // node.appendChild(createDiv('+', 'control up'));
+    // node.appendChild(createDiv('-', 'control down'));
+    node.appendChild(createDiv('C', 'control copy'));
+    node.appendChild(createDiv('depth: ' + this.depth, 'depth'));
+    // node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
+    node.appendChild(createDiv('id: ' + this.id, 'id'));
+
+    node.appendChild(title);
+    node.appendChild(text);
+
+    $('#todo_' + this.id).draggable({
+      stop: function () {
+        let card = $('#todo_' + that.id);
+
+        if (that.isPristine === true) {
+          that.isPristine = false;
+
+          pubsub.pub(window.CONFIG.LESS_PRISTINE);
+        }
+
+        that.x = +card.css('left').replace('px', '');
+        that.y = +card.css('top').replace('px', '');
+
+        pubsub.pub(window.CONFIG.SELECT_CARD, [that.id]);
+        pubsub.pub(window.CONFIG.SAVE_CARDS);
+      }
+    });
+
+    this.node = node;
+
+    if (this.selected === true) {
+      node.classList.add('selected');
+    }
+
+    if (this.isArchived) {
+      node.classList.add('completed');
+    }
+
+    return this;
+  },
+  getBackgroundColor: function () {
+    return randomMC.getColor({ shades: ['200', '300'] });
+  },
+  derender: function () {
+    let node = document.getElementById('todo_' + this.id);
+    document.getElementById('mainContainer').removeChild(node);
+
+    return this;
+  },
+  toggleArchived: function () {
+    if (this.isArchived === false || this.isArchived === undefined) {
+      this.node.classList.remove('notCompleted');
+      void this.node.offsetWidth;
+      this.node.classList.add('completed');
+      this.archivedAt = +new Date();
+    } else {
+      this.node.classList.remove('completed');
+      void this.node.offsetWidth;
+      this.node.classList.add('notCompleted');
+      this.archivedAt = null;
+    }
+
+    this.isArchived = !this.isArchived;
+
+    pubsub.pub(window.CONFIG.SAVE_CARDS);
+  },
+  delete: function () {
+    this.isDeleted = true;
+
+    this.derender();
+  },
+  undelete: function () {
+    this.isDeleted = false;
+
+    this.render();
+
+    return this;
+  },
+  findLink: function () {
+    const regex = /(https?:\/\/[^\s]+|www.[^\s]+)/;
+    let link = regex.exec(this.title);
+
+    if (link == null) {
+      link = regex.exec(this.description);
+    }
+
+    if (link) {
+      return link[0];
+    }
+  }
 };
 
 module.exports = Card;
+
 },{"../lib/pubsub":7,"random-material-color":4}],10:[function(require,module,exports){
-const Card = require('./Card'),
-pubsub = require('../lib/pubsub'),
-CONFIG = require('../config');
+const Card = require('./Card');
+const pubsub = require('../lib/pubsub');
+const CONFIG = require('../config');
 
 let CardManager = {
-    init: function() {
-        this.cards = [];
-        this.selectedCard = {id: -1};
-        this.deletedCards = [];
-        this.pristine = 0;
+  init: function () {
+    this.cards = [];
+    this.selectedCard = { id: -1 };
+    this.deletedCards = [];
+    this.pristine = 0;
 
-        return this;
-    },
-    addCard: function(card) {
-        this.cards.push(card);
-        card.id = this.cards.length - 1;
+    return this;
+  },
+  addCard: function (card) {
+    this.cards.push(card);
+    card.id = this.cards.length - 1;
 
-        card.x = card.x + this.pristine * 10;
-        card.y = card.y + this.pristine * 10;
+    card.x = card.x + this.pristine * 10;
+    card.y = card.y + this.pristine * 10;
 
-        this.pristine++;
+    this.pristine++;
 
-        return card;
-    },
-    removeCard: function(id) {
-        this.cards[id].derender();
-        this.cards[id] = undefined;
+    return card;
+  },
+  removeCard: function (id) {
+    this.cards[id].derender();
+    this.cards[id] = undefined;
 
-        return this;
-    },
-    redrawCard: function(cardId, x, y) {
-        let card = this.cards[cardId];
-        card.x = x;
-        card.y = y;
+    return this;
+  },
+  redrawCard: function (cardId, x, y) {
+    let card = this.cards[cardId];
+    card.x = x;
+    card.y = y;
 
-        card.derender();
-        card.render();
+    card.derender();
+    card.render();
 
-        return this;
-    },
-    saveCards: function() {
-        if (typeof(Storage) !== 'undefined') {
-            localStorage.setItem('cards', JSON.stringify(this.cards));
-        } else {
-            console.log('you don\'t have local storage :(');
-        }
-
-        this.persistSelectedCard();
-        this.persistDeletedCards();
-
-        return this;
-    },
-    loadCards: function() {
-        this.cards = JSON.parse(localStorage.getItem('cards'));
-
-        if (this.cards === null) {
-            this.cards = JSON.parse(atob(CONFIG.DEFAULT_CONTENT));
-        }
-
-        this.clearArray();
-
-        this.loadSelectedCard();
-        this.loadDeletedCards();
-
-        document.activeElement.blur();
-
-        return this;
-    },
-    clearArray: function() {
-        let i;
-
-        this.cards = this.cards.filter(function(elem) {
-            return elem !== undefined && elem !== null;
-        });
-        for (i in this.cards) {
-            if (this.cards.hasOwnProperty(i)) {
-                this.cards[+i].id = +i;
-            }
-        }
-
-        return this;
-    },
-    reRenderAllCards: function() {
-        this.cards.forEach((card) => {
-            card.derender();
-        });
-        this.renderAllCards();
-    },
-    renderAllCards: function() {
-
-        this.cards.forEach((card) => {
-                card.selected = this.selectedCard && (this.selectedCard.id === card.id);
-                Object.setPrototypeOf(card, Card);
-                card.render();
-            }
-        );
-
-        return this;
-    },
-    getInstance: function() {
-        if (CardManager.instance === undefined) {
-            CardManager.instance = Object.create(CardManager, {});
-            CardManager.instance.init();
-            pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
-            pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
-            pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
-            pubsub.sub(window.CONFIG.LESS_PRISTINE, CardManager.instance.lessPristine, CardManager.instance);
-        }
-
-        return CardManager.instance;
-
-    },
-    lessPristine: function() {
-        this.pristine--;
-    },
-    exportCards: function() {
-        return btoa(JSON.stringify(this.cards));
-    },
-    importCards: function(data) {
-        localStorage.setItem('cards', atob(data));
-        this.loadCards();
-        this.renderAllCards();
-    },
-    selectCard: function(cardId) {
-        if (this.selectedCard !== undefined && this.selectedCard.node.classList !== undefined) {
-            this.selectedCard.node.classList.remove('selected');
-        }
-        this.selectedCard = this.cards[cardId];
-
-        this.selectedCard.node.classList.add('selected');
-
-        this.persistSelectedCard();
-        document.activeElement.blur();
-    },
-    nextCard: function() {
-        let it = +this.selectedCard.id + 1;
-
-        while (it !== +this.selectedCard.id) {
-            if (this.cards[it] !== undefined && this.cards[it].isDeleted !== true) {
-                break;
-            }
-            if (++it >= this.cards.length) {
-                it = 0;
-            }
-        }
-
-        this.selectCard(it);
-    },
-    previousCard: function() {
-        let it = +this.selectedCard.id - 1;
-
-        while (it !== +this.selectedCard.id) {
-            if (this.cards[it] !== undefined) {
-                break;
-            }
-            if (--it <= 0) {
-                it = this.cards.length;
-            }
-        }
-
-        this.selectCard(it);
-    },
-    persistSelectedCard: function() {
-        if (this.selectedCard && this.selectedCard.id > -1) {
-            localStorage.setItem('selectedCard', this.selectedCard.id);
-        }
-    },
-    loadSelectedCard: function() {
-        let selectedCardId = +localStorage.getItem('selectedCard');
-
-        if (selectedCardId !== undefined && selectedCardId > -1) {
-            this.selectedCard = this.cards[selectedCardId];
-        }
-    },
-    persistDeletedCards: function() {
-        localStorage.setItem('deletedCards', JSON.stringify(this.deletedCards));
-    },
-    loadDeletedCards: function() {
-        this.deletedCards = JSON.parse(localStorage.getItem('deletedCards')) || [];
-
-    },
-    deleteCard: function(card) {
-        this.deletedCards.push(card.id);
-
-        card.delete();
-    },
-    undeleteLastCard: function() {
-        if (this.deletedCards.length === 0) {
-            return;
-        }
-
-        this.selectCard(this.cards[this.deletedCards.splice(this.deletedCards.length - 1)].undelete().id);
-
-        this.saveCards();
+    return this;
+  },
+  saveCards: function () {
+    if (typeof (Storage) !== 'undefined') {
+      window.localStorage.setItem('cards', JSON.stringify(this.cards));
+    } else {
+      console.log('you don\'t have local storage :(');
     }
+
+    this.persistSelectedCard();
+    this.persistDeletedCards();
+
+    return this;
+  },
+  loadCards: function () {
+    this.cards = JSON.parse(window.localStorage.getItem('cards'));
+
+    if (this.cards === null) {
+      this.cards = JSON.parse(window.atob(CONFIG.DEFAULT_CONTENT));
+    }
+
+    this.clearArray();
+
+    this.loadSelectedCard();
+    this.loadDeletedCards();
+
+    document.activeElement.blur();
+
+    return this;
+  },
+  clearArray: function () {
+    let i;
+
+    this.cards = this.cards.filter(function (elem) {
+      return elem !== undefined && elem !== null;
+    });
+    for (i in this.cards) {
+      if (this.cards.hasOwnProperty(i)) {
+        this.cards[+i].id = +i;
+      }
+    }
+
+    return this;
+  },
+  reRenderAllCards: function () {
+    this.cards.forEach((card) => {
+      card.derender();
+    });
+    this.renderAllCards();
+  },
+  renderAllCards: function () {
+    this.cards.forEach((card) => {
+      card.selected = this.selectedCard && (this.selectedCard.id === card.id);
+      Object.setPrototypeOf(card, Card);
+      card.render();
+    }
+    );
+
+    return this;
+  },
+  getInstance: function () {
+    if (CardManager.instance === undefined) {
+      CardManager.instance = Object.create(CardManager, {});
+      CardManager.instance.init();
+      pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
+      pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
+      pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
+      pubsub.sub(window.CONFIG.LESS_PRISTINE, CardManager.instance.lessPristine, CardManager.instance);
+    }
+
+    return CardManager.instance;
+  },
+  lessPristine: function () {
+    this.pristine--;
+  },
+  exportCards: function () {
+    return window.btoa(JSON.stringify(this.cards));
+  },
+  importCards: function (data) {
+    window.localStorage.setItem('cards', window.atob(data));
+    this.loadCards();
+    this.renderAllCards();
+  },
+  selectCard: function (cardId) {
+    if (this.selectedCard !== undefined && this.selectedCard.node.classList !== undefined) {
+      this.selectedCard.node.classList.remove('selected');
+    }
+    this.selectedCard = this.cards[cardId];
+
+    this.selectedCard.node.classList.add('selected');
+
+    this.persistSelectedCard();
+    document.activeElement.blur();
+  },
+  nextCard: function () {
+    let it = +this.selectedCard.id + 1;
+
+    while (it !== +this.selectedCard.id) {
+      if (this.cards[it] !== undefined && this.cards[it].isDeleted !== true) {
+        break;
+      }
+      if (++it >= this.cards.length) {
+        it = 0;
+      }
+    }
+
+    this.selectCard(it);
+  },
+  previousCard: function () {
+    let it = +this.selectedCard.id - 1;
+
+    while (it !== +this.selectedCard.id) {
+      if (this.cards[it] !== undefined) {
+        break;
+      }
+      if (--it <= 0) {
+        it = this.cards.length;
+      }
+    }
+
+    this.selectCard(it);
+  },
+  persistSelectedCard: function () {
+    if (this.selectedCard && this.selectedCard.id > -1) {
+      window.localStorage.setItem('selectedCard', this.selectedCard.id);
+    }
+  },
+  loadSelectedCard: function () {
+    let selectedCardId = +window.localStorage.getItem('selectedCard');
+
+    if (selectedCardId !== undefined && selectedCardId > -1) {
+      this.selectedCard = this.cards[selectedCardId];
+    }
+  },
+  persistDeletedCards: function () {
+    window.localStorage.setItem('deletedCards', JSON.stringify(this.deletedCards));
+  },
+  loadDeletedCards: function () {
+    this.deletedCards = JSON.parse(window.localStorage.getItem('deletedCards')) || [];
+  },
+  deleteCard: function (card) {
+    this.deletedCards.push(card.id);
+
+    card.delete();
+  },
+  undeleteLastCard: function () {
+    if (this.deletedCards.length === 0) {
+      return;
+    }
+
+    this.selectCard(this.cards[this.deletedCards.splice(this.deletedCards.length - 1)].undelete().id);
+
+    this.saveCards();
+  }
 };
 
 module.exports = CardManager;
+
 },{"../config":5,"../lib/pubsub":7,"./Card":9}],11:[function(require,module,exports){
 let cardManager = require('./models/CardManager').getInstance();
 
-function createDiv(text, className) {
-    let div = document.createElement('div');
-    div.innerHTML = text;
-    div.style.float = "right";
-    div.style.cursor = "pointer";
-    div.style.width = "auto";
-    div.style.textAlign = "center";
-    div.style.margin = "0 3px";
+function createDiv (text, className) {
+  let div = document.createElement('div');
+  div.innerHTML = text;
+  div.style.float = 'right';
+  div.style.cursor = 'pointer';
+  div.style.width = 'auto';
+  div.style.textAlign = 'center';
+  div.style.margin = '0 3px';
 
-    if (className !== undefined) {
-        div.className = className;
-    }
+  if (className !== undefined) {
+    div.className = className;
+  }
 
-    return div;
+  return div;
 }
 
-function copySelectionText() {
-    let copysuccess; // let to check whether execCommand successfully executed
-    try {
-        copysuccess = document.execCommand("copy"); // run command to copy selected text to clipboard
-    } catch (e) {
-        copysuccess = false
-    }
-    return copysuccess
+function copySelectionText () {
+  let copysuccess; // let to check whether execCommand successfully executed
+  try {
+    copysuccess = document.execCommand('copy'); // run command to copy selected text to clipboard
+  } catch (e) {
+    copysuccess = false;
+  }
+  return copysuccess;
 }
 
-function selectText(element) {
-    let doc = document
-        , text = element
-        , range, selection
+function selectText (element) {
+  let doc = document;
+  let text = element;
+  let range, selection
     ;
-    if (doc.body.createTextRange) {
-        range = document.body.createTextRange();
-        range.moveToElementText(text);
-        range.select();
-    } else if (window.getSelection) {
-        selection = window.getSelection();
-        range = document.createRange();
-        range.selectNodeContents(text);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        return selection;
-    }
+  if (doc.body.createTextRange) {
+    range = document.body.createTextRange();
+    range.moveToElementText(text);
+    range.select();
+  } else if (window.getSelection) {
+    selection = window.getSelection();
+    range = document.createRange();
+    range.selectNodeContents(text);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    return selection;
+  }
 }
 
-function getParentCardId(context) {
-    if (context.parentElement === null) return;
-    return parseInt(context.parentElement.id.split("_")[1]);
+function getParentCardId (context) {
+  if (context.parentElement === null) return;
+  return parseInt(context.parentElement.id.split('_')[1]);
 }
 
-function getSomethingByclassName(context, classname) {
-    let res = context.getElementsByClassName(classname);
+function getSomethingByclassName (context, classname) {
+  let res = context.getElementsByClassName(classname);
 
-    if (res.length === 0) {
-        res = context.parentElement.getElementsByClassName(classname);
-    }
+  if (res.length === 0) {
+    res = context.parentElement.getElementsByClassName(classname);
+  }
 
-    return res;
+  return res;
 }
 
-function changeDepth(cardId, increment) {
-    let depth = cardManager.cards[cardId].depth + increment;
+function changeDepth (cardId, increment) {
+  let depth = cardManager.cards[cardId].depth + increment;
 
-    this.style.zIndex = depth;
-    cardManager.cards[cardId].depth = depth;
+  this.style.zIndex = depth;
+  cardManager.cards[cardId].depth = depth;
 
-    let elem = getSomethingByclassName(this, 'depth');
-    elem[0].innerHTML = depth;
+  let elem = getSomethingByclassName(this, 'depth');
+  elem[0].innerHTML = depth;
 }
 
-function setDepth(cardId, depth) {
-    this.style.zIndex = depth;
-    cardManager.cards[cardId].depth = depth;
+function setDepth (cardId, depth) {
+  this.style.zIndex = depth;
+  cardManager.cards[cardId].depth = depth;
 
-    let elem = getSomethingByclassName(this, 'depth');
-    elem[0].innerHTML = depth;
+  let elem = getSomethingByclassName(this, 'depth');
+  elem[0].innerHTML = depth;
 }
 
-function getCardHTMLById(mainContainer, id) {
-    return mainContainer.getElementById('todo_' + id);
+function getCardHTMLById (mainContainer, id) {
+  return mainContainer.getElementById('todo_' + id);
 }
 
 // PROTOTYPES
@@ -958,33 +936,35 @@ function getCardHTMLById(mainContainer, id) {
 /*
  * Returns the size of an array
  */
-Array.prototype.size = function() {
-    return this.filter(function(a) {
-        return a !== undefined;
-    }).length
+Array.prototype.size = function () {
+  return this.filter(function (a) {
+    return a !== undefined;
+  }).length;
 };
 
 /*
  * Returns the size of an object
  */
-Object.size = function(obj) {
-    let size = 0, key = "";
+Object.size = function (obj) {
+  let size = 0;
+  let key = '';
 
-    for (key in obj) {
-        if (obj.hasOwnProperty(key)) size++;
-    }
-    return size;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) size++;
+  }
+  return size;
 };
 
 module.exports = {
-    createDiv: createDiv,
-    copySelectionText: copySelectionText,
-    selectText: selectText,
-    getParentCardId: getParentCardId,
-    changeDepth: changeDepth,
-    setDepth: setDepth,
-    getCardHTMLById: getCardHTMLById
+  createDiv: createDiv,
+  copySelectionText: copySelectionText,
+  selectText: selectText,
+  getParentCardId: getParentCardId,
+  changeDepth: changeDepth,
+  setDepth: setDepth,
+  getCardHTMLById: getCardHTMLById
 };
+
 },{"./models/CardManager":10}]},{},[8])
 
 //# sourceMappingURL=bundle.js.map
