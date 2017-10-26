@@ -1,6 +1,6 @@
 const Card = require('./Card'),
-    pubsub = require('../lib/pubsub'),
-    CONFIG = require('../config');
+pubsub = require('../lib/pubsub'),
+CONFIG = require('../config');
 
 let CardManager = {
     init: function() {
@@ -176,7 +176,6 @@ let CardManager = {
         localStorage.setItem('deletedCards', JSON.stringify(this.deletedCards));
     },
     loadDeletedCards: function() {
-        console.log(localStorage.getItem('deletedCards'));
         this.deletedCards = JSON.parse(localStorage.getItem('deletedCards')) || [];
 
     },

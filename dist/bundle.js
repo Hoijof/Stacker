@@ -246,7 +246,7 @@ function keyHandlerUp(e) {
 
     switch (e.keyCode) {
         case CONFIG.ASCII.C_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 let elem = cardManager.selectedCard.node,
                     selection;
 
@@ -257,7 +257,7 @@ function keyHandlerUp(e) {
 
             break;
         case CONFIG.ASCII.D_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 let card = cardManager.selectedCard;
                 cardManager.nextCard();
 
@@ -267,17 +267,17 @@ function keyHandlerUp(e) {
             }
             break;
         case CONFIG.ASCII.E_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 doubleClickHandler.apply(cardManager.selectedCard.node);
             }
             break;
         case CONFIG.ASCII.A_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 cardManager.selectedCard.toggleArchived();
             }
             break;
         case CONFIG.ASCII.I_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 // input.focus();
                 createCard();
             }
@@ -299,7 +299,7 @@ function keyHandlerUp(e) {
             cardManager.saveCards();
             break;
         case CONFIG.ASCII.Z_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 cardManager.undeleteLastCard();
             }
             break;
@@ -516,7 +516,7 @@ let pubsub = require('../lib/pubsub'),
 
 
 let Card = {
-    init: function(title, description, pristine) {
+    init: function (title, description, pristine) {
         this.id = -1;
         this.title = title;
         this.description = description;
@@ -533,7 +533,7 @@ let Card = {
 
         return this;
     },
-    render: function(always = false) {
+    render: function (always = false) {
         if (this.isDeleted === true && always === false) {
             return;
         }
@@ -545,7 +545,15 @@ let Card = {
             that = this;
 
         if (this.title) {
-            title.innerHTML = this.title;
+            if (link) {
+                title.innerHTML = `<a target="_blank" href="${link}">${this.title}</a>`;
+            } else {
+                title.innerHTML = this.title;
+            }
+        } else {
+            if (link) {
+                title.innerHTML = `<a target="_blank" href="${link}">Link!</a>`;
+            } 
         }
 
         if (this.description) {
@@ -573,15 +581,12 @@ let Card = {
         node.appendChild(createDiv('depth: ' + this.depth, 'depth'));
         // node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
         node.appendChild(createDiv('id: ' + this.id, 'id'));
-        if (link) {
-            node.appendChild(createDiv(`<a target="_blank" href="${link}">Link!</a>`, 'link'));
-        }
 
         node.appendChild(title);
         node.appendChild(text);
 
         $('#todo_' + this.id).draggable({
-            stop: function() {
+            stop: function () {
                 let card = $('#todo_' + that.id);
 
                 if (that.isPristine === true) {
@@ -611,16 +616,16 @@ let Card = {
 
         return this;
     },
-    getBackgroundColor: function() {
-        return randomMC.getColor({shades: ['200', '300']});
+    getBackgroundColor: function () {
+        return randomMC.getColor({ shades: ['200', '300'] });
     },
-    derender: function() {
+    derender: function () {
         let node = document.getElementById('todo_' + this.id);
         document.getElementById('mainContainer').removeChild(node);
 
         return this;
     },
-    toggleArchived: function() {
+    toggleArchived: function () {
         if (this.isArchived === false || this.isArchived === undefined) {
             this.node.classList.remove('notCompleted');
             void this.node.offsetWidth;
@@ -637,21 +642,25 @@ let Card = {
 
         pubsub.pub(window.CONFIG.SAVE_CARDS);
     },
-    delete: function() {
+    delete: function () {
         this.isDeleted = true;
 
         this.derender();
     },
-    undelete: function() {
+    undelete: function () {
         this.isDeleted = false;
 
         this.render();
 
         return this;
     },
-    findLink: function() {
+    findLink: function () {
         const regex = /(https?:\/\/[^\s]+|www.[^\s]+)/;
-        const link = regex.exec(this.title);
+        let link = regex.exec(this.title);
+
+        if (link == null) {
+            link = regex.exec(this.description);
+        }
 
         if (link) {
             return link[0];
@@ -662,8 +671,8 @@ let Card = {
 module.exports = Card;
 },{"../lib/pubsub":7,"random-material-color":4}],10:[function(require,module,exports){
 const Card = require('./Card'),
-    pubsub = require('../lib/pubsub'),
-    CONFIG = require('../config');
+pubsub = require('../lib/pubsub'),
+CONFIG = require('../config');
 
 let CardManager = {
     init: function() {
@@ -839,7 +848,6 @@ let CardManager = {
         localStorage.setItem('deletedCards', JSON.stringify(this.deletedCards));
     },
     loadDeletedCards: function() {
-        console.log(localStorage.getItem('deletedCards'));
         this.deletedCards = JSON.parse(localStorage.getItem('deletedCards')) || [];
 
     },

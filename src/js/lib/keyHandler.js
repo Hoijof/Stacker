@@ -85,7 +85,7 @@ function keyHandlerUp(e) {
 
     switch (e.keyCode) {
         case CONFIG.ASCII.C_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 let elem = cardManager.selectedCard.node,
                     selection;
 
@@ -96,7 +96,7 @@ function keyHandlerUp(e) {
 
             break;
         case CONFIG.ASCII.D_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 let card = cardManager.selectedCard;
                 cardManager.nextCard();
 
@@ -106,17 +106,17 @@ function keyHandlerUp(e) {
             }
             break;
         case CONFIG.ASCII.E_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 doubleClickHandler.apply(cardManager.selectedCard.node);
             }
             break;
         case CONFIG.ASCII.A_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 cardManager.selectedCard.toggleArchived();
             }
             break;
         case CONFIG.ASCII.I_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 // input.focus();
                 createCard();
             }
@@ -138,7 +138,7 @@ function keyHandlerUp(e) {
             cardManager.saveCards();
             break;
         case CONFIG.ASCII.Z_KEY:
-            if (event.ctrlKey || window.cmdPress) {
+            if (event.ctrlKey || window.cmdPress || true) {
                 cardManager.undeleteLastCard();
             }
             break;

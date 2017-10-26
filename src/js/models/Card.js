@@ -3,7 +3,7 @@ let pubsub = require('../lib/pubsub'),
 
 
 let Card = {
-    init: function(title, description, pristine) {
+    init: function (title, description, pristine) {
         this.id = -1;
         this.title = title;
         this.description = description;
@@ -20,7 +20,7 @@ let Card = {
 
         return this;
     },
-    render: function(always = false) {
+    render: function (always = false) {
         if (this.isDeleted === true && always === false) {
             return;
         }
@@ -32,7 +32,15 @@ let Card = {
             that = this;
 
         if (this.title) {
-            title.innerHTML = this.title;
+            if (link) {
+                title.innerHTML = `<a target="_blank" href="${link}">${this.title}</a>`;
+            } else {
+                title.innerHTML = this.title;
+            }
+        } else {
+            if (link) {
+                title.innerHTML = `<a target="_blank" href="${link}">Link!</a>`;
+            } 
         }
 
         if (this.description) {
@@ -60,15 +68,12 @@ let Card = {
         node.appendChild(createDiv('depth: ' + this.depth, 'depth'));
         // node.appendChild(createDiv(this.isArchived ? 'V' : 'O', 'isArchived'));
         node.appendChild(createDiv('id: ' + this.id, 'id'));
-        if (link) {
-            node.appendChild(createDiv(`<a target="_blank" href="${link}">Link!</a>`, 'link'));
-        }
 
         node.appendChild(title);
         node.appendChild(text);
 
         $('#todo_' + this.id).draggable({
-            stop: function() {
+            stop: function () {
                 let card = $('#todo_' + that.id);
 
                 if (that.isPristine === true) {
@@ -98,16 +103,16 @@ let Card = {
 
         return this;
     },
-    getBackgroundColor: function() {
-        return randomMC.getColor({shades: ['200', '300']});
+    getBackgroundColor: function () {
+        return randomMC.getColor({ shades: ['200', '300'] });
     },
-    derender: function() {
+    derender: function () {
         let node = document.getElementById('todo_' + this.id);
         document.getElementById('mainContainer').removeChild(node);
 
         return this;
     },
-    toggleArchived: function() {
+    toggleArchived: function () {
         if (this.isArchived === false || this.isArchived === undefined) {
             this.node.classList.remove('notCompleted');
             void this.node.offsetWidth;
@@ -124,21 +129,25 @@ let Card = {
 
         pubsub.pub(window.CONFIG.SAVE_CARDS);
     },
-    delete: function() {
+    delete: function () {
         this.isDeleted = true;
 
         this.derender();
     },
-    undelete: function() {
+    undelete: function () {
         this.isDeleted = false;
 
         this.render();
 
         return this;
     },
-    findLink: function() {
+    findLink: function () {
         const regex = /(https?:\/\/[^\s]+|www.[^\s]+)/;
-        const link = regex.exec(this.title);
+        let link = regex.exec(this.title);
+
+        if (link == null) {
+            link = regex.exec(this.description);
+        }
 
         if (link) {
             return link[0];
