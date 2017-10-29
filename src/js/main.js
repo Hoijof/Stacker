@@ -17,6 +17,6 @@ document.addEventListener('DOMContentLoaded', function () {
     cardManager: cardManager
   });
     
-  cardManager.loadCards();
+  cardManager.loadData();
   cardManager.renderAllCards();
 });

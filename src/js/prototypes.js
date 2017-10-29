@@ -31,18 +31,18 @@ function selectText (element) {
   let text = element;
   let range, selection
     ;
-  if (doc.body.createTextRange) {
-    range = document.body.createTextRange();
-    range.moveToElementText(text);
-    range.select();
-  } else if (window.getSelection) {
-    selection = window.getSelection();
-    range = document.createRange();
-    range.selectNodeContents(text);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    return selection;
-  }
+    if (doc.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) {
+        selection = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        return selection;
+    }
 }
 
 function getParentCardId (context) {
@@ -78,8 +78,8 @@ function setDepth (cardId, depth) {
   elem[0].innerHTML = depth;
 }
 
-function getCardHTMLById (mainContainer, id) {
-  return mainContainer.getElementById('todo_' + id);
+function getCardHTMLById(mainContainer, id) {
+    return mainContainer.getElementById('todo_' + id);
 }
 
 // PROTOTYPES
@@ -100,10 +100,10 @@ Object.size = function (obj) {
   let size = 0;
   let key = '';
 
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) size++;
-  }
-  return size;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
 };
 
 module.exports = {

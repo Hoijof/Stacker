@@ -94,7 +94,7 @@ function keyHandlerUp (e) {
       let card = cardManager.selectedCard;
       cardManager.nextCard();
       cardManager.deleteCard(card);
-      cardManager.saveCards();
+      cardManager.saveData();
       break;
     case CONFIG.ASCII.E_KEY:
       doubleClickHandler.apply(cardManager.selectedCard.node);
@@ -121,7 +121,7 @@ function keyHandlerUp (e) {
       cardManager.selectedCard.derender();
       cardManager.selectedCard.render();
 
-      cardManager.saveCards();
+      cardManager.saveData();
       break;
     case CONFIG.ASCII.Z_KEY:
       cardManager.undeleteLastCard();
@@ -158,7 +158,7 @@ function editInputKeyEvent (event) {
     card.derender();
     card.render();
     this.value = '';
-    cardManager.saveCards();
+    cardManager.saveData();
     hideEditContainer();
   } else if (event.keyCode === 27) {
     hideEditContainer();
@@ -244,7 +244,7 @@ function cardMenuEvents () {
     case 'O':
       cardManager.cards[cardId].toggleArchived();
   }
-  cardManager.saveCards();
+  cardManager.saveData();
 }
 
 function exportCards () {

@@ -256,7 +256,7 @@ function keyHandlerUp (e) {
       let card = cardManager.selectedCard;
       cardManager.nextCard();
       cardManager.deleteCard(card);
-      cardManager.saveCards();
+      cardManager.saveData();
       break;
     case CONFIG.ASCII.E_KEY:
       doubleClickHandler.apply(cardManager.selectedCard.node);
@@ -283,7 +283,7 @@ function keyHandlerUp (e) {
       cardManager.selectedCard.derender();
       cardManager.selectedCard.render();
 
-      cardManager.saveCards();
+      cardManager.saveData();
       break;
     case CONFIG.ASCII.Z_KEY:
       cardManager.undeleteLastCard();
@@ -320,7 +320,7 @@ function editInputKeyEvent (event) {
     card.derender();
     card.render();
     this.value = '';
-    cardManager.saveCards();
+    cardManager.saveData();
     hideEditContainer();
   } else if (event.keyCode === 27) {
     hideEditContainer();
@@ -406,7 +406,7 @@ function cardMenuEvents () {
     case 'O':
       cardManager.cards[cardId].toggleArchived();
   }
-  cardManager.saveCards();
+  cardManager.saveData();
 }
 
 function exportCards () {
@@ -441,7 +441,27 @@ module.exports = {
   init: init
 };
 
-},{"../config":5,"../models/Card":9}],7:[function(require,module,exports){
+},{"../config":5,"../models/Card":10}],7:[function(require,module,exports){
+window.loger = true;
+
+module.exports = {
+    log: function(message) {
+        if (window.loger) {
+            console.log(message);
+        }
+    },
+    warn: function(message) {
+        if (window.loger) {
+            console.warn(message);
+        }
+    },
+    error: function(message) {
+        if (window.loger) {
+            console.error(message);
+        }
+    }
+};
+},{}],8:[function(require,module,exports){
 
 var subs = {};
 
@@ -467,7 +487,7 @@ module.exports = {
   sub: sub
 };
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 window.CONFIG = require('./config.js');
 
 let keyHandler = require('./lib/keyHandler');
@@ -487,11 +507,11 @@ document.addEventListener('DOMContentLoaded', function () {
     cardManager: cardManager
   });
     
-  cardManager.loadCards();
+  cardManager.loadData();
   cardManager.renderAllCards();
 });
 
-},{"./config.js":5,"./lib/keyHandler":6,"./lib/pubsub":7,"./models/CardManager":10,"./prototypes":11}],9:[function(require,module,exports){
+},{"./config.js":5,"./lib/keyHandler":6,"./lib/pubsub":8,"./models/CardManager":11,"./prototypes":12}],10:[function(require,module,exports){
 let pubsub = require('../lib/pubsub');
 let randomMC = require('random-material-color');
 
@@ -499,7 +519,7 @@ let Card = {
   init: function (title, description, pristine) {
     this.id = -1;
     this.title = title;
-    this.description = description;
+    this.description = description || "";
     this.depth = 5;
     this.x = 100;
     this.y = 100;
@@ -649,10 +669,11 @@ let Card = {
 
 module.exports = Card;
 
-},{"../lib/pubsub":7,"random-material-color":4}],10:[function(require,module,exports){
+},{"../lib/pubsub":8,"random-material-color":4}],11:[function(require,module,exports){
 const Card = require('./Card');
 const pubsub = require('../lib/pubsub');
 const CONFIG = require('../config');
+const loger = require('../lib/loger');
 
 let CardManager = {
   init: function () {
@@ -690,33 +711,44 @@ let CardManager = {
 
     return this;
   },
-  saveCards: function () {
-    if (typeof (Storage) !== 'undefined') {
-      window.localStorage.setItem('cards', JSON.stringify(this.cards));
-    } else {
-      console.log('you don\'t have local storage :(');
+  saveData: function () {
+    let data = {};
+
+    if (typeof (Storage) === 'undefined') {
+      console.warn('you don\'t have local storage :(');
+      return;
     }
 
-    this.persistSelectedCard();
-    this.persistDeletedCards();
+    data.cards = this.cards;
+    data.selectedCardId = this.selectedCard.id;
+    data.deletedCards = this.deletedCards;
 
-    return this;
+    window.localStorage.setItem('cardsData', JSON.stringify(data));
+
+    loger.log("Data saved");
   },
-  loadCards: function () {
-    this.cards = JSON.parse(window.localStorage.getItem('cards'));
+  loadData: function () {
+    const data = JSON.parse(window.localStorage.getItem('cardsData'));
+
+    this.cards = data.cards;
 
     if (this.cards === null) {
       this.cards = JSON.parse(window.atob(CONFIG.DEFAULT_CONTENT));
     }
 
-    this.clearArray();
+    // Load selected card
+    if (data.selectedCardId !== undefined && data.selectedCardId > -1) {
+      this.selectedCard = this.cards[data.selectedCardId];
+    }
 
-    this.loadSelectedCard();
-    this.loadDeletedCards();
+    this.clearArray();    
+
+    // Load deleted cards
+    this.deletedCards = data.deletedCards || [];
 
     document.activeElement.blur();
 
-    return this;
+    loger.log('Data loaded');
   },
   clearArray: function () {
     let i;
@@ -724,6 +756,7 @@ let CardManager = {
     this.cards = this.cards.filter(function (elem) {
       return elem !== undefined && elem !== null;
     });
+
     for (i in this.cards) {
       if (this.cards.hasOwnProperty(i)) {
         this.cards[+i].id = +i;
@@ -736,6 +769,7 @@ let CardManager = {
     this.cards.forEach((card) => {
       card.derender();
     });
+
     this.renderAllCards();
   },
   renderAllCards: function () {
@@ -752,7 +786,7 @@ let CardManager = {
     if (CardManager.instance === undefined) {
       CardManager.instance = Object.create(CardManager, {});
       CardManager.instance.init();
-      pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
+      pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveData, CardManager.instance);
       pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
       pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
       pubsub.sub(window.CONFIG.LESS_PRISTINE, CardManager.instance.lessPristine, CardManager.instance);
@@ -767,8 +801,8 @@ let CardManager = {
     return window.btoa(JSON.stringify(this.cards));
   },
   importCards: function (data) {
-    window.localStorage.setItem('cards', window.atob(data));
-    this.loadCards();
+    window.localStorage.setItem('cardsData', window.atob(data));
+    this.loadData();
     this.renderAllCards();
   },
   selectCard: function (cardId) {
@@ -779,7 +813,6 @@ let CardManager = {
 
     this.selectedCard.node.classList.add('selected');
 
-    this.persistSelectedCard();
     document.activeElement.blur();
   },
   nextCard: function () {
@@ -810,24 +843,6 @@ let CardManager = {
 
     this.selectCard(it);
   },
-  persistSelectedCard: function () {
-    if (this.selectedCard && this.selectedCard.id > -1) {
-      window.localStorage.setItem('selectedCard', this.selectedCard.id);
-    }
-  },
-  loadSelectedCard: function () {
-    let selectedCardId = +window.localStorage.getItem('selectedCard');
-
-    if (selectedCardId !== undefined && selectedCardId > -1) {
-      this.selectedCard = this.cards[selectedCardId];
-    }
-  },
-  persistDeletedCards: function () {
-    window.localStorage.setItem('deletedCards', JSON.stringify(this.deletedCards));
-  },
-  loadDeletedCards: function () {
-    this.deletedCards = JSON.parse(window.localStorage.getItem('deletedCards')) || [];
-  },
   deleteCard: function (card) {
     this.deletedCards.push(card.id);
 
@@ -840,13 +855,13 @@ let CardManager = {
 
     this.selectCard(this.cards[this.deletedCards.splice(this.deletedCards.length - 1)].undelete().id);
 
-    this.saveCards();
+    this.saveData();
   }
 };
 
 module.exports = CardManager;
 
-},{"../config":5,"../lib/pubsub":7,"./Card":9}],11:[function(require,module,exports){
+},{"../config":5,"../lib/loger":7,"../lib/pubsub":8,"./Card":10}],12:[function(require,module,exports){
 let cardManager = require('./models/CardManager').getInstance();
 
 function createDiv (text, className) {
@@ -880,18 +895,18 @@ function selectText (element) {
   let text = element;
   let range, selection
     ;
-  if (doc.body.createTextRange) {
-    range = document.body.createTextRange();
-    range.moveToElementText(text);
-    range.select();
-  } else if (window.getSelection) {
-    selection = window.getSelection();
-    range = document.createRange();
-    range.selectNodeContents(text);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    return selection;
-  }
+    if (doc.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) {
+        selection = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        return selection;
+    }
 }
 
 function getParentCardId (context) {
@@ -927,8 +942,8 @@ function setDepth (cardId, depth) {
   elem[0].innerHTML = depth;
 }
 
-function getCardHTMLById (mainContainer, id) {
-  return mainContainer.getElementById('todo_' + id);
+function getCardHTMLById(mainContainer, id) {
+    return mainContainer.getElementById('todo_' + id);
 }
 
 // PROTOTYPES
@@ -949,10 +964,10 @@ Object.size = function (obj) {
   let size = 0;
   let key = '';
 
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) size++;
-  }
-  return size;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
 };
 
 module.exports = {
@@ -965,6 +980,6 @@ module.exports = {
   getCardHTMLById: getCardHTMLById
 };
 
-},{"./models/CardManager":10}]},{},[8])
+},{"./models/CardManager":11}]},{},[9])
 
 //# sourceMappingURL=bundle.js.map

@@ -1,6 +1,7 @@
 const Card = require('./Card');
 const pubsub = require('../lib/pubsub');
 const CONFIG = require('../config');
+const loger = require('../lib/loger');
 
 let CardManager = {
   init: function () {
@@ -38,33 +39,44 @@ let CardManager = {
 
     return this;
   },
-  saveCards: function () {
-    if (typeof (Storage) !== 'undefined') {
-      window.localStorage.setItem('cards', JSON.stringify(this.cards));
-    } else {
-      console.log('you don\'t have local storage :(');
+  saveData: function () {
+    let data = {};
+
+    if (typeof (Storage) === 'undefined') {
+      console.warn('you don\'t have local storage :(');
+      return;
     }
 
-    this.persistSelectedCard();
-    this.persistDeletedCards();
+    data.cards = this.cards;
+    data.selectedCardId = this.selectedCard.id;
+    data.deletedCards = this.deletedCards;
 
-    return this;
+    window.localStorage.setItem('cardsData', JSON.stringify(data));
+
+    loger.log("Data saved");
   },
-  loadCards: function () {
-    this.cards = JSON.parse(window.localStorage.getItem('cards'));
+  loadData: function () {
+    const data = JSON.parse(window.localStorage.getItem('cardsData'));
+
+    this.cards = data.cards;
 
     if (this.cards === null) {
       this.cards = JSON.parse(window.atob(CONFIG.DEFAULT_CONTENT));
     }
 
-    this.clearArray();
+    // Load selected card
+    if (data.selectedCardId !== undefined && data.selectedCardId > -1) {
+      this.selectedCard = this.cards[data.selectedCardId];
+    }
 
-    this.loadSelectedCard();
-    this.loadDeletedCards();
+    this.clearArray();    
+
+    // Load deleted cards
+    this.deletedCards = data.deletedCards || [];
 
     document.activeElement.blur();
 
-    return this;
+    loger.log('Data loaded');
   },
   clearArray: function () {
     let i;
@@ -72,6 +84,7 @@ let CardManager = {
     this.cards = this.cards.filter(function (elem) {
       return elem !== undefined && elem !== null;
     });
+
     for (i in this.cards) {
       if (this.cards.hasOwnProperty(i)) {
         this.cards[+i].id = +i;
@@ -84,6 +97,7 @@ let CardManager = {
     this.cards.forEach((card) => {
       card.derender();
     });
+
     this.renderAllCards();
   },
   renderAllCards: function () {
@@ -100,7 +114,7 @@ let CardManager = {
     if (CardManager.instance === undefined) {
       CardManager.instance = Object.create(CardManager, {});
       CardManager.instance.init();
-      pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveCards, CardManager.instance);
+      pubsub.sub(window.CONFIG.SAVE_CARDS, CardManager.instance.saveData, CardManager.instance);
       pubsub.sub(window.CONFIG.SELECT_CARD, CardManager.instance.selectCard, CardManager.instance);
       pubsub.sub(window.CONFIG.RERENDER, CardManager.instance.reRenderAllCards, CardManager.instance);
       pubsub.sub(window.CONFIG.LESS_PRISTINE, CardManager.instance.lessPristine, CardManager.instance);
@@ -115,8 +129,8 @@ let CardManager = {
     return window.btoa(JSON.stringify(this.cards));
   },
   importCards: function (data) {
-    window.localStorage.setItem('cards', window.atob(data));
-    this.loadCards();
+    window.localStorage.setItem('cardsData', window.atob(data));
+    this.loadData();
     this.renderAllCards();
   },
   selectCard: function (cardId) {
@@ -127,7 +141,6 @@ let CardManager = {
 
     this.selectedCard.node.classList.add('selected');
 
-    this.persistSelectedCard();
     document.activeElement.blur();
   },
   nextCard: function () {
@@ -158,24 +171,6 @@ let CardManager = {
 
     this.selectCard(it);
   },
-  persistSelectedCard: function () {
-    if (this.selectedCard && this.selectedCard.id > -1) {
-      window.localStorage.setItem('selectedCard', this.selectedCard.id);
-    }
-  },
-  loadSelectedCard: function () {
-    let selectedCardId = +window.localStorage.getItem('selectedCard');
-
-    if (selectedCardId !== undefined && selectedCardId > -1) {
-      this.selectedCard = this.cards[selectedCardId];
-    }
-  },
-  persistDeletedCards: function () {
-    window.localStorage.setItem('deletedCards', JSON.stringify(this.deletedCards));
-  },
-  loadDeletedCards: function () {
-    this.deletedCards = JSON.parse(window.localStorage.getItem('deletedCards')) || [];
-  },
   deleteCard: function (card) {
     this.deletedCards.push(card.id);
 
@@ -188,7 +183,7 @@ let CardManager = {
 
     this.selectCard(this.cards[this.deletedCards.splice(this.deletedCards.length - 1)].undelete().id);
 
-    this.saveCards();
+    this.saveData();
   }
 };
 

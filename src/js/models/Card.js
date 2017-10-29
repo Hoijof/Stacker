@@ -5,7 +5,7 @@ let Card = {
   init: function (title, description, pristine) {
     this.id = -1;
     this.title = title;
-    this.description = description;
+    this.description = description || "";
     this.depth = 5;
     this.x = 100;
     this.y = 100;
