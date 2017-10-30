@@ -58,9 +58,9 @@ let CardManager = {
   loadData: function () {
     const data = JSON.parse(window.localStorage.getItem('cardsData'));
 
-    this.cards = data.cards;
+    this.cards = data && data.cards;
 
-    if (this.cards === null) {
+    if (this.cards == null) {
       this.cards = JSON.parse(window.atob(CONFIG.DEFAULT_CONTENT));
     }
 
@@ -69,7 +69,7 @@ let CardManager = {
       this.selectedCard = this.cards[data.selectedCardId];
     }
 
-    this.clearArray();    
+    this.clearArray();
 
     // Load deleted cards
     this.deletedCards = data.deletedCards || [];
