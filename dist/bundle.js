@@ -807,7 +807,7 @@ let CardManager = {
   },
   selectCard: function (cardId) {
     if (this.selectedCard !== undefined &&
-        this.selectedCard > -1 &&
+        this.selectedCard.id > -1 &&
         this.selectedCard.node.classList !== undefined) {
       this.selectedCard.node.classList.remove('selected');
     }
