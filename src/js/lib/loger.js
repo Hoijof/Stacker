@@ -1,4 +1,4 @@
-window.loger = true;
+window.loger = false;
 
 module.exports = {
     log: function(message) {
