@@ -40,22 +40,17 @@ let CardManager = {
     return this;
   },
   saveData: function () {
-    let data = {};
-
     if (typeof (Storage) === 'undefined') {
       console.warn('you don\'t have local storage :(');
       return;
     }
 
-    data.cards = this.cards;
-    data.selectedCardId = this.selectedCard.id;
-    data.deletedCards = this.deletedCards;
-
-    window.localStorage.setItem('cardsData', JSON.stringify(data));
+    window.localStorage.setItem('cardsData', JSON.stringify(this.getDataObject()));
 
     loger.log("Data saved");
   },
   loadData: function () {
+    
     const data = JSON.parse(window.localStorage.getItem('cardsData')) || {};
 
     this.cards = data.cards;
@@ -93,11 +88,16 @@ let CardManager = {
 
     return this;
   },
-  reRenderAllCards: function () {
+  derenderAllCards: function() {
     this.cards.forEach((card) => {
+      if (card.isDeleted) {
+        return;
+      }
       card.derender();
     });
-
+  },
+  reRenderAllCards: function () {
+    this.derenderAllCards();
     this.renderAllCards();
   },
   renderAllCards: function () {
@@ -125,10 +125,21 @@ let CardManager = {
   lessPristine: function () {
     this.pristine--;
   },
+  getDataObject: function() {
+    let data = {};
+
+    data.cards = this.cards;
+    data.selectedCardId = this.selectedCard.id;
+    data.deletedCards = this.deletedCards;
+
+    return data;
+  },
   exportCards: function () {
-    return window.btoa(JSON.stringify(this.cards));
+    this.saveData();
+    return window.btoa(JSON.stringify(this.getDataObject()));
   },
   importCards: function (data) {
+    this.derenderAllCards();
     window.localStorage.setItem('cardsData', window.atob(data));
     this.loadData();
     this.renderAllCards();
