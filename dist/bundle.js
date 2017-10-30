@@ -728,9 +728,9 @@ let CardManager = {
     loger.log("Data saved");
   },
   loadData: function () {
-    const data = JSON.parse(window.localStorage.getItem('cardsData'));
+    const data = JSON.parse(window.localStorage.getItem('cardsData')) || {};
 
-    this.cards = data && data.cards;
+    this.cards = data.cards;
 
     if (this.cards == null) {
       this.cards = JSON.parse(window.atob(CONFIG.DEFAULT_CONTENT));
