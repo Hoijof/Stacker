@@ -1,18 +1,26 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
+import proptypes from 'prop-types';
 
 export default class Card extends Component {
+  
+  static proptypes = {
+    title: proptypes.string.isRequired,
+    content: proptypes.string.isRequired
+  }
+  
   constructor() {
     super();
-    this.state = {
-      title: ""
-    };
   }
+  
 
   render() {
+    const {title, content} = this.props;
+
     return (
-      <form id="article-form">
-      </form>
+      <div class="Card">
+        <h3>{title}</h3>
+        <content>{content}</content>
+      </div>
     );
   }
 }
