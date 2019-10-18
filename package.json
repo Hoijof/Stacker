@@ -35,6 +35,7 @@
     "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-draggable": "^4.0.3"
