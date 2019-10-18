@@ -75,7 +75,7 @@ export default class Card extends Component {
   }
   
   render() {
-    const {type, position, grid, index, isSelected} = this.props;
+    const {type, position, grid, index, isSelected, isEditing} = this.props;
     let className = `Card ${CARD_TYPES_TO_CLASSNAMES[type]}`;
 
     if (isSelected) {
@@ -95,6 +95,7 @@ export default class Card extends Component {
         onStart={this._handleStart}
         onDrag={this._handleDrag}
         onStop={this._handleStop}
+        disabled={isEditing}
         enableUserSelectHack={false}>
           
         <div className={className} style={style}>
