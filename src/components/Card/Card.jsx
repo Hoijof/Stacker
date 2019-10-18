@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import proptypes from 'prop-types';
 import Draggable from 'react-draggable';
 import './Card.scss';
@@ -17,14 +17,14 @@ export default class Card extends Component {
       y: proptypes.number.isRequired
     }).isRequired,
     grid: proptypes.oneOfType([proptypes.array, proptypes.bool]),
-    isSelected: proptypes.bool,
-    index: proptypes.number
+    isSelected: proptypes.bool.isRequired,
+    index: proptypes.number,
+    isEditing: proptypes.bool.isRequired
   }
 
   static defaultPropTypes = {
     type: 'goldenRatio',
     grid: false,
-    isSelected: false,
     index: 0
   }
   
@@ -34,6 +34,8 @@ export default class Card extends Component {
     this._handleStart = this._handleStart.bind(this);
     this._handleDrag = this._handleDrag.bind(this);
     this._handleStop = this._handleStop.bind(this);
+    this._onChangeTitle = this._onChangeTitle.bind(this);
+    this._onChangeContent = this._onChangeContent.bind(this);
   }
 
   _handleStart(e, data) {
@@ -47,9 +49,33 @@ export default class Card extends Component {
   _handleStop(e, data) {
     this.props.onStop(this.props.id, e, data);
   }
+
+  _onChangeTitle(e) {
+    this.props.onChangeTitle(this.props.id, e);
+  }
+
+  _onChangeContent(e) {
+    this.props.onChangeContent(this.props.id, e);
+  }
+
+  _renderContent() {
+    const {title, content, isEditing} = this.props;
+
+    return !isEditing ? (
+      <Fragment>
+        <h3>{title}</h3>
+        <content>{content}</content>
+      </Fragment>
+    ) : (
+      <Fragment>
+        <input value={title} onChange={this._onChangeTitle} />
+        <textarea value={content} onChange={this._onChangeContent}/>
+      </Fragment>
+    );
+  }
   
   render() {
-    const {title, content, type, position, grid, index, isSelected} = this.props;
+    const {type, position, grid, index, isSelected} = this.props;
     let className = `Card ${CARD_TYPES_TO_CLASSNAMES[type]}`;
 
     if (isSelected) {
@@ -68,10 +94,11 @@ export default class Card extends Component {
         scale={1}
         onStart={this._handleStart}
         onDrag={this._handleDrag}
-        onStop={this._handleStop}>
+        onStop={this._handleStop}
+        enableUserSelectHack={false}>
+          
         <div className={className} style={style}>
-          <h3>{title}</h3>
-          <content>{content}</content>
+          {this._renderContent()}
         </div>
       </Draggable>
     );

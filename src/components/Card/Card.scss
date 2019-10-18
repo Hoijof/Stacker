@@ -15,5 +15,9 @@
     &.isSelected {
         border: 1px solid black;
     }
+
+    content {
+        white-space: pre;
+    }
 }
 
