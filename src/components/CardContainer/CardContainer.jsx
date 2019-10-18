@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import './CardContainer.scss';
 import Card from '../Card';
-import { getUserInformation } from '../../services/cardService';
+import { getUserInformation, saveStuff } from '../../services/cardService';
 import { CARD_STYLES } from '../../constants';
 
 export default class CardContainer extends Component {
@@ -19,6 +19,16 @@ export default class CardContainer extends Component {
     }
     
     this._loadCards();
+
+    window.addEventListener('beforeunload', (event) => {
+      const { cards, type, grid } = this.state;
+      
+      saveStuff({
+        cards,
+        type,
+        grid
+      });
+    });
   }
 
   async _loadCards() {

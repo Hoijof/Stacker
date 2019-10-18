@@ -1,6 +1,6 @@
 export default {
     type: 0,
-    grid: null,
+    grid: false,
     cards: [
         {
             id: 1,
