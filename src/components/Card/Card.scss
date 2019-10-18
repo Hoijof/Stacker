@@ -1,0 +1,14 @@
+.Card {
+    background: red;
+    
+    &.goldenRatio {
+        width: 200px * 1.618;
+        height: 200px;
+    }
+
+    &.postIt {
+        width: 200px;
+        height: 200px;
+    }
+}
+
