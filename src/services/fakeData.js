@@ -7,6 +7,7 @@ export default {
             title: "test Name",
             content: "My content",
             index: 1,
+            tags: [],
             position: {
                 x: 200,
                 y: 200
@@ -19,6 +20,7 @@ export default {
              IS LONGER WOWOWOWO
             AMAZING MAN`,
             index: 4,
+            tags: [],
             position: {
                 x: 360,
                 y: 800

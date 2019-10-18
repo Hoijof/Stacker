@@ -1,6 +1,7 @@
 .Card {
     background: red;
     border: 1px solid rgba(0,0,0,0);
+    position: fixed;
     
     &.goldenRatio {
         width: 200px * 1.618;

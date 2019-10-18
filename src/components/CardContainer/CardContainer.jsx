@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import './CardContainer.scss';
 import Card from '../Card';
 import { getUserInformation, saveStuff } from '../../services/cardService';
-import { CARD_STYLES } from '../../constants';
+import { CARD_STYLES, EMPTY_CARD, TAGS, CREATION_OFFSET_STEP } from '../../constants';
 import GlobalEventHandler from '../../GlobalEventHandler';
 
 export default class CardContainer extends Component {
@@ -14,6 +14,7 @@ export default class CardContainer extends Component {
     this._onDrag = this._onDrag.bind(this);
     this._onChangeTitle = this._onChangeTitle.bind(this);
     this._onChangeContent = this._onChangeContent.bind(this);
+    this.burn = this.burn.bind(this);
 
     this.state = {
       type: CARD_STYLES.GOLDEN,
@@ -22,19 +23,11 @@ export default class CardContainer extends Component {
       selectedCardId: null
     }
 
-    this._api = {
-      getSelectedCard: () => {
-        return this.state.selectedCardId
-      },
-      isEditing: () => {
-        return this.state.isEditing
-      },
-      toggleEditMode: () => {
-        this.setState({
-          isEditing: !this.state.isEditing
-        });
-      }
-    }
+    this._lastId = -1;
+    this._creationOffset = 0;
+    this.lastRemoved = [];
+
+    this._api = this._getApi();
 
     this._globalEventHandler = new GlobalEventHandler(this._api);
     
@@ -51,8 +44,71 @@ export default class CardContainer extends Component {
     });
   }
 
+  _getApi() {
+    return {
+      getSelectedCard: () => {
+        return this.state.selectedCardId
+      },
+      isEditing: () => {
+        return this.state.isEditing
+      },
+      toggleEditMode: () => {
+        this.setState({
+          isEditing: !this.state.isEditing
+        });
+      },
+      createCard: () => {
+        const card = { ...EMPTY_CARD };
+
+        this._creationOffset += CREATION_OFFSET_STEP;
+
+        card.position = {
+          x: this._creationOffset,
+          y: this._creationOffset
+        }
+
+        card.id = ++this._lastId;
+
+        this.state.cards.push(card);
+        this.setState({
+          cards: this.state.cards,
+          selectedCardId: card.id
+        });
+      },
+      removeCard: () => {
+        const card = this._getCard(this.state.selectedCardId);
+        const cards = this.state.cards;
+
+        this.lastRemoved.push(card);
+
+        card.tags.push(TAGS.REMOVED);
+
+        this.setState({
+          cards
+        });
+      },
+      undoLastDelete: () => {
+        if (this.lastRemoved.length === 0 || this.state.isEditing) {
+          return false;
+        }
+
+        const card = this.lastRemoved.pop();
+      
+        card.tags.splice(card.tags.indexOf(TAGS.REMOVED), 1);
+
+        this.setState({
+          selectedCardId: card.id
+        });
+      }
+    };
+  }
+
   async _loadCards() {
     const data = await getUserInformation();
+
+    this._lastId = data.cards.reduce((acc, card) => {
+      return card.id > acc ? card.id : acc;
+    }, -1);
 
     this.setState({
       type: data.type,
@@ -63,6 +119,10 @@ export default class CardContainer extends Component {
 
   _renderCards(cards) {
     return cards.map((card) => {
+      if (card.tags.includes(TAGS.REMOVED)) {
+        return null;
+      }
+
       const { selectedCardId, isEditing } = this.state;
       const isSelectedcard = card.id === selectedCardId;
       const isSelectedEditing = isSelectedcard && isEditing;
@@ -130,9 +190,17 @@ export default class CardContainer extends Component {
     });
   }
 
+  burn() {
+    window.localStorage.removeItem('stacker-reborn-userInformation');
+    this.setState({
+      cards: []
+    });
+  }
+
   render() {
     return (
       <div className="CardContainer">
+        <button onClick={this.burn} value="Hard reset"> Hard Reset </button>
         {this._renderCards(this.state.cards)}
       </div>
     );

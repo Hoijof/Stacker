@@ -28,7 +28,7 @@ export default class GlobalEventHandler {
                     this._api.createCard()
                     break;
                 case 'd':
-                    this._api.deleteCard();
+                    this._api.removeCard();
                     e.preventDefault();
                     break;
                 case 'z':
