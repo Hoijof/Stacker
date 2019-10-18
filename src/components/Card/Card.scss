@@ -1,5 +1,6 @@
 .Card {
     background: red;
+    border: 1px solid rgba(0,0,0,0);
     
     &.goldenRatio {
         width: 200px * 1.618;
@@ -9,6 +10,10 @@
     &.postIt {
         width: 200px;
         height: 200px;
+    }
+
+    &.isSelected {
+        border: 1px solid black;
     }
 }
 

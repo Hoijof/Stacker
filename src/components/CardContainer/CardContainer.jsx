@@ -15,14 +15,15 @@ export default class CardContainer extends Component {
     this.state = {
       type: CARD_STYLES.GOLDEN,
       grid: false,
-      cards: []
+      cards: [],
+      selectedCardId: null
     }
     
     this._loadCards();
 
     window.addEventListener('beforeunload', (event) => {
       const { cards, type, grid } = this.state;
-      
+
       saveStuff({
         cards,
         type,
@@ -46,8 +47,10 @@ export default class CardContainer extends Component {
       return (<Card
           key={card.id}
           id={card.id}
+          isSelected={card.id === this.state.selectedCardId}
           title={card.title}
           content={card.content}
+          index={card.index}
           position={card.position}
           type={this.state.type}
           grid={this.state.grid}
@@ -59,7 +62,7 @@ export default class CardContainer extends Component {
   }
 
   _onStart(id, event, data) {
-
+    
   }
 
   _onDrag(id, event, data) {
@@ -75,7 +78,8 @@ export default class CardContainer extends Component {
     };
 
     this.setState({
-      cards: this.state.cards
+      cards: this.state.cards,
+      selectedCardId: card.id
     });
   }
 

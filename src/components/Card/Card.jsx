@@ -16,12 +16,16 @@ export default class Card extends Component {
       x: proptypes.number.isRequired,
       y: proptypes.number.isRequired
     }).isRequired,
-    grid: proptypes.oneOfType([proptypes.array, proptypes.bool])
+    grid: proptypes.oneOfType([proptypes.array, proptypes.bool]),
+    isSelected: proptypes.bool,
+    index: proptypes.number
   }
 
   static defaultPropTypes = {
     type: 'goldenRatio',
-    grid: false
+    grid: false,
+    isSelected: false,
+    index: 0
   }
   
   constructor() {
@@ -45,8 +49,16 @@ export default class Card extends Component {
   }
   
   render() {
-    const {title, content, type, position, grid} = this.props;
-    const className = `Card ${CARD_TYPES_TO_CLASSNAMES[type]}`;
+    const {title, content, type, position, grid, index, isSelected} = this.props;
+    let className = `Card ${CARD_TYPES_TO_CLASSNAMES[type]}`;
+
+    if (isSelected) {
+      className += ' isSelected';
+    }
+
+    const style = {
+      zIndex: index
+    }
 
     return (
       <Draggable
@@ -57,7 +69,7 @@ export default class Card extends Component {
         onStart={this._handleStart}
         onDrag={this._handleDrag}
         onStop={this._handleStop}>
-        <div className={className}>
+        <div className={className} style={style}>
           <h3>{title}</h3>
           <content>{content}</content>
         </div>
