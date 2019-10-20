@@ -6,6 +6,11 @@ import {
     getUserInformation as getUserInformationLocalStorage
  } from './localStorage';
 
+ import {
+     saveStuff as saveStuffServer,
+     getUserInformation as getUserInformationServer
+ } from './server';
+
  const fakeDataActive = getUrlParam('fakeData');
 
 export async function getUserInformation() {
@@ -13,7 +18,14 @@ export async function getUserInformation() {
         return fakeData;
     }
 
-    return getUserInformationLocalStorage();
+    const data = await getUserInformationServer();
+
+    if (data === null) {
+        return Promise.resolve(fakeData);
+    }
+
+    return Promise.resolve(data);
+    // return getUserInformationLocalStorage();
 }
 
 export async function saveStuff(data) {
@@ -21,5 +33,6 @@ export async function saveStuff(data) {
         return
     }
 
-    return saveStuffLocalStorage(data);
+    // return saveStuffLocalStorage(data);
+    return saveStuffServer(data);
 }

@@ -35,6 +35,9 @@ export default class GlobalEventHandler {
                     if (this._api.undoLastDelete()) {
                         e.preventDefault();
                     }
+                case 's':
+                    this._api.saveStuff();
+                    e.preventDefault();
             }
         }
     }

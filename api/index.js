@@ -2,6 +2,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var routes = require("./routes/routes.js");
 var app = express();
+var cors = require('cors');
 const assert = require('assert');
 const password = require('./password');
 const MongoClient = require('mongodb').MongoClient;
@@ -27,6 +28,7 @@ client.connect(function(err) {
   app.locals.stacker = stacker;
 });
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

@@ -1,3 +1,6 @@
+import { LOCAL_STORAGE_KEY } from '../constants';
+import md5 from 'md5';
+
 export function getUrlParam(urlParam) {
     const urlParams = window.location.search.replace('?', '').split('&');
     let result = null;
@@ -13,4 +16,16 @@ export function getUrlParam(urlParam) {
     });
 
     return result;
+}
+
+export function getUserToken() {
+    const userTokenId = `${LOCAL_STORAGE_KEY}-user-token`;
+    let userToken = window.localStorage.getItem(userTokenId);
+
+    if (userToken === null) {
+        userToken = md5(prompt("Please enter your user token", "username:password"));
+        window.localStorage.setItem(userTokenId, userToken);
+    }
+
+    return userToken;
 }

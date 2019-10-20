@@ -25,3 +25,7 @@ export const EMPTY_CARD = {
 export const TAGS = {
     REMOVED: 0
 };
+
+export const LOCAL_STORAGE_KEY = 'stacker-reborn';
+
+export const SERVER_URL = 'http://localhost:3000';

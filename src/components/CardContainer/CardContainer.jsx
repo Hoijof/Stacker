@@ -20,7 +20,8 @@ export default class CardContainer extends Component {
       type: CARD_STYLES.GOLDEN,
       grid: false,
       cards: [],
-      selectedCardId: null
+      selectedCardId: null,
+      pristine: true
     }
 
     this._lastId = -1;
@@ -35,12 +36,13 @@ export default class CardContainer extends Component {
 
     window.addEventListener('beforeunload', (event) => {
       const { cards, type, grid } = this.state;
+      
+      if (!this.state.pristine) {
+        event.preventDefault();
 
-      saveStuff({
-        cards,
-        type,
-        grid
-      });
+        event.returnValue = 'wat';
+      }
+      
     });
   }
 
@@ -54,7 +56,8 @@ export default class CardContainer extends Component {
       },
       toggleEditMode: () => {
         this.setState({
-          isEditing: !this.state.isEditing
+          isEditing: !this.state.isEditing,
+          pristine: false
         });
       },
       createCard: () => {
@@ -72,7 +75,8 @@ export default class CardContainer extends Component {
         this.state.cards.push(card);
         this.setState({
           cards: this.state.cards,
-          selectedCardId: card.id
+          selectedCardId: card.id,
+          pristine: false
         });
       },
       removeCard: () => {
@@ -84,7 +88,8 @@ export default class CardContainer extends Component {
         card.tags.push(TAGS.REMOVED);
 
         this.setState({
-          cards
+          cards,
+          pristine: false
         });
       },
       undoLastDelete: () => {
@@ -97,8 +102,20 @@ export default class CardContainer extends Component {
         card.tags.splice(card.tags.indexOf(TAGS.REMOVED), 1);
 
         this.setState({
-          selectedCardId: card.id
+          selectedCardId: card.id,
+          pristine: false
         });
+      },
+      saveStuff: () => {
+        const { cards, type, grid } = this.state;
+
+        saveStuff({
+          cards,
+          type,
+          grid
+        });
+        
+        this.setState({pristine: true});
       }
     };
   }
@@ -156,7 +173,10 @@ export default class CardContainer extends Component {
 
     card.content = e.target.value;
 
-    this.setState({cards: this.state.cards});
+    this.setState({
+      cards: this.state.cards,
+      pristine: false
+    });
   }
 
 
@@ -165,7 +185,10 @@ export default class CardContainer extends Component {
   
     card.title = e.target.value;
 
-    this.setState({cards: this.state.cards});
+    this.setState({
+      cards: this.state.cards,
+      pristine: false
+    });
   }
 
   _onStart(id, event, data) {
@@ -186,20 +209,23 @@ export default class CardContainer extends Component {
 
     this.setState({
       cards: this.state.cards,
-      selectedCardId: card.id
+      selectedCardId: card.id,
+      pristine: false
     });
   }
 
   burn() {
     window.localStorage.removeItem('stacker-reborn-userInformation');
     this.setState({
-      cards: []
+      cards: [],
+      pristine: false
     });
   }
 
   render() {
     return (
       <div className="CardContainer">
+        <div>{this.state.pristine ? "" : "U DIRTY FUCKER"}</div>
         <button onClick={this.burn} value="Hard reset"> Hard Reset </button>
         {this._renderCards(this.state.cards)}
       </div>

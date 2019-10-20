@@ -1,4 +1,4 @@
-const LOCAL_STORAGE_KEY = 'stacker-reborn';
+import { LOCAL_STORAGE_KEY } from '../constants';
 const EMPTY_DATA = {
     cards: []
 };
