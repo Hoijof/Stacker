@@ -23,7 +23,7 @@ export function getUserToken() {
     let userToken = window.localStorage.getItem(userTokenId);
 
     if (userToken === null) {
-        userToken = md5(prompt("Please enter your user token", "username:password"));
+        userToken = md5(prompt("Please enter your unique identifier", "username:password"));
         window.localStorage.setItem(userTokenId, userToken);
     }
 

@@ -4,8 +4,8 @@ export default {
     cards: [
         {
             id: 1,
-            title: "test Name",
-            content: "My content",
+            title: "Welcome to Stacker",
+            content: "Do stuff bla bla bla",
             index: 1,
             tags: [],
             position: {
@@ -15,10 +15,13 @@ export default {
         },
         {
             id: 2,
-            title: "SECOND TEST NAME",
-            content: `THIS CONTENT
-             IS LONGER WOWOWOWO
-            AMAZING MAN`,
+            title: "Shortcuts",
+            content: `Always press 'ctrl' or 'cmd' key :D
+            e: Edit selected card
+            i: Create new card
+            d: Delete selected card
+            z: undo last removed card
+            s: save`,
             index: 4,
             tags: [],
             position: {
