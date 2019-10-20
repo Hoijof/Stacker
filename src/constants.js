@@ -28,4 +28,4 @@ export const TAGS = {
 
 export const LOCAL_STORAGE_KEY = 'stacker-reborn';
 
-export const SERVER_URL = 'http://localhost:3000';
+export const SERVER_URL = 'http://localhost:3003';
