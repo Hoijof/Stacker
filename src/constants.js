@@ -23,7 +23,7 @@ export const EMPTY_CARD = {
 };
 
 export const TAGS = {
-    REMOVED: 0
+    REMOVED: 'Removed'
 };
 
 export const LOCAL_STORAGE_KEY = 'stacker-reborn';

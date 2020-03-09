@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import './CardContainer.scss';
 import Card from '../Card';
+import LateralMenu from '../LateralMenu';
 import { getUserInformation, saveStuff } from '../../services/cardService';
 import { CARD_STYLES, EMPTY_CARD, TAGS, CREATION_OFFSET_STEP } from '../../constants';
 import GlobalEventHandler from '../../GlobalEventHandler';
@@ -15,6 +16,8 @@ export default class CardContainer extends Component {
     this._onChangeTitle = this._onChangeTitle.bind(this);
     this._onChangeContent = this._onChangeContent.bind(this);
     this.burn = this.burn.bind(this);
+    this._saveSettings = this._saveSettings.bind(this);
+
 
     this.state = {
       type: CARD_STYLES.GOLDEN,
@@ -214,6 +217,13 @@ export default class CardContainer extends Component {
     });
   }
 
+  _saveSettings(settings) {
+    this.setState({
+      type: settings.type,
+      pristine: false,
+    });
+  }
+
   burn() {
     window.localStorage.removeItem('stacker-reborn-userInformation');
     this.setState({
@@ -223,12 +233,23 @@ export default class CardContainer extends Component {
   }
 
   render() {
+    const { type } = this.state;
+    const settings = { type };
+
     return (
-      <div className="CardContainer">
-        <div>{this.state.pristine ? "" : "U DIRTY FUCKER"}</div>
-        <button onClick={this.burn} value="Hard reset"> Hard Reset </button>
-        {this._renderCards(this.state.cards)}
-      </div>
+      <Fragment>
+        <LateralMenu 
+          tags={Object.values(TAGS)}
+          settings={settings}
+          saveSettings={this._saveSettings}
+          burn={this.burn}
+        />
+
+        <div className="CardContainer">
+          <div>{this.state.pristine ? "" : "U DIRTY FUCKER"}</div>
+          {this._renderCards(this.state.cards)}
+        </div>
+      </Fragment>
     );
   }
 }

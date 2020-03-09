@@ -26,7 +26,7 @@
     "babel-loader": "^8.0.6",
     "css-loader": "^3.2.0",
     "html-webpack-plugin": "^3.2.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
@@ -35,8 +35,10 @@
     "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {
+    "@material-ui/core": "^4.9.5",
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.19.0",
+    "classname": "0.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "md5": "^2.2.1",

@@ -22,7 +22,7 @@ export default class Card extends Component {
     isEditing: proptypes.bool.isRequired
   }
 
-  static defaultPropTypes = {
+  static defaultProps  = {
     type: 'goldenRatio',
     grid: false,
     index: 0

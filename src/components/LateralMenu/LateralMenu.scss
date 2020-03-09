@@ -1,0 +1,32 @@
+.LateralMenu {
+    border-left: 2px solid #333;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 100px;
+    display: block;
+    margin: 0;
+    padding: 0;
+    background: white;
+    z-index: 100;
+
+    &.expanded {
+        width: 500px;
+    }
+
+    .Tag, .Settings {
+        border-bottom: 1px solid #333;
+        cursor: pointer;
+        padding: 5px 2px;
+
+        &:hover {
+            background-color: #EEEEEE;
+        }
+    }
+
+    .Setting {
+        margin-left: 15px;
+    }
+}
+
