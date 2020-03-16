@@ -163,6 +163,10 @@ export default class CardContainer extends Component {
   _checkFilters(card) {
     const { filter } = this.state;
 
+    if (!filter) {
+      return false;
+    }
+
     if (filter.length === 0) {
       if (card.tags.includes(TAGS.REMOVED)) {
         return false;
