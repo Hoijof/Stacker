@@ -154,7 +154,7 @@ export default class CardContainer extends Component {
 
     this.setState({
       type: data.type,
-      filter: data.filter,
+      filter: data.filter || [],
       grid: data.grid,
       cards: data.cards 
     });
