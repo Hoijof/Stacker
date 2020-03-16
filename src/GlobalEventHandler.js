@@ -35,8 +35,13 @@ export default class GlobalEventHandler {
                     if (this._api.undoLastDelete()) {
                         e.preventDefault();
                     }
+                    break;
                 case 's':
                     this._api.saveStuff();
+                    e.preventDefault();
+                    break;
+                case 'c':
+                    this._api.completeCard();
                     e.preventDefault();
             }
         }

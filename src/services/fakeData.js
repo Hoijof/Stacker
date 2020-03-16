@@ -1,3 +1,5 @@
+import { TAGS } from '../constants';
+
 export default {
     type: 0,
     grid: false,
@@ -7,7 +9,7 @@ export default {
             title: "Welcome to Stacker",
             content: "Do stuff bla bla bla",
             index: 1,
-            tags: [],
+            tags: [TAGS.ALL, TAGS.PENDING],
             position: {
                 x: 200,
                 y: 200
@@ -21,9 +23,11 @@ export default {
             i: Create new card
             d: Delete selected card
             z: undo last removed card
-            s: save`,
+            s: save
+            c: complete / uncomplete card`,
+            
             index: 4,
-            tags: [],
+            tags: [TAGS.ALL, TAGS.PENDING],
             position: {
                 x: 360,
                 y: 800

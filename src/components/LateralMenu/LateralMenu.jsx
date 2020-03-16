@@ -11,7 +11,6 @@ import cx from "classname";
 export default class LateralMenu extends Component {
   static proptypes = {
     tags: proptypes.array,
-    filterByTag: proptypes.func,
     settings: proptypes.object,
     saveSettings: proptypes.func,
     burn: proptypes.func
@@ -19,31 +18,48 @@ export default class LateralMenu extends Component {
 
   static defaultProps = {
     tags: ["testTag", "testTag2"],
-    filterByTag: tag => {
-      console.log(`Filtering by ${tag}`);
-    }
   };
 
   constructor() {
     super();
 
     this.state = {
-      expanded: true
+      expanded: false,
     };
 
     this.toggleSettings = this.toggleSettings.bind(this);
     this.toggleCardType = this.toggleCardType.bind(this);
   }
 
+  _filterByTag(tag) {
+    const { filter } = this.props.settings;
+    const index = filter.indexOf(tag);
+
+    if (index > -1) {
+      filter.splice(index, 1);
+    } else {
+      filter.push(tag);
+    }
+
+    this.props.saveSettings({
+      filter,
+    });
+  }
+
   renderTags(tags) {
     const renderedTags = [];
 
     tags.forEach(tag => {
+      const classNames = cx({
+        Tag: true,
+        selected: this.props.settings.filter.includes(tag),
+      });
+
       renderedTags.push(
         <div
-          className="Tag"
+          className={classNames}
           key={tag}
-          onClick={this.props.filterByTag.bind(this, tag)}
+          onClick={this._filterByTag.bind(this, tag)}
         >
           {tag}
         </div>
@@ -68,8 +84,6 @@ export default class LateralMenu extends Component {
   render() {
     const { tags, settings } = this.props;
     const { expanded } = this.state;
-
-    console.log(settings);
 
     const classNames = cx({
       LateralMenu: true,

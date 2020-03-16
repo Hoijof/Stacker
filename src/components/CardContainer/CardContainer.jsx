@@ -24,7 +24,8 @@ export default class CardContainer extends Component {
       grid: false,
       cards: [],
       selectedCardId: null,
-      pristine: true
+      pristine: true,
+      filter: [],
     }
 
     this._lastId = -1;
@@ -76,6 +77,7 @@ export default class CardContainer extends Component {
         card.id = ++this._lastId;
 
         this.state.cards.push(card);
+
         this.setState({
           cards: this.state.cards,
           selectedCardId: card.id,
@@ -89,6 +91,25 @@ export default class CardContainer extends Component {
         this.lastRemoved.push(card);
 
         card.tags.push(TAGS.REMOVED);
+
+        this.setState({
+          cards,
+          pristine: false
+        });
+      },
+      completeCard: () => {
+        const card = this._getCard(this.state.selectedCardId);
+        const cards = this.state.cards;
+
+        if (card.tags.includes(TAGS.COMPLETED)) {
+          card.tags.push(TAGS.PENDING);
+          const index = card.tags.indexOf(TAGS.COMPLETED);
+          card.tags.splice(index, 1);
+        } else {
+          card.tags.push(TAGS.COMPLETED);
+          const index = card.tags.indexOf(TAGS.PENDING);
+          card.tags.splice(index, 1);
+        }
 
         this.setState({
           cards,
@@ -110,11 +131,12 @@ export default class CardContainer extends Component {
         });
       },
       saveStuff: () => {
-        const { cards, type, grid } = this.state;
+        const { cards, type, grid, filter } = this.state;
 
         saveStuff({
           cards,
           type,
+          filter,
           grid
         });
         
@@ -132,25 +154,48 @@ export default class CardContainer extends Component {
 
     this.setState({
       type: data.type,
+      filter: data.filter,
       grid: data.grid,
       cards: data.cards 
     });
   }
 
-  _renderCards(cards) {
-    return cards.map((card) => {
+  _checkFilters(card) {
+    const { filter } = this.state;
+
+    if (filter.length === 0) {
       if (card.tags.includes(TAGS.REMOVED)) {
-        return null;
+        return false;
       }
 
-      const { selectedCardId, isEditing } = this.state;
-      const isSelectedcard = card.id === selectedCardId;
-      const isSelectedEditing = isSelectedcard && isEditing;
+      return true;
+    }
+
+    let valid = true;
+
+    filter.forEach((activeFilterTag) => {
+      if (!card.tags.includes(activeFilterTag)) {
+        valid = false;
+      }
+    });
+
+    return valid;
+  }
+
+  _renderCards(cards) {
+    return cards.map((card) => {
+      const { selectedCardId, isEditing, filter } = this.state;
+      const isSelectedCard = card.id === selectedCardId;
+      const isSelectedEditing = isSelectedCard && isEditing;
+    
+      if (!this._checkFilters(card)) {
+        return;
+      }
 
       return (<Card
           key={card.id}
           id={card.id}
-          isSelected={isSelectedcard}
+          isSelected={isSelectedCard}
           isEditing={isSelectedEditing}
           title={card.title}
           content={card.content}
@@ -218,9 +263,14 @@ export default class CardContainer extends Component {
   }
 
   _saveSettings(settings) {
+    const { type, filter } = this.state;
+
+    const computedType = typeof settings.type === 'number' ? settings.type : type;
+
     this.setState({
-      type: settings.type,
+      type: computedType,
       pristine: false,
+      filter: settings.filter || filter,
     });
   }
 
@@ -233,8 +283,8 @@ export default class CardContainer extends Component {
   }
 
   render() {
-    const { type } = this.state;
-    const settings = { type };
+    const { type, filter } = this.state;
+    const settings = { type, filter };
 
     return (
       <Fragment>
